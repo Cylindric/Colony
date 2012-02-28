@@ -1,3 +1,5 @@
+#include <iostream>
+#include <direct.h>
 #include "CApp.h"
 
 bool CApp::OnInit() {
@@ -9,7 +11,7 @@ bool CApp::OnInit() {
 		return false;
 	}
 
-	if((Surf_Test = CSurface::OnLoad("./gfx/floor.bmp")) == NULL) {
+	if((Surf_Test = CSurface::OnLoad("./gfx/floor.png")) == NULL) {
 		return false;
 	}
 

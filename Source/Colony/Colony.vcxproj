@@ -38,8 +38,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\SDL-1.2.15\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\SDL-1.2.15\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\SDL-1.2.15\include;$(SolutionDir)\SDL_image-1.2.12\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\SDL-1.2.15\lib\x86;$(SolutionDir)\SDL_image-1.2.12\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -49,11 +49,12 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDLmain.lib;SDL_Image.lib;SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /S /D "$(SolutionDir)gfx" "$(OutDir)gfx\"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
