@@ -71,6 +71,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CAnimation.cpp" />
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CApp_OnCleanup.cpp" />
     <ClCompile Include="CApp_OnEvent.cpp" />
@@ -80,6 +81,7 @@
     <ClCompile Include="CArea.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCursor.cpp" />
+    <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CEvent.cpp" />
     <ClCompile Include="CFPS.cpp" />
     <ClCompile Include="CMap.cpp" />
@@ -87,10 +89,12 @@
     <ClCompile Include="CTile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CAnimation.h" />
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CArea.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCursor.h" />
+    <ClInclude Include="CEntity.h" />
     <ClInclude Include="CEvent.h" />
     <ClInclude Include="CFPS.h" />
     <ClInclude Include="CMap.h" />

@@ -8,6 +8,7 @@
 #include "CCamera.h"
 #include "CCursor.h"
 #include "CFPS.h"
+#include "CEntity.h"
 
 class CApp : public CEvent {
 
@@ -15,6 +16,8 @@ private:
 	bool Running;
 	SDL_Surface* Surf_Display;
 	SDL_Surface* Default_Tileset;
+	SDL_Surface* Buggy_Tileset;
+	CEntity Buggy1;
 
 public:
 	CApp();
