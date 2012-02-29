@@ -6,6 +6,6 @@ void CApp::OnRender() {
 	SDL_Flip(Surf_Display);
 
 	char buffer[30];
-	sprintf_s(buffer,"Colony: %i FPS",  CFPS::FPSControl.GetFPS());
+	sprintf_s(buffer, "Colony: %i FPS",  CFPS::FPSControl.GetFPS());
 	SDL_WM_SetCaption(buffer, "Colony");
 }

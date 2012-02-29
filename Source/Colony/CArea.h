@@ -1,10 +1,8 @@
-#ifndef _CAREA_H_
-#define _CAREA_H_
-
+#pragma once
 #include "CMap.h"
 
-class CArea
-{
+class CArea {
+
 public:
 	static CArea AreaControl;
 
@@ -21,5 +19,3 @@ public:
 	void OnRender(SDL_Surface* Surf_Display, int CameraX, int CameraY);
 	void OnCleanup();
 };
-
-#endif

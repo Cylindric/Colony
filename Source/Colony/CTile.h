@@ -1,6 +1,4 @@
-#ifndef _CTILE_H_
-#define _CTILE_H_
-
+#pragma once
 #include "Define.h"
 
 enum {
@@ -9,9 +7,8 @@ enum {
 	TILE_TYPE_BLOCK
 };
 
+class CTile {
 
-class CTile
-{
 public:
 	int TileID;
 	int TypeID;
@@ -19,5 +16,3 @@ public:
 public:
 	CTile(void);
 };
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef _CCAMERA_H_
-#define _CCAMERA_H_
- 
+#pragma once
 #include <SDL.h> 
 #include "Define.h"
  
@@ -10,6 +8,7 @@ enum {
 };
  
 class CCamera {
+
     public:
         static CCamera CameraControl;
  
@@ -32,11 +31,8 @@ class CCamera {
     public:
         int GetX();
         int GetY();
- 
+
     public:
         void SetPos(int X, int Y);
- 
         void SetTarget(int* X, int* Y);
 };
- 
-#endif

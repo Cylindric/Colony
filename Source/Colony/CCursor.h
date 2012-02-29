@@ -1,12 +1,10 @@
-#ifndef _CCURSOR_H_
-#define _CCURSOR_H_
-
+#pragma once
 #include <SDL.h> 
 #include "Define.h"
 #include "CSurface.h"
 
-class CCursor
-{
+class CCursor {
+
 private:
 	SDL_Surface* Surf_Tileset;
     int X;
@@ -23,5 +21,3 @@ public:
 	bool OnMove(int MouseX, int MouseY);
 	void OnRender(SDL_Surface* Surf_Display);
 };
-
-#endif

@@ -3,11 +3,11 @@
 CCamera CCamera::CameraControl;
  
 CCamera::CCamera() {
-    X = Y = 0;
- 
-    TargetX = TargetY = NULL;
- 
-    TargetMode = TARGET_MODE_NORMAL;
+    X = 0;
+	Y = 0;
+    TargetX = NULL;
+	TargetY = NULL;
+     TargetMode = TARGET_MODE_NORMAL;
 }
  
 void CCamera::OnMove(int MoveX, int MoveY) {

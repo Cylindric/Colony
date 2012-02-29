@@ -1,6 +1,4 @@
-#ifndef _CAPP_H_
-#define _CAPP_H_
-
+#pragma once
 #include <SDL.h>
 #include "Define.h"
 #include "CEvent.h"
@@ -32,5 +30,3 @@ public:
 	void OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode);
 	void OnMouseMove(int mX, int mY, int relX, int relY, bool Left,bool Right,bool Middle);
 };
-
-#endif

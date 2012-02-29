@@ -1,5 +1,4 @@
-#ifndef _DEFINE_H_
-    #define _DEFINE_H_
+#pragma once
  
 #define MAP_WIDTH  40
 #define MAP_HEIGHT 40
@@ -9,5 +8,3 @@
  
 #define WWIDTH  640
 #define WHEIGHT 480
- 
-#endif

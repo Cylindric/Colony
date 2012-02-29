@@ -3,10 +3,6 @@
 CEvent::CEvent() {
 }
  
-CEvent::~CEvent() {
-    //Do nothing
-}
- 
 void CEvent::OnEvent(SDL_Event* Event) {
     switch(Event->type) {
         case SDL_ACTIVEEVENT: {

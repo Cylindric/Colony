@@ -14,7 +14,7 @@ bool CArea::OnLoad(SDL_Surface* Tileset) {
 
 	MapList.clear();
 
-	AreaSize = 3;
+	AreaSize = 4;
 	for(int row = 0; row < AreaSize; row++) {
 		for(int col = 0; col < AreaSize; col++) {
 			CMap tmpMap;
@@ -35,7 +35,7 @@ void CArea::OnRender(SDL_Surface* Surf_Display, int CameraX, int CameraY) {
 	FirstID = FirstID + ((-CameraY / MapHeight) * AreaSize);
 
 	for(int i = 0; i < 4; i++) {
-		int id = FirstID + ((i / 2) * AreaSize) + (i % 2);
+		unsigned int id = FirstID + ((i / 2) * AreaSize) + (i % 2);
 
 		if(id < 0 || id >= MapList.size()) continue;
 
