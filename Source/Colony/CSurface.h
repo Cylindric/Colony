@@ -1,5 +1,5 @@
-#ifndef _CSURFACe_H_
-#define _CSURFACe_H_
+#ifndef _CSURFACE_H_
+#define _CSURFACE_H_
 
 #include <SDL.h>
 #include <SDL_image.h>

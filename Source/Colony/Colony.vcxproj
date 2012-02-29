@@ -77,13 +77,26 @@
     <ClCompile Include="CApp_OnInit.cpp" />
     <ClCompile Include="CApp_OnLoop.cpp" />
     <ClCompile Include="CApp_OnRender.cpp" />
+    <ClCompile Include="CArea.cpp" />
+    <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CCursor.cpp" />
     <ClCompile Include="CEvent.cpp" />
+    <ClCompile Include="CFPS.cpp" />
+    <ClCompile Include="CMap.cpp" />
     <ClCompile Include="CSurface.cpp" />
+    <ClCompile Include="CTile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CApp.h" />
+    <ClInclude Include="CArea.h" />
+    <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CCursor.h" />
     <ClInclude Include="CEvent.h" />
+    <ClInclude Include="CFPS.h" />
+    <ClInclude Include="CMap.h" />
     <ClInclude Include="CSurface.h" />
+    <ClInclude Include="CTile.h" />
+    <ClInclude Include="Define.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

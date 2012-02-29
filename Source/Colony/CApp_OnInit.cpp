@@ -7,13 +7,24 @@ bool CApp::OnInit() {
 		return false;
 	}
 
-	if((Surf_Display = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF)) == NULL) {
+	if((Surf_Display = SDL_SetVideoMode(WWIDTH, WHEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF)) == NULL) {
 		return false;
 	}
 
-	if((Surf_Test = CSurface::OnLoad("./gfx/floor.png")) == NULL) {
+	if((Default_Tileset = CSurface::OnLoad("./gfx/floor.png")) == false) {
+        return false;
+    }
+
+	if(CArea::AreaControl.OnLoad(Default_Tileset) == false) {
 		return false;
 	}
+
+	if(CCursor::CursorControl.OnLoad(Default_Tileset) == false) {
+		return false;
+	}
+	SDL_ShowCursor(0);
+
+	SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);
 
 	return true;
 }

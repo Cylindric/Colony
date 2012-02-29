@@ -2,7 +2,7 @@
 
 CApp::CApp() {
 	Surf_Display = NULL;
-	Surf_Test = NULL;
+	Default_Tileset = NULL;
 
 	Running = true;
 }
@@ -21,7 +21,7 @@ int CApp::OnExecute() {
 
 		OnLoop();
 		OnRender();
-		SDL_Delay(1000);
+		SDL_Delay(1);
 	}
 
 	OnCleanup();
