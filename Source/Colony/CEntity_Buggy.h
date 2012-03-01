@@ -18,5 +18,7 @@ private:
 	float AccelerationX;
 	float AccelerationY;
 	float MaxSpeed;
+	float DestinationX;
+	float DestinationY;
 };
 
