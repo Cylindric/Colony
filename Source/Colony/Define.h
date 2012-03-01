@@ -1,10 +1,11 @@
 #pragma once
  
-#define MAP_WIDTH  40
-#define MAP_HEIGHT 40
+const unsigned int MAP_WIDTH = 10;
+const unsigned int MAP_HEIGHT = 10;
  
-#define TILE_SIZE 20
-#define TILESET_COLS 10
- 
-#define WWIDTH  640
-#define WHEIGHT 480
+const unsigned int TILE_SIZE = 20;
+const unsigned int TILESET_COLS = 10;
+
+const unsigned int AREA_SIZE = 5;
+//const unsigned int WWIDTH = 640;
+//const unsigned int WHEIGHT = 480;

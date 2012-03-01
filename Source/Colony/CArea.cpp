@@ -3,7 +3,6 @@
 CArea CArea::AreaControl;
 
 CArea::CArea() {
-	AreaSize = 0;
 }
 
 bool CArea::OnLoad(SDL_Surface* Tileset) {
@@ -14,11 +13,10 @@ bool CArea::OnLoad(SDL_Surface* Tileset) {
 
 	MapList.clear();
 
-	AreaSize = 4;
-	for(int row = 0; row < AreaSize; row++) {
-		for(int col = 0; col < AreaSize; col++) {
+	for(int row = 0; row < AREA_SIZE; row++) {
+		for(int col = 0; col < AREA_SIZE; col++) {
 			CMap tmpMap;
-			if(tmpMap.OnLoad(Surf_Tileset) == false) {
+			if(tmpMap.OnLoad(Surf_Tileset, col, row) == false) {
 				return false;
 			}
 			MapList.push_back(tmpMap);
@@ -32,15 +30,17 @@ void CArea::OnRender(SDL_Surface* Surf_Display, int CameraX, int CameraY) {
 	int MapHeight = MAP_HEIGHT * TILE_SIZE;
 
 	int FirstID = -CameraX / MapWidth;
-	FirstID = FirstID + ((-CameraY / MapHeight) * AreaSize);
+	FirstID = FirstID + ((-CameraY / MapHeight) * AREA_SIZE);
 
-	for(int i = 0; i < 4; i++) {
-		unsigned int id = FirstID + ((i / 2) * AreaSize) + (i % 2);
+	int nHorizontalMaps = (CCamera::CameraControl.GetWidth()/(MAP_WIDTH*TILE_SIZE)) + 2;
+	int nVerticalMaps = (CCamera::CameraControl.GetHeight()/(MAP_HEIGHT*TILE_SIZE)) + 2;
+	for(int i = 0; i < nHorizontalMaps*nVerticalMaps; i++) {
+		unsigned int id = FirstID + ((i / nHorizontalMaps) * AREA_SIZE) + (i % nHorizontalMaps);
 
-		if(id < 0 || id >= MapList.size()) continue;
+		if(id >= MapList.size()) continue;
 
-		int x = ((id % AreaSize) * MapWidth) + CameraX;
-		int y = ((id / AreaSize) * MapHeight) + CameraY;
+		int x = ((id % AREA_SIZE) * MapWidth) + CameraX;
+		int y = ((id / AREA_SIZE) * MapHeight) + CameraY;
 
 		MapList[id].OnRender(Surf_Display, x, y);
 	}

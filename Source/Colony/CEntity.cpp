@@ -14,10 +14,10 @@ CEntity::CEntity() {
 CEntity::~CEntity() {
 }
 
-bool CEntity::OnLoad(SDL_Surface* Tileset, int Width, int Height, int MaxFrames) {
-	if(Tileset == NULL) return false;
-	Surf_Tileset = Tileset;
-
+bool CEntity::OnLoad(char* Filename, int Width, int Height, int MaxFrames) {
+	if((Surf_Tileset = CSurface::OnLoad(Filename)) == NULL) {
+        return false;
+    }
 	this->Width = Width;
 	this->Height = Height;
 	Anim_Control.MaxFrames = MaxFrames;
@@ -31,8 +31,23 @@ void CEntity::OnLoop() {
 void CEntity::OnRender(SDL_Surface* Surf_Display) {
 	if(Surf_Tileset == NULL || Surf_Display == NULL) return;
 
-	CSurface::OnDraw(Surf_Display, Surf_Tileset, (int)X, (int)Y, Anim_Control.GetCurrentFrame() * Width, AnimState * Height, Width, Height);
+	// calculate the 'real' position on the view
+	int screenX = (int)(X + CCamera::CameraControl.GetX());
+	int screenY = (int)(Y + CCamera::CameraControl.GetY());
+
+	// center the sprite
+	screenX = screenX - (Width / 2);
+	screenY = screenY - (Height / 2);
+
+	// if the sprite is off-camera, don't bother drawing it
+	if((screenX + Width < 0) || (screenY + Height < 0)) return;
+	if((screenX - Width > CCamera::CameraControl.GetWidth()) || (screenY - Height > CCamera::CameraControl.GetWidth())) return;
+
+	CSurface::OnDraw(Surf_Display, Surf_Tileset, screenX, screenY, Anim_Control.GetCurrentFrame() * Width, AnimState * Height, Width, Height);
 }
 
 void CEntity::OnCleanup() {
+	if(Surf_Tileset) {
+		SDL_UnlockSurface(Surf_Tileset);
+	}
 }

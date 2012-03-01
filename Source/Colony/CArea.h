@@ -1,5 +1,6 @@
 #pragma once
 #include "CMap.h"
+#include "CCamera.h"
 
 class CArea {
 
@@ -10,7 +11,6 @@ public:
 	std::vector<CMap> MapList;
 
 private:
-	int AreaSize;
 	SDL_Surface* Surf_Tileset;
 
 public:

@@ -38,8 +38,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\SDL-1.2.15\include;$(SolutionDir)\SDL_image-1.2.12\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\SDL-1.2.15\lib\x86;$(SolutionDir)\SDL_image-1.2.12\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\SDL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\SDL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -49,7 +49,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDLmain.lib;SDL_Image.lib;SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDLmain.lib;SDL_Image.lib;SDL_ttf.lib;SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
@@ -82,6 +82,7 @@
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCursor.cpp" />
     <ClCompile Include="CEntity.cpp" />
+    <ClCompile Include="CEntity_Buggy.cpp" />
     <ClCompile Include="CEvent.cpp" />
     <ClCompile Include="CFPS.cpp" />
     <ClCompile Include="CMap.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCursor.h" />
     <ClInclude Include="CEntity.h" />
+    <ClInclude Include="CEntity_Buggy.h" />
     <ClInclude Include="CEvent.h" />
     <ClInclude Include="CFPS.h" />
     <ClInclude Include="CMap.h" />

@@ -23,3 +23,7 @@ void CApp::OnKeyDown(SDLKey sym, SDLMod mod, Uint16 unicode) {
 void CApp::OnMouseMove(int mX, int mY, int relX, int relY, bool Left, bool Right, bool Middle) {
 	CCursor::CursorControl.OnMove(mX, mY);
 }
+
+void CApp::OnResize(int w,int h) {
+	CCamera::CameraControl.SetSize(w, h);
+}

@@ -4,22 +4,36 @@ CMap::CMap() {
 	Surf_Tileset = NULL;
 }
 
-bool CMap::OnLoad(SDL_Surface* Tileset) {
+bool CMap::OnLoad(SDL_Surface* Tileset, int AreaX, int AreaY) {
 	if(Tileset == NULL) {
 		return false;
 	}
 
+	this->AreaX = AreaX;
+	this->AreaY = AreaY;
+
 	Surf_Tileset = Tileset;
 	// default ground tiles
-	int groundTiles[18] = {0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 25};
+	int groundTiles[17] = {1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 25};
 
 	TileList.clear();
-	for(int Y = 0;Y < MAP_HEIGHT;Y++) {
-		for(int X = 0;X < MAP_WIDTH;X++) {
+	for(int Y = 0; Y < MAP_HEIGHT; Y++) {
+		for(int X = 0; X < MAP_WIDTH; X++) {
 			CTile tempTile;
-			int r = (rand() % 18);
-			tempTile.TileID = groundTiles[r];
-			tempTile.TypeID = TILE_TYPE_NORMAL;
+
+			// global-border tiles
+			if (
+				((X == 0) && AreaX == 0) ||
+				((Y == 0) && AreaY == 0) ||
+				((X == (MAP_WIDTH - 1)) && (AreaX == AREA_SIZE - 1)) ||
+				((Y == (MAP_HEIGHT - 1)) && (AreaY == AREA_SIZE - 1))
+				) {
+				tempTile.TileID = 0;
+				tempTile.TypeID = TILE_TYPE_BLOCK;
+			} else {
+				tempTile.TileID = groundTiles[(rand() % 17)];
+				tempTile.TypeID = TILE_TYPE_NORMAL;
+			}
  			TileList.push_back(tempTile);
 		}
 	}

@@ -4,6 +4,7 @@
 #include "Define.h"
 #include "CAnimation.h"
 #include "CSurface.h"
+#include "CCamera.h"
 
 class CEntity {
 public:
@@ -25,7 +26,7 @@ public:
 	virtual ~CEntity();
 
 public:
-	virtual bool OnLoad(SDL_Surface* Tileset, int Width, int Height, int MaxFrames);
+	virtual bool OnLoad(char* Filename, int Width, int Height, int MaxFrames);
 	virtual void OnLoop();
 	virtual void OnRender(SDL_Surface* Surf_Display);
 	virtual void OnCleanup();
