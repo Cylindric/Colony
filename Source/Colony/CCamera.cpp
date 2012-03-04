@@ -10,15 +10,10 @@ CCamera::CCamera() {
     TargetX = NULL;
 	TargetY = NULL;
     TargetMode = TARGET_MODE_NORMAL;
-	
-	text_color.r=255;
-	text_color.g=255;
-	text_color.b=255;
 }
  
 SDL_Surface* CCamera::OnInit() {
 	this->SetSize(this->Width, this->Height);
-	font = TTF_OpenFont("NEUROPOL.ttf", 16);
 	return this->Surf_Display;
 }
 
@@ -97,9 +92,14 @@ void CCamera::SetTarget(int* X, int* Y) {
 }
 
 void CCamera::OnRender(SDL_Surface* Surf_Display) {
-	//char buffer[30];
-	//sprintf_s(buffer, "X:%i Y:%i", X, Y);
-	text = TTF_RenderText_Solid(font, "test", text_color);
-	SDL_BlitSurface(text, NULL, Surf_Display, NULL);
-	SDL_FreeSurface(text);
+	DebugTextBuffer[0] = 0;
+	int fps = CFPS::FPSControl.GetFPS();
+	float sf = CFPS::FPSControl.GetSpeedFactor();
+	sprintf_s(DebugTextBuffer, "X:%i Y:%i  FPS:%i F:%3.2f", CCursor::CursorControl.GetX(), CCursor::CursorControl.GetY(), fps, sf);
+
+	SDL_Color c;
+	c.r = 255;
+	c.g = 255;
+	c.b = 255;
+	CFont::FontControl.AddTextToSurface(Surf_Display, FONT_NORMAL, 0, 0, c, DebugTextBuffer);
 }

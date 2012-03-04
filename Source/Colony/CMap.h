@@ -4,11 +4,14 @@
 #include "CTile.h"
 #include "CSurface.h"
 #include "Define.h"
+#include "CFont.h"
 
 class CMap {
 
-private:
+public:
 	std::vector<CTile> TileList;
+
+private:
 	SDL_Surface* Surf_Tileset;
 	int AreaX;
 	int AreaY;

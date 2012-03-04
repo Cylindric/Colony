@@ -1,5 +1,6 @@
 #pragma once
 #include "Define.h"
+#include "CEntity.h"
 
 enum {
 	TILE_TYPE_NONE = 0,
@@ -10,9 +11,12 @@ enum {
 class CTile {
 
 public:
+	std::vector<CEntity*> EntityList;
 	int TileID;
 	int TypeID;
+	char Label[1];
 
 public:
 	CTile(void);
+
 };

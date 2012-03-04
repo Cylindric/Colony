@@ -18,4 +18,5 @@ public:
 	bool OnLoad(SDL_Surface* Tileset);
 	void OnRender(SDL_Surface* Surf_Display, int CameraX, int CameraY);
 	void OnCleanup();
+	CTile GetTile(int X, int Y);
 };

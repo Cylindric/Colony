@@ -49,3 +49,14 @@ void CArea::OnRender(SDL_Surface* Surf_Display, int CameraX, int CameraY) {
 void CArea::OnCleanup() {
 	MapList.clear();
 }
+
+CTile CArea::GetTile(int X, int Y) {
+	int mapX = (X/20);
+	int mapY = (Y/20);
+	int mapID = (AREA_SIZE*mapY)+mapX;
+
+	int tileX = X % 20;
+	int tileY = Y % 20;
+	int tileID = (MAP_WIDTH*tileY)+tileX;
+	return MapList[mapID].TileList[tileID];
+}

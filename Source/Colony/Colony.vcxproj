@@ -83,7 +83,9 @@
     <ClCompile Include="CCursor.cpp" />
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CEntity_Buggy.cpp" />
+    <ClCompile Include="CEntity_TargetCursor.cpp" />
     <ClCompile Include="CEvent.cpp" />
+    <ClCompile Include="CFont.cpp" />
     <ClCompile Include="CFPS.cpp" />
     <ClCompile Include="CMap.cpp" />
     <ClCompile Include="CSurface.cpp" />
@@ -97,7 +99,9 @@
     <ClInclude Include="CCursor.h" />
     <ClInclude Include="CEntity.h" />
     <ClInclude Include="CEntity_Buggy.h" />
+    <ClInclude Include="CEntity_TargetCursor.h" />
     <ClInclude Include="CEvent.h" />
+    <ClInclude Include="CFont.h" />
     <ClInclude Include="CFPS.h" />
     <ClInclude Include="CMap.h" />
     <ClInclude Include="CSurface.h" />

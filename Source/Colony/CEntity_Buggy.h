@@ -4,21 +4,24 @@
 #include "CSurface.h"
 #include "CEntity.h"
 #include "CFPS.h"
+#include "CEntity_TargetCursor.h"
+#include "CArea.h"
 
 class CEntity_Buggy : public CEntity {
 
 public:
 	CEntity_Buggy();
-	bool OnLoad();
 	void OnLoop();
+	bool OnLoad(SDL_Surface* Tileset);
+	void OnRender(SDL_Surface* Surf_Display);
 
 private:
-	float SpeedX;
-	float SpeedY;
-	float AccelerationX;
-	float AccelerationY;
-	float MaxSpeed;
-	float DestinationX;
-	float DestinationY;
+	float Speed;
+	int DestinationX;
+	int DestinationY;
+	int testD;
+	unsigned long LastMove;
+
+	CEntity_TargetCursor DestinationCursor;
 };
 

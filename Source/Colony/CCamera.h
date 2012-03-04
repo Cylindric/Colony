@@ -3,6 +3,9 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include "Define.h"
+#include "CCursor.h"
+#include "CFPS.h"
+#include "CFont.h"
 
 enum {
     TARGET_MODE_NORMAL = 0,
@@ -23,9 +26,9 @@ class CCamera {
  
         int* TargetX;
         int* TargetY;
- 	    TTF_Font *font;
 		SDL_Surface *text;
 		SDL_Color text_color;
+		char DebugTextBuffer[50];
 
     public:
         int TargetMode;

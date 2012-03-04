@@ -12,21 +12,22 @@ public:
 
 protected:
 	CAnimation Anim_Control;
-	SDL_Surface* Surf_Tileset;
+	SDL_Surface* EntityTileset;
 
 public:
-	float X;
-	float Y;
-	int Width;
-	int Height;
+	int X;
+	int Y;
+	int SpriteWidth;
+	int SpriteHeight;
 	int AnimState;
+	char Label[1];
 
 public:
 	CEntity();
 	virtual ~CEntity();
 
 public:
-	virtual bool OnLoad(char* Filename, int Width, int Height, int MaxFrames);
+	virtual bool OnLoad(SDL_Surface* EntityTileset);
 	virtual void OnLoop();
 	virtual void OnRender(SDL_Surface* Surf_Display);
 	virtual void OnCleanup();

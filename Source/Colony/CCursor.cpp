@@ -7,6 +7,17 @@ CCursor::CCursor() {
 	Y = 0;
 }
 
+
+int CCursor::GetX() {
+	return X;
+}
+
+
+int CCursor::GetY() {
+	return Y;
+}
+
+
 bool CCursor::OnLoad(SDL_Surface* Tileset) {
 	if(Tileset == NULL) {
 		return false;
@@ -22,9 +33,8 @@ bool CCursor::OnMove(int MouseX, int MouseY) {
 }
 
 void CCursor::OnRender(SDL_Surface* Surf_Display) {
-	int CursorTile = 9;
-	int TilesetX = (CursorTile % TILESET_COLS) * TILE_SIZE;
-	int TilesetY = (CursorTile / TILESET_COLS) * TILE_SIZE;
+	int TilesetX = (CURSOR_TILE % TILESET_COLS) * TILE_SIZE;
+	int TilesetY = (CURSOR_TILE / TILESET_COLS) * TILE_SIZE;
 
 	CSurface::OnDraw(Surf_Display, Surf_Tileset, X, Y, TilesetX, TilesetY, TILE_SIZE, TILE_SIZE);
 }

@@ -1,12 +1,20 @@
 #include "CAnimation.h"
 
 CAnimation::CAnimation() {
-	CurrentFrame = 0;
-	MaxFrames = 0;
+	this->StartFrame = 0;
+	this->EndFrame = 0;
+	this->CurrentFrame = 0;
+
 	FrameInc = 1;
 	FrameRate = 100; //ms
 	OldTime = 0;
 	Oscillate = false;
+}
+
+void CAnimation::SetLoop(int StartFrame, int EndFrame) {
+	this->StartFrame = StartFrame;
+	this->EndFrame = EndFrame;
+	this->CurrentFrame = StartFrame;
 }
 
 void CAnimation::OnAnimate() {
@@ -19,17 +27,17 @@ void CAnimation::OnAnimate() {
 
 	if(Oscillate) {
 		if(FrameInc > 0) {
-			if(CurrentFrame >= MaxFrames) {
+			if(CurrentFrame >= EndFrame) {
 				FrameInc = -FrameInc;
 			}
 		} else {
-			if(CurrentFrame <= 0) {
+			if(CurrentFrame <= StartFrame) {
 				FrameInc = -FrameInc;
 			}
 		}
 	} else {
-		if(CurrentFrame >= MaxFrames) {
-			CurrentFrame = 0;
+		if(CurrentFrame > EndFrame) {
+			CurrentFrame = StartFrame;
 		}
 	}
 }
@@ -39,7 +47,7 @@ void CAnimation::SetFrameRate(int Rate) {
 }
 
 void CAnimation::SetCurrentFrame(int Frame) {
-	if(Frame < 0 || Frame >= MaxFrames) return;
+	if(Frame < StartFrame || Frame >= EndFrame) return;
 
 	CurrentFrame = Frame;
 }

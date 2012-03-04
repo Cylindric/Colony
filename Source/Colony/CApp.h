@@ -11,6 +11,7 @@
 #include "CFPS.h"
 #include "CEntity.h"
 #include "CEntity_Buggy.h"
+#include "CFont.h"
 
 class CApp : public CEvent {
 

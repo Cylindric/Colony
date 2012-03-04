@@ -66,6 +66,12 @@
     <ClCompile Include="CEntity_Buggy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CEntity_TargetCursor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CApp.h">
@@ -105,6 +111,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CEntity_Buggy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CEntity_TargetCursor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CFont.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

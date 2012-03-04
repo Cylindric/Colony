@@ -1,53 +1,54 @@
 #include "CEntity.h"
+#include "CArea.h"
 
 std::vector<CEntity*> CEntity::EntityList;
 
 CEntity::CEntity() {
-	Surf_Tileset = NULL;
-	X = 0.0f;
-	Y = 0.0f;
-	Width = 0;
-	Height = 0;
-	AnimState = 0;
+	this->EntityTileset = NULL;
+	this->X = -1;
+	this->Y = -1;
+	this->SpriteWidth = TILE_SIZE;
+	this->SpriteHeight = TILE_SIZE;
+	this->AnimState = 0;
+	this->Label[0] = 0;
 }
+
 
 CEntity::~CEntity() {
 }
 
-bool CEntity::OnLoad(char* Filename, int Width, int Height, int MaxFrames) {
-	if((Surf_Tileset = CSurface::OnLoad(Filename)) == NULL) {
+
+bool CEntity::OnLoad(SDL_Surface* Tileset) {
+	if(Tileset == NULL) {
         return false;
     }
-	this->Width = Width;
-	this->Height = Height;
-	Anim_Control.MaxFrames = MaxFrames;
+	this->EntityTileset = Tileset;
 	return true;
 }
+
 
 void CEntity::OnLoop() {
 	Anim_Control.OnAnimate();
 }
 
+
 void CEntity::OnRender(SDL_Surface* Surf_Display) {
-	if(Surf_Tileset == NULL || Surf_Display == NULL) return;
+	if(this->EntityTileset == NULL || Surf_Display == NULL) return;
 
 	// calculate the 'real' position on the view
-	int screenX = (int)(X + CCamera::CameraControl.GetX());
-	int screenY = (int)(Y + CCamera::CameraControl.GetY());
-
-	// center the sprite
-	screenX = screenX - (Width / 2);
-	screenY = screenY - (Height / 2);
+	int screenX = ((X * TILE_SIZE) + CCamera::CameraControl.GetX());
+	int screenY = ((Y * TILE_SIZE) + CCamera::CameraControl.GetY());
 
 	// if the sprite is off-camera, don't bother drawing it
-	if((screenX + Width < 0) || (screenY + Height < 0)) return;
-	if((screenX - Width > CCamera::CameraControl.GetWidth()) || (screenY - Height > CCamera::CameraControl.GetWidth())) return;
+	if((screenX + SpriteWidth < 0) || (screenY + SpriteHeight < 0)) return;
+	if((screenX - SpriteWidth > CCamera::CameraControl.GetWidth()) || (screenY - SpriteHeight > CCamera::CameraControl.GetWidth())) return;
 
-	CSurface::OnDraw(Surf_Display, Surf_Tileset, screenX, screenY, Anim_Control.GetCurrentFrame() * Width, AnimState * Height, Width, Height);
+	int cell = Anim_Control.GetCurrentFrame();
+    int cellX = (cell % TILESET_COLS) * TILE_SIZE;
+    int cellY = (cell / TILESET_COLS) * TILE_SIZE;
+
+	CSurface::OnDraw(Surf_Display, this->EntityTileset, screenX, screenY, cellX, cellY, SpriteWidth, SpriteHeight);
 }
 
 void CEntity::OnCleanup() {
-	if(Surf_Tileset) {
-		SDL_UnlockSurface(Surf_Tileset);
-	}
 }

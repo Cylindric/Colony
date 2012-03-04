@@ -15,6 +15,8 @@ public:
 
 public:
 	CCursor();
+	int GetX();
+	int GetY();
 
 public:
 	bool OnLoad(SDL_Surface* Tileset);
