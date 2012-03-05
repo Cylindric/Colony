@@ -78,8 +78,8 @@
     <ClCompile Include="CApp_OnInit.cpp" />
     <ClCompile Include="CApp_OnLoop.cpp" />
     <ClCompile Include="CApp_OnRender.cpp" />
-    <ClCompile Include="CArea.cpp" />
     <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CCoord.cpp" />
     <ClCompile Include="CCursor.cpp" />
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CEntity_Buggy.cpp" />
@@ -94,8 +94,8 @@
   <ItemGroup>
     <ClInclude Include="CAnimation.h" />
     <ClInclude Include="CApp.h" />
-    <ClInclude Include="CArea.h" />
     <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CCoord.h" />
     <ClInclude Include="CCursor.h" />
     <ClInclude Include="CEntity.h" />
     <ClInclude Include="CEntity_Buggy.h" />

@@ -2,6 +2,10 @@
 #include <vector>
 #include <SDL.h>
 #include "CAnimation.h"
+#include "CCoord.h"
+#include "Define.h"
+#include "CCamera.h"
+#include "CSurface.h"
 
 class CEntity {
 public:
@@ -12,8 +16,7 @@ protected:
 	SDL_Surface* EntityTileset;
 
 public:
-	int X;
-	int Y;
+	CCoord Coord;
 	int SpriteWidth;
 	int SpriteHeight;
 	int AnimState;

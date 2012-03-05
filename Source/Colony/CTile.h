@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "CEntity.h"
+#include "CCoord.h"
 
 enum {
 	TILE_TYPE_NONE = 0,
@@ -15,6 +16,7 @@ public:
 	int TileID;
 	int TypeID;
 	char Label[5];
+	CCoord Coord;
 
 public:
 	CTile(void);

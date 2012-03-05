@@ -1,8 +1,4 @@
 #pragma once
- 
-const unsigned int MAP_WIDTH = 20;
-const unsigned int MAP_HEIGHT = 20;
- 
 const unsigned int TILE_SIZE = 20;
 const unsigned int TILESET_COLS = 10;
 

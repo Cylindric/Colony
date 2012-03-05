@@ -4,8 +4,8 @@
 #include <algorithm>
 #include "CEntity.h"
 #include "CEntity_TargetCursor.h"
-#include "CArea.h"
 #include "Define.h"
+#include "CCoord.h"
 
 class CEntity_Buggy : public CEntity {
 
@@ -17,8 +17,8 @@ public:
 
 private:
 	float Speed;
-	int DestinationX;
-	int DestinationY;
+	CCoord Destination;
+
 	int testD;
 	unsigned long LastMove;
 

@@ -1,12 +1,10 @@
 #include "CEntity.h"
-#include "CArea.h"
 
 std::vector<CEntity*> CEntity::EntityList;
 
 CEntity::CEntity() {
 	this->EntityTileset = NULL;
-	this->X = -1;
-	this->Y = -1;
+	this->Coord = CCoord();
 	this->SpriteWidth = TILE_SIZE;
 	this->SpriteHeight = TILE_SIZE;
 	this->AnimState = 0;
@@ -36,8 +34,8 @@ void CEntity::OnRender(SDL_Surface* Surf_Display) {
 	if(this->EntityTileset == NULL || Surf_Display == NULL) return;
 
 	// calculate the 'real' position on the view
-	int screenX = ((X * TILE_SIZE) + CCamera::CameraControl.GetX());
-	int screenY = ((Y * TILE_SIZE) + CCamera::CameraControl.GetY());
+	int screenX = ((this->Coord.X * TILE_SIZE) + CCamera::CameraControl.GetX());
+	int screenY = ((this->Coord.Y * TILE_SIZE) + CCamera::CameraControl.GetY());
 
 	// if the sprite is off-camera, don't bother drawing it
 	if((screenX + SpriteWidth < 0) || (screenY + SpriteHeight < 0)) return;

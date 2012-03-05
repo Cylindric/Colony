@@ -5,8 +5,8 @@
 #include "CCursor.h"
 #include "Define.h"
 #include "CFont.h"
-#include "CArea.h"
 #include "CFPS.h"
+#include "CMap.h"
 
 enum {
     TARGET_MODE_NORMAL = 0,
