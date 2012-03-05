@@ -20,3 +20,16 @@ public:
 	CTile(void);
 
 };
+
+
+class ATile {
+public:
+	ATile(void);
+	CTile* tile;
+	CTile* parent;
+	int Gcost;
+	int Hcost;
+	int Fscore;
+	bool operator==(const ATile &other) const;
+	bool operator!=(const ATile &other) const;
+};

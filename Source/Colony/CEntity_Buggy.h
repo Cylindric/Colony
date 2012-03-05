@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include <list>
 #include <algorithm>
 #include "CEntity.h"
 #include "CEntity_TargetCursor.h"
@@ -24,4 +25,3 @@ private:
 	CEntity_TargetCursor DestinationCursor;
 	int CostToDestination();
 };
-
