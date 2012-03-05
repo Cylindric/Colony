@@ -1,6 +1,4 @@
 #include "CEntity_Buggy.h"
-#include <iostream>
-#include <direct.h>
 
 
 CEntity_Buggy::CEntity_Buggy() {
@@ -11,9 +9,9 @@ CEntity_Buggy::CEntity_Buggy() {
 }
 
 
-bool CEntity_Buggy::OnLoad(SDL_Surface* Tileset) {
-	bool rv = CEntity::OnLoad(Tileset);
-	this->DestinationCursor.OnLoad(Tileset);
+bool CEntity_Buggy::OnLoad() {
+	bool rv = CEntity::OnLoad();
+	this->DestinationCursor.OnLoad();
 	this->Destination.X = 15;
 	this->Destination.Y = 10;
 	Anim_Control.SetLoop(30, 33);

@@ -1,7 +1,12 @@
 #pragma once
+
+// Forward declared dependencies
+
+// Included dependencies
 #include <SDL.h>
 #include "Define.h"
 #include "CSurface.h"
+#include "CMap.h"
 
 class CCursor {
 
@@ -19,7 +24,7 @@ public:
 	int GetY();
 
 public:
-	bool OnLoad(SDL_Surface* Tileset);
+	bool OnLoad();
 	bool OnMove(int MouseX, int MouseY);
 	void OnRender(SDL_Surface* Surf_Display);
 };

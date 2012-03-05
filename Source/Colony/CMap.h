@@ -1,11 +1,16 @@
 #pragma once
+
+// Forward declared dependencies
+
+// Included dependencies
 #include <vector>
 #include <SDL.h>
-#include "CCoord.h"
-#include "CTile.h"
 #include "Define.h"
+#include "CEntity.h"
+#include "CTile.h"
 #include "CSurface.h"
 #include "CFont.h"
+
 
 class CMap {
 
@@ -27,4 +32,5 @@ public: // public methods
 	void OnCleanup();
 
 	CTile* GetTile(CCoord coord);
+	SDL_Surface* GetTileset();
 };

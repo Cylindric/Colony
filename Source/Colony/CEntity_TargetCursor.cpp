@@ -5,8 +5,8 @@ CEntity_TargetCursor::CEntity_TargetCursor() {
 }
 
 
-bool CEntity_TargetCursor::OnLoad(SDL_Surface* Tileset) {
-	bool rv = CEntity::OnLoad(Tileset);
+bool CEntity_TargetCursor::OnLoad() {
+	bool rv = CEntity::OnLoad();
 	Anim_Control.SetLoop(40, 41);
 	Anim_Control.SetFrameRate(200);
 	return rv;

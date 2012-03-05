@@ -1,7 +1,12 @@
 #pragma once
+
+// Forward declared dependencies
+class CEntity;
+
+// Included dependencies
 #include <vector>
-#include "CEntity.h"
 #include "CCoord.h"
+
 
 enum {
 	TILE_TYPE_NONE = 0,
@@ -23,7 +28,7 @@ public:
 
 };
 
-
+/*
 class ATile {
 public:
 	ATile(void);
@@ -35,3 +40,4 @@ public:
 	bool operator==(const ATile &other) const;
 	bool operator!=(const ATile &other) const;
 };
+*/

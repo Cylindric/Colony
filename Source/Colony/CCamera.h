@@ -1,9 +1,11 @@
 #pragma once
+
+// Included dependencies
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include "Define.h"
 #include "CCamera.h"
 #include "CCursor.h"
-#include "Define.h"
 #include "CFont.h"
 #include "CFPS.h"
 #include "CMap.h"

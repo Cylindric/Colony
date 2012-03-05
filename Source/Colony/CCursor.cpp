@@ -18,11 +18,8 @@ int CCursor::GetY() {
 }
 
 
-bool CCursor::OnLoad(SDL_Surface* Tileset) {
-	if(Tileset == NULL) {
-		return false;
-	}
-	Surf_Tileset = Tileset;
+bool CCursor::OnLoad() {
+	Surf_Tileset = CMap::MapControl.GetTileset();
 	return true;
 }
 

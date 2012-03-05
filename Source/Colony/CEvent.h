@@ -1,4 +1,6 @@
 #pragma once
+
+// Included dependencies
 #include <SDL.h>
 
 class CEvent {

@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
 #include <SDL.h>
+#include "Define.h"
 #include "CAnimation.h"
 #include "CCoord.h"
-#include "Define.h"
 #include "CCamera.h"
 #include "CSurface.h"
 
@@ -27,7 +27,7 @@ public:
 	virtual ~CEntity();
 
 public:
-	virtual bool OnLoad(SDL_Surface* EntityTileset);
+	virtual bool OnLoad();
 	virtual void OnLoop();
 	virtual void OnRender(SDL_Surface* Surf_Display);
 	virtual void OnCleanup();

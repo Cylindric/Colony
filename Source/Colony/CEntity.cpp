@@ -16,11 +16,8 @@ CEntity::~CEntity() {
 }
 
 
-bool CEntity::OnLoad(SDL_Surface* Tileset) {
-	if(Tileset == NULL) {
-        return false;
-    }
-	this->EntityTileset = Tileset;
+bool CEntity::OnLoad() {
+	this->EntityTileset = CMap::MapControl.GetTileset();
 	return true;
 }
 

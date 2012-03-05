@@ -1,18 +1,25 @@
 #pragma once
+
+// Forward declared dependencies
+class CTile;
+
+// Included dependencies
 #include <iostream>
 #include <direct.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include "CCoord.h"
+#include "Define.h"
+
 #include "CEvent.h"
-#include "CEntity.h"
 #include "CEntity_Buggy.h"
 #include "CMap.h"
-#include "CCamera.h"
 #include "CCursor.h"
 #include "CFPS.h"
-#include "CSurface.h"
-#include "CFont.h"
+//#include "CCoord.h"
+//#include "CEntity.h"
+//#include "CCamera.h"
+//#include "CSurface.h"
+//#include "CFont.h"
 
 class CApp : public CEvent {
 

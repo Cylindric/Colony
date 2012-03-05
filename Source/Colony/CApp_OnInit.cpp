@@ -20,14 +20,18 @@ bool CApp::OnInit() {
 	}
 
 	// hack in a single buggy for testing
-	if(Buggy1.OnLoad(Default_Tileset) == false) return false;
+	if(Buggy1.OnLoad() == false) {
+		return false;
+	}
 	Buggy1.Coord.X = 5;
 	Buggy1.Coord.Y = 5;
 	CTile* buggyTile = CMap::MapControl.GetTile(Buggy1.Coord);
-	//buggyTile->EntityList.push_back(&Buggy1);
+	buggyTile->EntityList.push_back(&Buggy1);
 	CEntity::EntityList.push_back(&Buggy1);
 
-	if(CCursor::CursorControl.OnLoad(Default_Tileset) == false) return false;
+	if(CCursor::CursorControl.OnLoad() == false) {
+		return false;
+	}
 	SDL_ShowCursor(0);
 
 

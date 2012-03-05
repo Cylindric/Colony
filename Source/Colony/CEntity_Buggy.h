@@ -1,18 +1,25 @@
 #pragma once
-#include <SDL.h>
+
+// Forward declared dependencies
+
+// Included dependencies
+#include <iostream>
+#include <direct.h>
 #include <list>
 #include <algorithm>
+#include <SDL.h>
+#include "Define.h"
 #include "CEntity.h"
 #include "CEntity_TargetCursor.h"
-#include "Define.h"
 #include "CCoord.h"
 
+// The class
 class CEntity_Buggy : public CEntity {
 
 public:
 	CEntity_Buggy();
 	void OnLoop();
-	bool OnLoad(SDL_Surface* Tileset);
+	bool OnLoad();
 	void OnRender(SDL_Surface* Surf_Display);
 
 private:

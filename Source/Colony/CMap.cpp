@@ -113,3 +113,12 @@ void CMap::OnCleanup() {
 	this->TileList.clear();
 	SDL_FreeSurface(this->Surf_Tileset);
 }
+
+
+CTile* CMap::GetTile(CCoord coord) {
+	return &this->TileList[(coord.Y * this->Width)+coord.X];
+}
+
+SDL_Surface* CMap::GetTileset() {
+	return this->Surf_Tileset;
+}
