@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include <algorithm>
 #include "CEntity.h"
 #include "CEntity_TargetCursor.h"
 #include "CArea.h"
@@ -21,5 +22,6 @@ private:
 	unsigned long LastMove;
 
 	CEntity_TargetCursor DestinationCursor;
+	int CostToDestination();
 };
 

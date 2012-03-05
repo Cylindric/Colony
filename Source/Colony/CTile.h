@@ -14,7 +14,7 @@ public:
 	std::vector<CEntity*> EntityList;
 	int TileID;
 	int TypeID;
-	char Label[1];
+	char Label[5];
 
 public:
 	CTile(void);

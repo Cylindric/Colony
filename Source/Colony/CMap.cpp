@@ -71,7 +71,7 @@ void CMap::OnRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
 			C.r = 255;
 			C.g = 255;
 			C.b = 255;
-			char label[] = " ";
+			char label[10] = "";
 			label[0]=0;
 
 			// check for any lables from resident entities
@@ -83,7 +83,7 @@ void CMap::OnRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
 
 			// check for a label on the tile itself
 			if(label[0] == 0) {
-				label[0] = TileList[id].Label[0];
+				sprintf_s(label, "%s", TileList[id].Label);
 			}
 
 			// if no entity labels, check for labels for the tile-type
