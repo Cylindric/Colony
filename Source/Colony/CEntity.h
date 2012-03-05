@@ -1,10 +1,7 @@
 #pragma once
-#include <SDL.h> 
 #include <vector>
-#include "Define.h"
+#include <SDL.h>
 #include "CAnimation.h"
-#include "CSurface.h"
-#include "CCamera.h"
 
 class CEntity {
 public:

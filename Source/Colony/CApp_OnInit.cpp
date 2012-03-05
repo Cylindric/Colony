@@ -16,7 +16,7 @@ bool CApp::OnInit() {
 
 	if((Default_Tileset = CSurface::OnLoad("./gfx/tiles.png")) == false) return false;
 
-	if(CArea::AreaControl.OnLoad(Default_Tileset) == false) return false;
+	if(CArea::AreaControl.OnLoad("./areas/area1.txt") == false) return false;
 
 	if(CFont::FontControl.OnInit() == false) {
 		std::cout << "Error initialising fonts";

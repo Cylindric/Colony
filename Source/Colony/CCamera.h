@@ -1,11 +1,12 @@
 #pragma once
-#include <iostream>
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include "Define.h"
+#include "CCamera.h"
 #include "CCursor.h"
-#include "CFPS.h"
+#include "Define.h"
 #include "CFont.h"
+#include "CArea.h"
+#include "CFPS.h"
 
 enum {
     TARGET_MODE_NORMAL = 0,

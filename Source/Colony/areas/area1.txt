@@ -1,0 +1,5 @@
+./gfx/tiles.png
+3
+./maps/wall.txt ./maps/plain.txt ./maps/plain.txt
+./maps/plain.txt ./maps/plain.txt ./maps/plain.txt
+./maps/plain.txt ./maps/plain.txt ./maps/plain.txt

@@ -1,11 +1,9 @@
 #pragma once
-
 #include <SDL.h>
-#include "CSurface.h"
 #include "CEntity.h"
-#include "CFPS.h"
 #include "CEntity_TargetCursor.h"
 #include "CArea.h"
+#include "Define.h"
 
 class CEntity_Buggy : public CEntity {
 

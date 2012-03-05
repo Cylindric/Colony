@@ -1,17 +1,12 @@
 #pragma once
 #include <SDL.h>
-#include <SDL_ttf.h>
-#include "Define.h"
 #include "CEvent.h"
-#include "CSurface.h"
-#include "CMap.h"
+#include "CEntity.h"
+#include "CEntity_Buggy.h"
 #include "CArea.h"
 #include "CCamera.h"
 #include "CCursor.h"
 #include "CFPS.h"
-#include "CEntity.h"
-#include "CEntity_Buggy.h"
-#include "CFont.h"
 
 class CApp : public CEvent {
 

@@ -22,6 +22,10 @@ void CEntity_Buggy::OnLoop() {
 	if(SDL_GetTicks() > (this->LastMove + 1000)) {
 		int nextX = this->X + this->testD;
 
+		// pop a footprint on the current tile
+		CTile& currentTile = CArea::AreaControl.GetTile(this->X, this->Y);
+		currentTile.Label[0] = 'o';
+
 		CTile destinationTile = CArea::AreaControl.GetTile(nextX, this->Y);
 		if(destinationTile.TypeID == TILE_TYPE_BLOCK) {
 			nextX = this->X;
@@ -31,7 +35,6 @@ void CEntity_Buggy::OnLoop() {
 		this->X = nextX;
 		this->LastMove = SDL_GetTicks();
 	}
-
 
 	this->DestinationCursor.X = this->X + this->testD;
 	this->DestinationCursor.Y = this->Y;

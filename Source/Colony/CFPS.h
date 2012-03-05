@@ -1,6 +1,5 @@
 #pragma once
-#include <SDL.h> 
-#include "Define.h"
+#include <SDL.h>
 
 class CFPS {
 

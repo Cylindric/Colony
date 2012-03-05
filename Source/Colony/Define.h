@@ -6,8 +6,6 @@ const unsigned int MAP_HEIGHT = 20;
 const unsigned int TILE_SIZE = 20;
 const unsigned int TILESET_COLS = 10;
 
-const unsigned int AREA_SIZE = 2;
-
 const unsigned int SHOW_GRID = 1;
 
 const unsigned int EDGE_TILE = 0;

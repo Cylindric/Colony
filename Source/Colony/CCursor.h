@@ -1,5 +1,5 @@
 #pragma once
-#include <SDL.h> 
+#include <SDL.h>
 #include "Define.h"
 #include "CSurface.h"
 

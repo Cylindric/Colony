@@ -1,9 +1,11 @@
 #pragma once
-#include <SDL.h>
 #include <vector>
+#include <SDL.h>
 #include "CTile.h"
-#include "CSurface.h"
+#include "CArea.h"
 #include "Define.h"
+#include "CMap.h"
+#include "CSurface.h"
 #include "CFont.h"
 
 class CMap {
@@ -20,6 +22,6 @@ public:
 	CMap();
 
 public:
-	bool OnLoad(SDL_Surface* Tileset, int AreaX, int AreaY);
+	bool OnLoad(char* File);
 	void OnRender(SDL_Surface* Surf_Display, int MapX, int MapY);
 };
