@@ -3,8 +3,9 @@
 #include <SDL.h>
 #include "CMap.h"
 #include "CTile.h"
-#include "CArea.h"
 #include "CCamera.h"
+
+class CMap;
 
 class CArea {
 
