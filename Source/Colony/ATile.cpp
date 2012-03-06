@@ -10,6 +10,15 @@ ATile::ATile(void)
 	this->tile = 0;
 }
 
+ATile::ATile(CTile* Tile, CTile* Parent, int G, int H)
+{
+	this->tile = Tile;
+	this->parent = Parent;
+	this->Gcost = G;
+	this->Hcost = H;
+	this->Fscore = G + H;
+}
+
 
 ATile::~ATile(void)
 {

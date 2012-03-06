@@ -8,6 +8,7 @@ class ATile
 {
 public:
 	ATile(void);
+	ATile(CTile* Tile, CTile* Parent, int G, int H);
 	~ATile(void);
 
 public:

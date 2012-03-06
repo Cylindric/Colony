@@ -32,4 +32,10 @@ private:
 
 	CEntity_TargetCursor DestinationCursor;
 	int CostToDestination();
+
+	int IterationCap;
+	void CalcRoute(std::list<ATile*> &openList, std::list<ATile*> &closedList, CTile* StartNode, CTile* EndNode);
+	int GetHeuristic(CCoord A, CCoord B);
+	ATile* GetLowestF(std::list<ATile*> List);
+	ATile* FindTileOnList(std::list<ATile*> List, CTile* Tile);
 };
