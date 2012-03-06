@@ -12,6 +12,7 @@
 #include "CEntity.h"
 #include "CEntity_TargetCursor.h"
 #include "CCoord.h"
+#include "ATile.h"
 
 // The class
 class CEntity_Buggy : public CEntity {
@@ -21,10 +22,10 @@ public:
 	void OnLoop();
 	bool OnLoad();
 	void OnRender(SDL_Surface* Surf_Display);
+	CCoord Destination;
 
 private:
 	float Speed;
-	CCoord Destination;
 
 	int testD;
 	unsigned long LastMove;

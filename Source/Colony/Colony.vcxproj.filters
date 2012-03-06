@@ -72,6 +72,9 @@
     <ClCompile Include="CCoord.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ATile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CApp.h">
@@ -117,6 +120,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CCoord.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ATile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -36,6 +36,8 @@ void CFont::AddTextToSurface(SDL_Surface* Surface, int Font, int X, int Y, SDL_C
 
 
 void CFont::AddTextToSurface(SDL_Surface* Surface, int Font, int X1, int Y1, int X2, int Y2, SDL_Color Colour, char Text[]) {
+	if(Text[0]==0) return;
+
 	this->SetTextSurface(Font, Colour, Text);
 
 	int offsetX = ((X2-X1) - this->TextSurface->w)/2;

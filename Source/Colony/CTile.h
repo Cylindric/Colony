@@ -23,21 +23,12 @@ public:
 	char Label[5];
 	CCoord Coord;
 
+	char LTopLeft[5];
+	char LTopRight[5];
+	char LBottomLeft[5];
+	char LBottomRight[5];
+
 public:
 	CTile(void);
 
 };
-
-/*
-class ATile {
-public:
-	ATile(void);
-	CTile* tile;
-	CTile* parent;
-	int Gcost;
-	int Hcost;
-	int Fscore;
-	bool operator==(const ATile &other) const;
-	bool operator!=(const ATile &other) const;
-};
-*/

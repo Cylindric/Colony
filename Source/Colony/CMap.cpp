@@ -104,7 +104,14 @@ void CMap::OnRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
 		if(label[0] != 0) {
 			CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY, tX+TILE_SIZE, tY+TILE_SIZE, C, label);
 		}
-        id++;
+
+		// tile labels
+		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY, tX+(TILE_SIZE/2), tY+(TILE_SIZE/2), C, tile->LTopLeft);
+		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX+(TILE_SIZE/2), tY, tX+TILE_SIZE, tY+(TILE_SIZE/2), C, tile->LTopRight);
+		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY+(TILE_SIZE/2), tX+(TILE_SIZE/2), tY+TILE_SIZE, C, tile->LBottomLeft);
+		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX+(TILE_SIZE/2), tY+(TILE_SIZE/2), tX+TILE_SIZE, tY+TILE_SIZE, C, tile->LBottomRight);
+
+		id++;
 	}
 }
 
@@ -116,8 +123,14 @@ void CMap::OnCleanup() {
 
 
 CTile* CMap::GetTile(CCoord coord) {
-	return &this->TileList[(coord.Y * this->Width)+coord.X];
+	return this->GetTile(coord.X, coord.Y);
 }
+
+
+CTile* CMap::GetTile(int X, int Y) {
+	return &this->TileList[(Y * this->Width)+X];
+}
+
 
 SDL_Surface* CMap::GetTileset() {
 	return this->Surf_Tileset;

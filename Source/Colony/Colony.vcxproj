@@ -71,6 +71,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ATile.cpp" />
     <ClCompile Include="CAnimation.cpp" />
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CApp_OnCleanup.cpp" />
@@ -92,6 +93,7 @@
     <ClCompile Include="CTile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ATile.h" />
     <ClInclude Include="CAnimation.h" />
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CCamera.h" />

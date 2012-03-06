@@ -23,8 +23,10 @@ bool CApp::OnInit() {
 	if(Buggy1.OnLoad() == false) {
 		return false;
 	}
-	Buggy1.Coord.X = 5;
-	Buggy1.Coord.Y = 5;
+	Buggy1.Coord.X = 1;
+	Buggy1.Coord.Y = 2;
+	Buggy1.Destination.X = 5;
+	Buggy1.Destination.Y = 2;
 	CTile* buggyTile = CMap::MapControl.GetTile(Buggy1.Coord);
 	buggyTile->EntityList.push_back(&Buggy1);
 	CEntity::EntityList.push_back(&Buggy1);

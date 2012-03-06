@@ -5,19 +5,9 @@ CTile::CTile(void) {
 	this->TypeID = TILE_TYPE_NONE;
 	this->Label[0] = 0;
 	this->Coord = CCoord();
+
+	this->LTopLeft[0] = 0;
+	this->LTopRight[0] = 0;
+	this->LBottomLeft[0] = 0;
+	this->LBottomRight[0] = 0;
 }
-
-/*
-ATile::ATile(void) {
-}
-
-
-bool ATile::operator==(const ATile &other) const {
-	return (this->parent == other.parent) && (this->tile == other.tile);
-}
-
-
-bool ATile::operator!=(const ATile &other) const {
-	return !(*this == other);
-}
-*/

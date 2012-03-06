@@ -32,5 +32,6 @@ public: // public methods
 	void OnCleanup();
 
 	CTile* GetTile(CCoord coord);
+	CTile* GetTile(int X, int Y);
 	SDL_Surface* GetTileset();
 };
