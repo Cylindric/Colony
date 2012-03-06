@@ -5,6 +5,7 @@ bool CApp::OnInit() {
 		return false;
 	}
 
+
 	if(TTF_Init() != 0) {
 		return false;
 	}
@@ -12,7 +13,10 @@ bool CApp::OnInit() {
 	Surf_Display = CCamera::CameraControl.OnInit();
 	if(Surf_Display == false) return false;
 
-	if(CMap::MapControl.OnLoad("./maps/wall.txt") == false) return false;
+	if(CMap::MapControl.OnLoad("./maps/curve.txt") == false) {
+		std::cerr << "Error loading map";
+		return false;
+	}
 
 	if(CFont::FontControl.OnInit() == false) {
 		std::cout << "Error initialising fonts";
@@ -23,10 +27,10 @@ bool CApp::OnInit() {
 	if(Buggy1.OnLoad() == false) {
 		return false;
 	}
-	Buggy1.Coord.X = 1;
-	Buggy1.Coord.Y = 2;
+	Buggy1.Coord.X = 3;
+	Buggy1.Coord.Y = 6;
 	Buggy1.Destination.X = 5;
-	Buggy1.Destination.Y = 2;
+	Buggy1.Destination.Y = 7;
 	CTile* buggyTile = CMap::MapControl.GetTile(Buggy1.Coord);
 	buggyTile->EntityList.push_back(&Buggy1);
 	CEntity::EntityList.push_back(&Buggy1);

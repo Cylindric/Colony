@@ -34,7 +34,10 @@ void CEntity_Buggy::CalcRoute(std::list<ATile*> &openList, std::list<ATile*> &cl
 	tile->Fscore = tile->Gcost + tile->Hcost;
 	openList.push_back(tile);
 
-	while(Finished == false && Iteration < this->IterationCap) {
+	while(Finished == false && Iteration <= this->IterationCap) {
+		if(Iteration==this->IterationCap) {
+			std::cout<<"last run";
+		}
 
 		// Find the tile with the lowest F in the Open List
 		ATile* currentTile = GetLowestF(openList);
@@ -50,23 +53,32 @@ void CEntity_Buggy::CalcRoute(std::list<ATile*> &openList, std::list<ATile*> &cl
 			// Check each neighbouring cell of the current cell
 			for(int row = currentTile->tile->Coord.Y - 1; row <= currentTile->tile->Coord.Y + 1; row++) {
 				for(int col = currentTile->tile->Coord.X - 1; col <= currentTile->tile->Coord.X + 1; col++) {
+					std::cout << col << "," << row << ":\n";
+
 					if(row == currentTile->tile->Coord.Y && col == currentTile->tile->Coord.X) continue; // skip current cell
+					if(row < 0 || row > CMap::MapControl.Height) continue; // skip tiles outside map
+					if(col < 0 || col > CMap::MapControl.Width) continue; // skip tiles outside map
 
 					CTile* neighbour = CMap::MapControl.GetTile(col, row);
 
 					// Only passable tiles are processed
-					if(neighbour->TypeID == TILE_TYPE_NORMAL) {
-						// is it on the Open List already?
-						ATile* foundNeighbour = FindTileOnList(openList, neighbour);
+					if (neighbour->TypeID == TILE_TYPE_NORMAL) {
+						// is it on the Closed List already?
+						ATile* foundNeighbour = FindTileOnList(closedList, neighbour);
 						if (foundNeighbour == 0) {
-							// not on list
-							foundNeighbour = new ATile(neighbour, currentTile->tile, currentTile->Gcost+1, GetHeuristic(neighbour->Coord, EndNode->Coord));
-							openList.push_back(foundNeighbour);
-						} else {
-							// on list
-							if(currentTile->Gcost + 1 < foundNeighbour->Gcost) {
-								// on list, and this route is cheaper
-								foundNeighbour->parent = currentTile->tile;
+
+							// is it on the Open List already?
+							foundNeighbour = FindTileOnList(openList, neighbour);
+							if (foundNeighbour == 0) {
+								// not on list
+								foundNeighbour = new ATile(neighbour, currentTile->tile, currentTile->Gcost+1, GetHeuristic(neighbour->Coord, EndNode->Coord));
+								openList.push_back(foundNeighbour);
+							} else {
+								// on list
+								if(currentTile->Gcost + 1 < foundNeighbour->Gcost) {
+									// on list, and this route is cheaper
+									foundNeighbour->parent = currentTile->tile;
+								}
 							}
 						}
 					}
@@ -118,11 +130,11 @@ void CEntity_Buggy::OnLoop() {
 
 	if(SDL_GetTicks() > (this->LastMove + 500)) {
 		CTile* currentTile = CMap::MapControl.GetTile(this->Coord);
-		CTile* targetTile = CMap::MapControl.GetTile(5, 2);
+		CTile* targetTile = CMap::MapControl.GetTile(this->Destination);
 
 		// decorate the tiles for testing
 		for (std::vector<CTile>::iterator itTile=CMap::MapControl.TileList.begin(); itTile!=CMap::MapControl.TileList.end(); ++itTile) {
-			sprintf_s(itTile->Label, "-");
+			sprintf_s(itTile->Label, "");
 		}
 
 		// A* test
@@ -132,14 +144,8 @@ void CEntity_Buggy::OnLoop() {
 
 
 		std::list<ATile*>::iterator tile;
-		if(this->IterationCap==7) {
-			std::cerr<<"end";
-		}
 		for (tile=openList.begin(); tile!=openList.end(); ++tile) {
-			int i = 0;
-			if(i==2) {
-				std::cerr<<"end";
-			}
+			sprintf_s((*tile)->tile->LTopRight, "%d", this->IterationCap);
 			sprintf_s((*tile)->tile->LTopLeft, "%d", (*tile)->Fscore);
 			sprintf_s((*tile)->tile->LBottomLeft, "%d", (*tile)->Gcost);
 			sprintf_s((*tile)->tile->LBottomRight, "%d", (*tile)->Hcost);
@@ -152,10 +158,10 @@ void CEntity_Buggy::OnLoop() {
 			if((*tile)->parent->Coord.X >  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y <  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 6; //up-right
 			if((*tile)->parent->Coord.X >  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 7; //down-right
 			if((*tile)->parent->Coord.X <  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 8; //down-left
-			i++;
 		}
 
 		for (tile=closedList.begin(); tile!=closedList.end(); ++tile) {
+			sprintf_s((*tile)->tile->LTopRight, "%d", this->IterationCap);
 			sprintf_s((*tile)->tile->LTopLeft, "%d", (*tile)->Fscore);
 			sprintf_s((*tile)->tile->LBottomLeft, "%d", (*tile)->Gcost);
 			sprintf_s((*tile)->tile->LBottomRight, "%d", (*tile)->Hcost);
@@ -170,6 +176,7 @@ void CEntity_Buggy::OnLoop() {
 			if((*tile)->parent->Coord.X <  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 8; //down-left
 		}
 
+		sprintf_s(currentTile->Label, "S");
 		//sprintf_s(lowestTile->tile->Label, "H");
 
 
