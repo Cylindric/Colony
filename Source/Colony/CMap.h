@@ -7,6 +7,7 @@
 #include <SDL.h>
 #include "Define.h"
 #include "CEntity.h"
+#include "CEntity_Buggy.h"
 #include "CTile.h"
 #include "CSurface.h"
 #include "CFont.h"

@@ -13,7 +13,7 @@ bool CApp::OnInit() {
 	Surf_Display = CCamera::CameraControl.OnInit();
 	if(Surf_Display == false) return false;
 
-	if(CMap::MapControl.OnLoad("./maps/curve.txt") == false) {
+	if(CMap::MapControl.OnLoad("./maps/wall.txt") == false) {
 		std::cerr << "Error loading map";
 		return false;
 	}
@@ -24,16 +24,16 @@ bool CApp::OnInit() {
 	}
 
 	// hack in a single buggy for testing
-	if(Buggy1.OnLoad() == false) {
-		return false;
-	}
-	Buggy1.Coord.X = 3;
-	Buggy1.Coord.Y = 6;
-	Buggy1.Destination.X = 5;
-	Buggy1.Destination.Y = 7;
-	CTile* buggyTile = CMap::MapControl.GetTile(Buggy1.Coord);
-	buggyTile->EntityList.push_back(&Buggy1);
-	CEntity::EntityList.push_back(&Buggy1);
+	//if(Buggy1.OnLoad() == false) {
+	//	return false;
+	//}
+	//Buggy1.Coord.X = 3;
+	//Buggy1.Coord.Y = 6;
+	//Buggy1.Destination.X = 5;
+	//Buggy1.Destination.Y = 7;
+	//CTile* buggyTile = CMap::MapControl.GetTile(Buggy1.Coord);
+	//buggyTile->EntityList.push_back(&Buggy1);
+	//CEntity::EntityList.push_back(&Buggy1);
 
 	if(CCursor::CursorControl.OnLoad() == false) {
 		return false;

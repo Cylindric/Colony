@@ -37,6 +37,34 @@ bool CMap::OnLoad(char* File) {
 		}
 		fscanf_s(FileHandle, "\n");
 	}
+
+	// read any extra commands
+	char EntityName[255];
+	int EntityPosX;
+	int EntityPosY;
+	int EntityTarX;
+	int EntityTarY;
+
+	bool getEnts = true;
+	while (getEnts) {
+		int c = fscanf_s(FileHandle, "%s %d %d %d %d\n", &EntityName, &EntityPosX, &EntityPosY, &EntityTarX, &EntityTarY);
+		if (c == EOF) {
+			getEnts = false;
+		} else {
+			if (EntityName == "buggy") {
+				CEntity_Buggy ent;
+				ent.OnLoad();
+				ent.Coord.X = EntityPosX;
+				ent.Coord.Y = EntityPosY;
+				ent.Destination.X = EntityTarX;
+				ent.Destination.Y = EntityTarY;
+				CTile* entTile = CMap::MapControl.GetTile(ent.Coord);
+				entTile->EntityList.push_back(&ent);
+				CEntity::EntityList.push_back(&ent);
+			}
+		}
+	}
+
 	fclose(FileHandle);
 	return true;
 }
