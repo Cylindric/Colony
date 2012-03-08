@@ -29,41 +29,41 @@ bool CMap::OnLoad(char* File) {
 	// read in all the cells
 	for(int Y = 0; Y < this->Height; Y++) {
 		for(int X = 0; X < this->Width; X++) {
-			CTile tempTile;
-			tempTile.Coord.X = X;
-			tempTile.Coord.Y = Y;
-			fscanf_s(FileHandle, "%d:%d ", &tempTile.TileID, &tempTile.TypeID);
+			CTile* tempTile = new CTile();
+			tempTile->Coord.X = X;
+			tempTile->Coord.Y = Y;
+			fscanf_s(FileHandle, "%d:%d ", &tempTile->TileID, &tempTile->TypeID);
 			TileList.push_back(tempTile);
 		}
 		fscanf_s(FileHandle, "\n");
 	}
 
 	// read any extra commands
-	char EntityName[255];
-	int EntityPosX;
-	int EntityPosY;
-	int EntityTarX;
-	int EntityTarY;
+	//char EntityName[255];
+	//int EntityPosX;
+	//int EntityPosY;
+	//int EntityTarX;
+	//int EntityTarY;
 
-	bool getEnts = true;
-	while (getEnts) {
-		int c = fscanf_s(FileHandle, "%s %d %d %d %d\n", &EntityName, &EntityPosX, &EntityPosY, &EntityTarX, &EntityTarY);
-		if (c == EOF) {
-			getEnts = false;
-		} else {
-			if (EntityName == "buggy") {
-				CEntity_Buggy ent;
-				ent.OnLoad();
-				ent.Coord.X = EntityPosX;
-				ent.Coord.Y = EntityPosY;
-				ent.Destination.X = EntityTarX;
-				ent.Destination.Y = EntityTarY;
-				CTile* entTile = CMap::MapControl.GetTile(ent.Coord);
-				entTile->EntityList.push_back(&ent);
-				CEntity::EntityList.push_back(&ent);
-			}
-		}
-	}
+	//bool getEnts = true;
+	//while (getEnts) {
+	//	int c = fscanf_s(FileHandle, "%s %d %d %d %d\n", &EntityName, &EntityPosX, &EntityPosY, &EntityTarX, &EntityTarY);
+	//	if (c == EOF) {
+	//		getEnts = false;
+	//	} else {
+	//		if (EntityName == "buggy") {
+	//			//CEntity_Buggy ent;
+	//			//ent.OnLoad();
+	//			//ent.Coord.X = EntityPosX;
+	//			//ent.Coord.Y = EntityPosY;
+	//			//ent.Destination.X = EntityTarX;
+	//			//ent.Destination.Y = EntityTarY;
+	//			//CTile* entTile = CMap::MapControl.GetTile(ent.Coord);
+	//			//entTile->EntityList.push_back(&ent);
+	//			//CEntity::EntityList.push_back(&ent);
+	//		}
+	//	}
+	//}
 
 	fclose(FileHandle);
 	return true;
@@ -78,8 +78,9 @@ void CMap::OnRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
 
 	int id = 0;
 
-	for (std::vector<CTile>::iterator i=this->TileList.begin(); i!=this->TileList.end(); ++i) {
-		CTile* tile = &*i;
+	std::vector<CTile*>::iterator i;
+	for (i=this->TileList.begin(); i!=this->TileList.end(); ++i) {
+		CTile* tile = *i;
 
         if(tile->TypeID == TILE_TYPE_NONE) {
             continue;
@@ -156,7 +157,7 @@ CTile* CMap::GetTile(CCoord coord) {
 
 
 CTile* CMap::GetTile(int X, int Y) {
-	return &this->TileList[(Y * this->Width)+X];
+	return this->TileList[(Y * this->Width)+X];
 }
 
 

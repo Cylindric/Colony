@@ -6,12 +6,11 @@
 #include <vector>
 #include <SDL.h>
 #include "Define.h"
-#include "CEntity.h"
-#include "CEntity_Buggy.h"
 #include "CTile.h"
 #include "CSurface.h"
 #include "CFont.h"
-
+#include "CEntity.h"
+//#include "CEntity_Buggy.h"
 
 class CMap {
 
@@ -20,7 +19,7 @@ public: // constructor
 
 public: // public properties
 	static CMap MapControl;
-	std::vector<CTile> TileList;
+	std::vector<CTile*> TileList;
 	int Width;
 	int Height;
 

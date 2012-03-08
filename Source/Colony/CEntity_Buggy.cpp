@@ -140,8 +140,8 @@ void CEntity_Buggy::OnLoop() {
 		CTile* targetTile = CMap::MapControl.GetTile(this->Destination);
 
 		// decorate the tiles for testing
-		for (std::vector<CTile>::iterator itTile=CMap::MapControl.TileList.begin(); itTile!=CMap::MapControl.TileList.end(); ++itTile) {
-			sprintf_s(itTile->Label, "");
+		for (std::vector<CTile*>::iterator itTile=CMap::MapControl.TileList.begin(); itTile!=CMap::MapControl.TileList.end(); ++itTile) {
+			sprintf_s((*itTile)->Label, "");
 		}
 
 		// A* test
