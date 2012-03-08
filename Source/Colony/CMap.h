@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CMAP_H_
+#define _CMAP_H_
 
 // Forward declared dependencies
 
@@ -35,3 +36,5 @@ public: // public methods
 	CTile* GetTile(int X, int Y);
 	SDL_Surface* GetTileset();
 };
+
+#endif

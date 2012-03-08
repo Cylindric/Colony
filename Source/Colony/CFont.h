@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CFONT_H_
+#define _CFONT_H_
 
 // Included dependencies
 #include <SDL.h>
@@ -28,3 +29,5 @@ public:
 	void AddTextToSurface(SDL_Surface* Surface, int Font, int X, int Y, SDL_Color Colour, char Text[]);
 	void AddTextToSurface(SDL_Surface* Surface, int Font, int X1, int Y1, int X2, int Y2, SDL_Color Colour, char Text[]);
 };
+
+#endif

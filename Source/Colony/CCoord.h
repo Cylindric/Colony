@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CCOORD_H_
+#define _CCOORD_H_
 
 class CCoord {
 public:
@@ -10,3 +11,4 @@ public:
 
 };
 
+#endif

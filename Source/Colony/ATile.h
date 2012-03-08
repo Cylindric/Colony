@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _ATILE_H_
+#define _ATILE_H_
 
 // forward dependencies
 class CTile;
@@ -22,3 +23,4 @@ public:
 
 };
 
+#endif

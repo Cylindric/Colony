@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _CANIMATION_H_
+#define _CANIMATION_H_
+
 #include <SDL.h>
 
 class CAnimation {
@@ -23,3 +25,4 @@ public:
 	int GetCurrentFrame();
 };
 
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CCAMERA_H_
+#define _CCAMERA_H_
 
 // Included dependencies
 #include <SDL.h>
@@ -55,3 +56,5 @@ class CCamera {
         void SetTarget(int* X, int* Y);
 		bool SetSize(int Width, int Height);
 };
+
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _CENTITY_TARGETCURSOR_H_
+#define _CENTITY_TARGETCURSOR_H_
+
 // Forward declared dependencies
 
 // Included dependencies
@@ -13,3 +15,5 @@ public:
 	void OnLoop();
 	bool OnLoad();
 };
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CEVENT_H_
+#define _CEVENT_H_
 
 // Included dependencies
 #include <SDL.h>
@@ -35,3 +36,5 @@ public:
 	virtual void OnExit();
 	virtual void OnUser(Uint8 type, int code, void* data1, void* data2);
 };
+
+#endif

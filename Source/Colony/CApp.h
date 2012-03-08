@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _CAPP_H_
+#define _CAPP_H_
+
 
 // Forward declared dependencies
 
@@ -43,3 +45,5 @@ public:
 	void OnMouseMove(int mX, int mY, int relX, int relY, bool Left,bool Right,bool Middle);
 	void OnResize(int w,int h);
 };
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CCURSOR_H_
+#define _CCURSOR_H_
 
 // Forward declared dependencies
 
@@ -28,3 +29,5 @@ public:
 	bool OnMove(int MouseX, int MouseY);
 	void OnRender(SDL_Surface* Surf_Display);
 };
+
+#endif

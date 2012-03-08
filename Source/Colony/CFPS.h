@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _CFPS_H_
+#define _CCFPS_H_
+
 #include <SDL.h>
 
 class CFPS {
@@ -21,3 +23,5 @@ public:
 	int GetFPS();
 	float GetSpeedFactor();
 };
+
+#endif

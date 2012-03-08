@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CENTITY_BUGGY_H_
+#define _CENTITY_BUGGY_H_
 
 // Forward declared dependencies
 
@@ -39,3 +40,5 @@ private:
 	ATile* GetLowestF(std::list<ATile*> List);
 	ATile* FindTileOnList(std::list<ATile*> List, CTile* Tile);
 };
+
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _CENTITY_H_
+#define _CENTITY_H_
+
 #include <vector>
 #include <SDL.h>
 #include "Define.h"
@@ -32,3 +34,5 @@ public:
 	virtual void OnRender(SDL_Surface* Surf_Display);
 	virtual void OnCleanup();
 };
+
+#endif

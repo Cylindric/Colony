@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CTILE_H_
+#define _CTILE_H_
 
 // Forward declared dependencies
 class CEntity;
@@ -32,3 +33,5 @@ public:
 	CTile(void);
 
 };
+
+#endif
