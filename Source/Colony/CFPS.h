@@ -1,5 +1,5 @@
 #ifndef _CFPS_H_
-#define _CCFPS_H_
+#define _CFPS_H_
 
 #include <SDL.h>
 
