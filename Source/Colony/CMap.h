@@ -10,7 +10,7 @@
 #include "CSurface.h"
 #include "CFont.h"
 #include "CEntity.h"
-//#include "CEntity_Buggy.h"
+#include "CEntity_Buggy.h"
 
 class CMap {
 

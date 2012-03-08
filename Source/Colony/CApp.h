@@ -1,7 +1,7 @@
 #pragma once
 
 // Forward declared dependencies
-class CTile;
+
 
 // Included dependencies
 #include <iostream>
@@ -11,7 +11,7 @@ class CTile;
 #include "Define.h"
 
 #include "CEvent.h"
-#include "CEntity_Buggy.h"
+//#include "CEntity_Buggy.h"
 #include "CMap.h"
 #include "CCursor.h"
 #include "CFPS.h"
@@ -27,8 +27,6 @@ private:
 	bool Running;
 	SDL_Surface* Surf_Display;
 	SDL_Surface* Default_Tileset;
-	SDL_Surface* Buggy_Tileset;
-	CEntity_Buggy Buggy1;
 
 public:
 	CApp();
