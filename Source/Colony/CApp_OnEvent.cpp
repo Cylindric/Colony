@@ -1,4 +1,6 @@
 #include "CApp.h"
+#include "CCamera.h"
+#include "CCursor.h"
 
 void CApp::OnEvent(SDL_Event* Event) {
 	CEvent::OnEvent(Event);

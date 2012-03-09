@@ -1,4 +1,6 @@
 #include "CApp.h"
+#include "CEntity.h"
+#include "CMap.h"
 
 void CApp::OnCleanup() {
 	for(unsigned int i = 0; i < CEntity::EntityList.size(); i++) {

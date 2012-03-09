@@ -1,4 +1,8 @@
 #include "CApp.h"
+#include "CFont.h"
+#include "CMap.h"
+#include "CCamera.h"
+#include <iostream>
 
 bool CApp::OnInit() {
 	if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -13,7 +17,7 @@ bool CApp::OnInit() {
 	Surf_Display = CCamera::CameraControl.OnInit();
 	if(Surf_Display == false) return false;
 
-	if(CMap::MapControl.OnLoad("./maps/wall.txt") == false) {
+	if(CMap::MapControl.OnLoad("./maps/maze.txt") == false) {
 		std::cerr << "Error loading map";
 		return false;
 	}
@@ -22,18 +26,6 @@ bool CApp::OnInit() {
 		std::cout << "Error initialising fonts";
 		return false;
 	}
-
-	// hack in a single buggy for testing
-	//if(Buggy1.OnLoad() == false) {
-	//	return false;
-	//}
-	//Buggy1.Coord.X = 3;
-	//Buggy1.Coord.Y = 6;
-	//Buggy1.Destination.X = 5;
-	//Buggy1.Destination.Y = 7;
-	//CTile* buggyTile = CMap::MapControl.GetTile(Buggy1.Coord);
-	//buggyTile->EntityList.push_back(&Buggy1);
-	//CEntity::EntityList.push_back(&Buggy1);
 
 	if(CCursor::CursorControl.OnLoad() == false) {
 		return false;

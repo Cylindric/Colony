@@ -3,16 +3,12 @@
 
 // Forward declared dependencies
 class CEntity_Buggy;
+struct SDL_Surface;
+class CTile;
+class CCoord;
 
 // Included dependencies
 #include <vector>
-#include <SDL.h>
-#include "Define.h"
-#include "CTile.h"
-#include "CSurface.h"
-#include "CFont.h"
-#include "CEntity.h"
-//#include "CEntity_Buggy.h"
 
 class CMap {
 

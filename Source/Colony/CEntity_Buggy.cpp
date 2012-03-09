@@ -1,18 +1,27 @@
 #include "CEntity_Buggy.h"
+//#include <direct.h>
+//#include <algorithm>
+//#include <SDL.h>
+#include "Define.h"
+#include "CEntity_TargetCursor.h"
+#include "CTile.h"
+#include "ATile.h"
+#include <iostream>
 
 
 CEntity_Buggy::CEntity_Buggy() {
-	this->Speed = 1;
 	this->Destination = CCoord();
 	this->LastMove = SDL_GetTicks();
-	this->testD = 1;
 	this->IterationCap = 0;
+	this->DestinationCursor = new CEntity_TargetCursor();
+	this->ValidPath = false;
+	this->PathToDestination.clear();
 }
 
 
 bool CEntity_Buggy::OnLoad() {
 	bool rv = CEntity::OnLoad();
-	this->DestinationCursor.OnLoad();
+	(*this->DestinationCursor).OnLoad();
 	this->Destination.X = -1;
 	this->Destination.Y = -1;
 	Anim_Control.SetLoop(30, 33);
@@ -35,13 +44,15 @@ void CEntity_Buggy::CalcRoute(std::list<ATile*> &openList, std::list<ATile*> &cl
 	tile->Fscore = tile->Gcost + tile->Hcost;
 	openList.push_back(tile);
 
+	std::cout << "Starting A* from " << StartNode->Coord.X << "," << StartNode->Coord.Y << " to " << EndNode->Coord.X << "," << EndNode->Coord.Y << std::endl;
+
 	while(Finished == false) {
-		if(Iteration==this->IterationCap) {
-			std::cout<<"last run";
-		}
+
+		std::cout << "OpenList is currently " << openList.size() << std::endl;
 
 		// Find the tile with the lowest F in the Open List
 		ATile* currentTile = GetLowestF(openList);
+		std::cout << "Lowest F is " << currentTile->Fscore << " at " << currentTile->tile->Coord.X << "," << currentTile->tile->Coord.Y << std::endl;
 
 		// Move the closest tile off the Open List, onto the Closed List
 		openList.remove(currentTile);
@@ -69,22 +80,31 @@ void CEntity_Buggy::CalcRoute(std::list<ATile*> &openList, std::list<ATile*> &cl
 						if (foundNeighbour == 0) {
 
 							if (row == currentTile->tile->Coord.Y || col == currentTile->tile->Coord.X) {
-								newCost = currentTile->Gcost + 10; // perpendicular tiles
+								newCost = currentTile->Gcost + COST_STRAIGHT; // perpendicular tiles
 							} else {
-								newCost = currentTile->Gcost + 14; // diagonal tiles
+								newCost = currentTile->Gcost + COST_DIAGONAL; // diagonal tiles
 							}
 
 							// is it on the Open List already?
 							foundNeighbour = FindTileOnList(openList, neighbour);
 							if (foundNeighbour == 0) {
 								// not on list
-								foundNeighbour = new ATile(neighbour, currentTile->tile, newCost, GetHeuristic(neighbour->Coord, EndNode->Coord));
+								foundNeighbour = new ATile();
+								foundNeighbour->parent = currentTile->tile;
+								foundNeighbour->tile = neighbour;
+								foundNeighbour->Gcost = newCost;
+								foundNeighbour->Hcost = GetHeuristic(neighbour->Coord, EndNode->Coord);
+								foundNeighbour->Fscore = foundNeighbour->Gcost + foundNeighbour->Hcost;
+
 								openList.push_back(foundNeighbour);
 							} else {
 								// on list
 								if(newCost < foundNeighbour->Gcost) {
 									// on list, and this route is cheaper
 									foundNeighbour->parent = currentTile->tile;
+									foundNeighbour->Gcost = newCost;
+									foundNeighbour->Hcost = GetHeuristic(neighbour->Coord, EndNode->Coord);
+									foundNeighbour->Fscore = foundNeighbour->Gcost + foundNeighbour->Hcost;
 								}
 							}
 						}
@@ -96,13 +116,15 @@ void CEntity_Buggy::CalcRoute(std::list<ATile*> &openList, std::list<ATile*> &cl
 		Iteration++;
 	}
 
+
 	this->IterationCap++;
 }
 
 
 int CEntity_Buggy::GetHeuristic(CCoord A, CCoord B) {
 	// cheap and simple H for now
-	return std::max(abs(A.X-B.X), abs(A.Y-B.Y));
+	//return COST_STRAIGHT * std::max(abs(A.X-B.X), abs(A.Y-B.Y));
+	return COST_STRAIGHT * (abs(A.X-B.X) + abs(A.Y-B.Y)); // Manhattan Distance
 }
 
 
@@ -144,15 +166,17 @@ void CEntity_Buggy::OnLoop() {
 			sprintf_s((*itTile)->Label, "");
 		}
 
+
 		// A* test
-		openList.clear();
-		closedList.clear();
-		CalcRoute(openList, closedList, currentTile, targetTile);
+		if (this->ValidPath == false) {
+			openList.clear();
+			closedList.clear();
+			CalcRoute(openList, closedList, currentTile, targetTile);
+		}
 
 
 		std::list<ATile*>::iterator tile;
 		for (tile=openList.begin(); tile!=openList.end(); ++tile) {
-			sprintf_s((*tile)->tile->LTopRight, "%d", this->IterationCap);
 			sprintf_s((*tile)->tile->LTopLeft, "%d", (*tile)->Fscore);
 			sprintf_s((*tile)->tile->LBottomLeft, "%d", (*tile)->Gcost);
 			sprintf_s((*tile)->tile->LBottomRight, "%d", (*tile)->Hcost);
@@ -168,7 +192,6 @@ void CEntity_Buggy::OnLoop() {
 		}
 
 		for (tile=closedList.begin(); tile!=closedList.end(); ++tile) {
-			sprintf_s((*tile)->tile->LTopRight, "%d", this->IterationCap);
 			sprintf_s((*tile)->tile->LTopLeft, "%d", (*tile)->Fscore);
 			sprintf_s((*tile)->tile->LBottomLeft, "%d", (*tile)->Gcost);
 			sprintf_s((*tile)->tile->LBottomRight, "%d", (*tile)->Hcost);
@@ -183,22 +206,33 @@ void CEntity_Buggy::OnLoop() {
 			if((*tile)->parent->Coord.X <  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 8; //down-left
 		}
 
-		if (openList.size() == 0) {
-			bool finished = false;
-			CTile* pathTile = targetTile;
-			while(finished == false) {
-				pathTile->TileID = 2;
 
-				ATile* thisATile = this->FindTileOnList(closedList, pathTile);
-				pathTile = thisATile->parent;
-				if(pathTile == currentTile) {
-					finished = true;
+		// Populate the final path to destination
+		if (this->ValidPath == false) {
+			if (openList.size() == 0) {
+				this->PathToDestination.clear();
+				bool finished = false;
+				CTile* pathTile = targetTile;
+				while(finished == false) {
+					ATile* thisATile = this->FindTileOnList(closedList, pathTile);
+					this->PathToDestination.insert(this->PathToDestination.begin(), thisATile->tile);
+					pathTile = thisATile->parent;
+					if(pathTile == currentTile) {
+						finished = true;
+					}
 				}
+				this->ValidPath = true;
 			}
 		}
 
+
+		// highlight the path
+		for(std::vector<CTile*>::iterator tile = this->PathToDestination.begin(); tile!=this->PathToDestination.end(); ++tile) {
+			(*tile)->TileID = 2;
+		}
+
+
 		sprintf_s(currentTile->Label, "S");
-		sprintf_s(currentTile->LTopRight, "I");
 		sprintf_s(currentTile->LTopLeft, "F");
 		sprintf_s(currentTile->LBottomLeft, "G");
 		sprintf_s(currentTile->LBottomRight, "H");
@@ -206,14 +240,14 @@ void CEntity_Buggy::OnLoop() {
 		this->LastMove = SDL_GetTicks();
 	}
 
-	this->DestinationCursor.Coord.X = this->Destination.X;
-	this->DestinationCursor.Coord.Y = this->Destination.Y;
+	(*this->DestinationCursor).Coord.X = this->Destination.X;
+	(*this->DestinationCursor).Coord.Y = this->Destination.Y;
 	Anim_Control.OnAnimate();
-	this->DestinationCursor.OnLoop();
+	(*this->DestinationCursor).OnLoop();
 }
 
 
 void CEntity_Buggy::OnRender(SDL_Surface* Surf_Display) {
 //	CEntity::OnRender(Surf_Display);
-	this->DestinationCursor.OnRender(Surf_Display);
+	(*this->DestinationCursor).OnRender(Surf_Display);
 }

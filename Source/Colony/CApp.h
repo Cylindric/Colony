@@ -2,26 +2,27 @@
 #define _CAPP_H_
 
 
-// Forward declared dependencies
-
-
 // Included dependencies
-#include <iostream>
-#include <direct.h>
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include "Define.h"
-
+//#include <iostream>
+//#include <direct.h>
+//#include <SDL.h>
+//#include <SDL_ttf.h>
+//#include "Define.h"
+//
 #include "CEvent.h"
 //#include "CEntity_Buggy.h"
-#include "CMap.h"
-#include "CCursor.h"
-#include "CFPS.h"
+//#include "CMap.h"
+//#include "CCursor.h"
+//#include "CFPS.h"
 //#include "CCoord.h"
 //#include "CEntity.h"
 //#include "CCamera.h"
 //#include "CSurface.h"
 //#include "CFont.h"
+
+// Forward declared dependencies
+struct SDL_Surface;
+
 
 class CApp : public CEvent {
 

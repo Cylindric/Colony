@@ -14,4 +14,7 @@ const unsigned int GRID_TILE = 99;
 const unsigned int CURSOR_TILE = 42;
 const unsigned int TARGET_TILE = 40;
 
+const unsigned int COST_STRAIGHT = 10;
+const unsigned int COST_DIAGONAL = 14;
+
 #endif

@@ -1,4 +1,7 @@
 #include "CApp.h"
+#include "CMap.h"
+#include "CEntity.h"
+
 
 void CApp::OnRender() {
 	SDL_FillRect( SDL_GetVideoSurface(), NULL, 0 );

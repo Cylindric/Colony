@@ -1,19 +1,13 @@
 #ifndef _CENTITY_BUGGY_H_
 #define _CENTITY_BUGGY_H_
 
-// Forward declared dependencies
-
 // Included dependencies
-#include <iostream>
-#include <direct.h>
-#include <list>
-#include <algorithm>
-#include <SDL.h>
-#include "Define.h"
 #include "CEntity.h"
-#include "CEntity_TargetCursor.h"
-#include "CCoord.h"
-#include "ATile.h"
+#include <list>
+
+// Forward declared dependencies
+class ATile;
+class CEntity_TargetCursor;
 
 // The class
 class CEntity_Buggy : public CEntity {
@@ -26,12 +20,11 @@ public:
 	CCoord Destination;
 
 private:
-	float Speed;
-
-	int testD;
+	bool ValidPath;
+	std::vector<CTile*> PathToDestination;
 	unsigned long LastMove;
 
-	CEntity_TargetCursor DestinationCursor;
+	CEntity_TargetCursor* DestinationCursor;
 	int CostToDestination();
 
 	int IterationCap;

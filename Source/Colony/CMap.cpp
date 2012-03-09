@@ -1,5 +1,18 @@
 #include "CMap.h"
 
+#include "Define.h"
+#include "CTile.h"
+#include "CSurface.h"
+#include "CFont.h"
+#include "CEntity.h"
+#include "CEntity_Buggy.h"
+
+#include <SDL.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
+
 CMap CMap::MapControl;
 
 
@@ -10,63 +23,63 @@ CMap::CMap() {
 
 bool CMap::OnLoad(char* File) {
 	TileList.clear();
-	FILE* FileHandle;
-	fopen_s(&FileHandle, File, "r");
-	if(FileHandle == NULL) {
+
+	// open the map file
+	std::ifstream mapFile(File);
+
+	// First line must be the tileset
+	std::string TilesetFile;
+	mapFile >> TilesetFile;
+	if((Surf_Tileset = CSurface::OnLoad((char*)TilesetFile.c_str())) == false) {
 		return false;
 	}
+	std::cout << "Tileset: " << TilesetFile << std::endl;
 
-	// determine the tileset to use
-	char TilesetFile[255];
-	fscanf_s(FileHandle, "%s\n", TilesetFile);
-	if((Surf_Tileset = CSurface::OnLoad(TilesetFile)) == false) {
-		return false;
+	// Next is the width and height of the map
+	mapFile >> this->Width >> this->Height;
+	std::cout << "Dimensions: " << this->Width << "x" << this->Height << std::endl;
+
+	// Next should be lines of tiles
+	int tileCount = 0;
+	while (tileCount < (this->Width * this->Height)) {
+		int valA = 0;
+		int valB = 0;
+		char sep = ' ';
+
+		mapFile >> valA >> sep >> valB;
+
+		CTile* tempTile = new CTile();
+		tempTile->Coord.X = (tileCount % this->Width);
+		tempTile->Coord.Y = (tileCount / this->Width);
+		tempTile->TileID = valA;
+		tempTile->TypeID = valB;
+		TileList.push_back(tempTile);
+		tileCount++;
 	}
 
-	// determine the X and Y dimensions of the map
-	fscanf_s(FileHandle, "%d %d\n", &this->Width, &this->Height);
+	// Next should be any entities
+	while (mapFile.good()) {
+		std::string objectName = "";
+		int valA = 0;
+		int valB = 0;
+		int valC = 0;
+		int valD = 0;
 
-	// read in all the cells
-	for(int Y = 0; Y < this->Height; Y++) {
-		for(int X = 0; X < this->Width; X++) {
-			CTile* tempTile = new CTile();
-			tempTile->Coord.X = X;
-			tempTile->Coord.Y = Y;
-			fscanf_s(FileHandle, "%d:%d ", &tempTile->TileID, &tempTile->TypeID);
-			TileList.push_back(tempTile);
+		mapFile >> objectName >> valA >> valB >> valC >> valD;
+		if (objectName == "buggy") {
+			CEntity_Buggy* ent = new CEntity_Buggy();
+			ent->OnLoad();
+			ent->Coord.X = valA;
+			ent->Coord.Y = valB;
+			ent->Destination.X = valC;
+			ent->Destination.Y = valD;
+			CTile* entTile = CMap::MapControl.GetTile(ent->Coord);
+			entTile->EntityList.push_back(ent);
+			CEntity::EntityList.push_back(ent);
 		}
-		fscanf_s(FileHandle, "\n");
 	}
 
-	// read any extra commands
-	//char EntityName[255];
-	//int EntityPosX;
-	//int EntityPosY;
-	//int EntityTarX;
-	//int EntityTarY;
-
-	//bool getEnts = true;
-	//while (getEnts) {
-	//	int c = fscanf_s(FileHandle, "%s %d %d %d %d\n", &EntityName, &EntityPosX, &EntityPosY, &EntityTarX, &EntityTarY);
-	//	if (c == EOF) {
-	//		getEnts = false;
-	//	} else {
-	//		if (EntityName == "buggy") {
-				CEntity_Buggy* ent;
-				ent->OnLoad();
-	//			ent.OnLoad();
-	//			//ent.Coord.X = EntityPosX;
-	//			//ent.Coord.Y = EntityPosY;
-	//			//ent.Destination.X = EntityTarX;
-	//			//ent.Destination.Y = EntityTarY;
-	//			//CTile* entTile = CMap::MapControl.GetTile(ent.Coord);
-	//			//entTile->EntityList.push_back(&ent);
-	//			//CEntity::EntityList.push_back(&ent);
-	//		}
-	//	}
-	//}
-
-	fclose(FileHandle);
+	mapFile.close();
 	return true;
 }
 
