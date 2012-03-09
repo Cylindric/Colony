@@ -1,12 +1,12 @@
 #ifndef _ATILE_H_
 #define _ATILE_H_
 
-// forward dependencies
+// Forward declarations
 class CTile;
 
+// The actual class
+class ATile {
 
-class ATile
-{
 public:
 	ATile(void);
 	ATile(CTile* Tile, CTile* Parent, int G, int H);

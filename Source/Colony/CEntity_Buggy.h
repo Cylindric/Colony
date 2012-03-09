@@ -7,6 +7,7 @@
 
 // Forward declared dependencies
 class ATile;
+class CTile;
 class CEntity_TargetCursor;
 
 // The class

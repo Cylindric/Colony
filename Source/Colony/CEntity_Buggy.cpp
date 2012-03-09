@@ -6,6 +6,7 @@
 #include "CEntity_TargetCursor.h"
 #include "CTile.h"
 #include "ATile.h"
+#include "CMap.h"
 #include <iostream>
 
 

@@ -1,4 +1,5 @@
 #include "CEntity.h"
+#include "CMap.h"
 
 std::vector<CEntity*> CEntity::EntityList;
 

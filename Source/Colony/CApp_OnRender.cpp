@@ -1,7 +1,8 @@
 #include "CApp.h"
 #include "CMap.h"
 #include "CEntity.h"
-
+#include "CCursor.h"
+#include "CFPS.h"
 
 void CApp::OnRender() {
 	SDL_FillRect( SDL_GetVideoSurface(), NULL, 0 );

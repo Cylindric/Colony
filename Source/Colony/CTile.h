@@ -1,12 +1,12 @@
 #ifndef _CTILE_H_
 #define _CTILE_H_
 
-// Forward declared dependencies
-class CEntity;
-
 // Included dependencies
 #include <vector>
 #include "CCoord.h"
+
+// Forward declarations
+class CEntity;
 
 
 enum {

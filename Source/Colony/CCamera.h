@@ -2,14 +2,10 @@
 #define _CCAMERA_H_
 
 // Included dependencies
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include "Define.h"
-#include "CCamera.h"
-#include "CCursor.h"
-#include "CFont.h"
-#include "CFPS.h"
-#include "CMap.h"
+
+// Forward declarations
+struct SDL_Surface;
+struct SDL_Color;
 
 enum {
     TARGET_MODE_NORMAL = 0,
@@ -30,8 +26,8 @@ class CCamera {
  
         int* TargetX;
         int* TargetY;
-		SDL_Surface *text;
-		SDL_Color text_color;
+		SDL_Surface* text;
+		SDL_Color* text_color;
 		char DebugTextBuffer[50];
 
     public:

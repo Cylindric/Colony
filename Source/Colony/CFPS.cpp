@@ -1,4 +1,5 @@
 #include "CFPS.h"
+#include <SDL.h>
  
 CFPS CFPS::FPSControl;
  

@@ -1,8 +1,11 @@
 #include "CApp.h"
+
+#include "CCamera.h"
+#include "CCursor.h"
 #include "CFont.h"
 #include "CMap.h"
-#include "CCamera.h"
 #include <iostream>
+
 
 bool CApp::OnInit() {
 	if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -31,7 +34,6 @@ bool CApp::OnInit() {
 		return false;
 	}
 	SDL_ShowCursor(0);
-
 
 	SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);
 

@@ -1,5 +1,14 @@
 #include "CCamera.h"
- 
+
+#include <SDL.h>
+#include <SDL_ttf.h>
+#include "Define.h"
+#include "CCamera.h"
+#include "CCursor.h"
+#include "CFont.h"
+#include "CFPS.h"
+#include "CMap.h"
+
 CCamera CCamera::CameraControl;
  
 CCamera::CCamera() {

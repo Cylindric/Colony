@@ -1,4 +1,5 @@
 #include "CAnimation.h"
+#include <SDL.h>
 
 CAnimation::CAnimation() {
 	this->StartFrame = 0;
