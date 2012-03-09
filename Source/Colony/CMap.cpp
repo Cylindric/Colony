@@ -52,7 +52,8 @@ bool CMap::OnLoad(char* File) {
 	//		getEnts = false;
 	//	} else {
 	//		if (EntityName == "buggy") {
-	//			CEntity_Buggy ent;
+				CEntity_Buggy* ent;
+				ent->OnLoad();
 	//			ent.OnLoad();
 	//			//ent.Coord.X = EntityPosX;
 	//			//ent.Coord.Y = EntityPosY;

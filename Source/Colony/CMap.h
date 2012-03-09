@@ -2,6 +2,7 @@
 #define _CMAP_H_
 
 // Forward declared dependencies
+class CEntity_Buggy;
 
 // Included dependencies
 #include <vector>
