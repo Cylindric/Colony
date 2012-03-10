@@ -1,5 +1,11 @@
-#include "CMap.h"
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
 
+#include <SDL.h>
+
+#include "CMap.h"
 #include "Define.h"
 #include "CTile.h"
 #include "CSurface.h"
@@ -7,41 +13,37 @@
 #include "CEntity.h"
 #include "CEntity_Buggy.h"
 
-#include <SDL.h>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <string>
 
 CMap CMap::MapControl;
 
 
 CMap::CMap() {
-	Surf_Tileset = NULL;
+	tileset_ = NULL;
 }
 
 
-bool CMap::OnLoad(char* File) {
-	TileList.clear();
+bool CMap::onLoad(char* filename) {
+	tileList_.clear();
 
 	// open the map file
-	std::ifstream mapFile(File);
+	std::ifstream mapFile(filename);
 
 	// First line must be the tileset
-	std::string TilesetFile;
-	mapFile >> TilesetFile;
-	if((Surf_Tileset = CSurface::OnLoad((char*)TilesetFile.c_str())) == false) {
+	std::string tilesetFilename;
+	mapFile >> tilesetFilename >> tileSize_ >> tileColumns_;
+	if((tileset_ = CSurface::OnLoad((char*)tilesetFilename.c_str())) == false) {
+		std::cerr << "Error loading map tileset";
 		return false;
 	}
-	std::cout << "Tileset: " << TilesetFile << std::endl;
+	std::cout << "Tileset: " << tilesetFilename << std::endl;
 
 	// Next is the width and height of the map
-	mapFile >> this->Width >> this->Height;
-	std::cout << "Dimensions: " << this->Width << "x" << this->Height << std::endl;
+	mapFile >> width_ >> height_;
+	std::cout << "Dimensions: " << width_ << "x" << height_ << std::endl;
 
 	// Next should be lines of tiles
 	int tileCount = 0;
-	while (tileCount < (this->Width * this->Height)) {
+	while (tileCount < (width_ * height_)) {
 		int valA = 0;
 		int valB = 0;
 		char sep = ' ';
@@ -49,11 +51,11 @@ bool CMap::OnLoad(char* File) {
 		mapFile >> valA >> sep >> valB;
 
 		CTile* tempTile = new CTile();
-		tempTile->Coord.X = (tileCount % this->Width);
-		tempTile->Coord.Y = (tileCount / this->Width);
+		tempTile->Coord.X = (tileCount % width_);
+		tempTile->Coord.Y = (tileCount / width_);
 		tempTile->TileID = valA;
 		tempTile->TypeID = valB;
-		TileList.push_back(tempTile);
+		tileList_.push_back(tempTile);
 		tileCount++;
 	}
 
@@ -73,7 +75,7 @@ bool CMap::OnLoad(char* File) {
 			ent->Coord.Y = valB;
 			ent->Destination.X = valC;
 			ent->Destination.Y = valD;
-			CTile* entTile = CMap::MapControl.GetTile(ent->Coord);
+			CTile* entTile = CMap::MapControl.getTile(ent->Coord);
 			entTile->EntityList.push_back(ent);
 			CEntity::EntityList.push_back(ent);
 		}
@@ -84,16 +86,16 @@ bool CMap::OnLoad(char* File) {
 }
 
 
-void CMap::OnRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
-	if(Surf_Tileset == NULL) return;
+void CMap::onRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
+	if(tileset_ == NULL) return;
 
-	int TilesetWidth = Surf_Tileset->w / TILE_SIZE;
-	int TilesetHeight = Surf_Tileset->h / TILE_SIZE;
+	int TilesetWidth = tileset_->w / tileSize_;
+	int TilesetHeight = tileset_->h / tileSize_;
 
 	int id = 0;
 
 	std::vector<CTile*>::iterator i;
-	for (i=this->TileList.begin(); i!=this->TileList.end(); ++i) {
+	for (i=this->tileList_.begin(); i!=this->tileList_.end(); ++i) {
 		CTile* tile = *i;
 
         if(tile->TypeID == TILE_TYPE_NONE) {
@@ -101,17 +103,17 @@ void CMap::OnRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
         }
  
 		int tID = tile->TileID;
-        int tX = MapX + (tile->Coord.X * TILE_SIZE);
-        int tY = MapY + (tile->Coord.Y * TILE_SIZE);
+        int tX = MapX + (tile->Coord.X * tileSize_);
+        int tY = MapY + (tile->Coord.Y * tileSize_);
  
-        int TilesetX = (tID % TILESET_COLS) * TILE_SIZE;
-        int TilesetY = (tID / TILESET_COLS) * TILE_SIZE;
+        int TilesetX = (tID % tileColumns_) * tileSize_;
+        int TilesetY = (tID / tileColumns_) * tileSize_;
 
-        CSurface::OnDraw(Surf_Display, Surf_Tileset, tX, tY, TilesetX, TilesetY, TILE_SIZE, TILE_SIZE);
+        CSurface::OnDraw(Surf_Display, tileset_, tX, tY, TilesetX, TilesetY, tileSize_, tileSize_);
 
 		// draw a grid
 		if(SHOW_GRID) {
-			CSurface::OnDraw(Surf_Display, Surf_Tileset, tX, tY, (GRID_TILE % TILESET_COLS)*TILE_SIZE, (GRID_TILE / TILESET_COLS)*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			CSurface::OnDraw(Surf_Display, tileset_, tX, tY, (GRID_TILE % tileColumns_)*tileSize_, (GRID_TILE / tileColumns_)*tileSize_, tileSize_, tileSize_);
 		}
 
 		// labels
@@ -136,7 +138,7 @@ void CMap::OnRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
 
 		// if no entity labels, check for labels for the tile-type
 		//if(label[0] == 0) {
-		//	switch(TileList[id].TypeID) {
+		//	switch(tileList_[id].TypeID) {
 		//	case TILE_TYPE_NORMAL: label[0] = '-'; break;
 		//	case TILE_TYPE_BLOCK: label[0] = '#'; break;
 		//	default: label[0] = 0; break;
@@ -145,36 +147,56 @@ void CMap::OnRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
 
 		// if there is a label to show, show it
 		if(label[0] != 0) {
-			CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY, tX+TILE_SIZE, tY+TILE_SIZE, C, label);
+			CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY, tX+tileSize_, tY+tileSize_, C, label);
 		}
 
 		// tile labels
-		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY, tX+(TILE_SIZE/2), tY+(TILE_SIZE/2), C, tile->LTopLeft);
-		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX+(TILE_SIZE/2), tY, tX+TILE_SIZE, tY+(TILE_SIZE/2), C, tile->LTopRight);
-		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY+(TILE_SIZE/2), tX+(TILE_SIZE/2), tY+TILE_SIZE, C, tile->LBottomLeft);
-		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX+(TILE_SIZE/2), tY+(TILE_SIZE/2), tX+TILE_SIZE, tY+TILE_SIZE, C, tile->LBottomRight);
+		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY, tX+(tileSize_/2), tY+(tileSize_/2), C, tile->LTopLeft);
+		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX+(tileSize_/2), tY, tX+tileSize_, tY+(tileSize_/2), C, tile->LTopRight);
+		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY+(tileSize_/2), tX+(tileSize_/2), tY+tileSize_, C, tile->LBottomLeft);
+		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX+(tileSize_/2), tY+(tileSize_/2), tX+tileSize_, tY+tileSize_, C, tile->LBottomRight);
 
 		id++;
 	}
 }
 
 
-void CMap::OnCleanup() {
-	this->TileList.clear();
-	SDL_FreeSurface(this->Surf_Tileset);
+void CMap::onCleanup() {
+	tileList_.clear();
+	SDL_FreeSurface(tileset_);
 }
 
 
-CTile* CMap::GetTile(CCoord coord) {
-	return this->GetTile(coord.X, coord.Y);
+CTile* CMap::getTile(CCoord coord) {
+	return getTile(coord.X, coord.Y);
 }
 
 
-CTile* CMap::GetTile(int X, int Y) {
-	return this->TileList[(Y * this->Width)+X];
+CTile* CMap::getTile(int X, int Y) {
+	return tileList_[(Y * width_)+X];
 }
 
 
-SDL_Surface* CMap::GetTileset() {
-	return this->Surf_Tileset;
+SDL_Surface* CMap::getTileset() {
+	return tileset_;
+}
+
+int CMap::getTilesetColumns() {
+	return tileColumns_;
+}
+
+int CMap::getTileSize() {
+	return tileSize_;
+}
+
+int CMap::getWidth() {
+	return width_;
+}
+
+int CMap::getHeight() {
+	return height_;
+}
+
+std::vector<CTile*>* CMap::getTiles() {
+	return &tileList_;
 }

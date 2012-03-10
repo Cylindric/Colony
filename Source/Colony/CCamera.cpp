@@ -38,12 +38,12 @@ void CCamera::OnMove(int MoveX, int MoveY) {
 		Y = 0;
 	}
 
-	int MaxX = ((CMap::MapControl.Width * TILE_SIZE) - (this->Width));
+	int MaxX = ((CMap::MapControl.getWidth() * CMap::MapControl.getTileSize()) - (this->Width));
 	if(X < -MaxX) {
 		X = -MaxX;
 	}
  
-	int MaxY = ((CMap::MapControl.Height * TILE_SIZE) - (this->Height));
+	int MaxY = ((CMap::MapControl.getHeight() * CMap::MapControl.getTileSize()) - (this->Height));
 	if(Y < -MaxY) {
 		Y = -MaxY;
 	}

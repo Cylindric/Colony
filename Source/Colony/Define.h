@@ -1,9 +1,6 @@
 #ifndef _DEFINE_H_
 #define _DEFINE_H_
 
-const unsigned int TILE_SIZE = 40;
-const unsigned int TILESET_COLS = 10;
-
 const unsigned int SHOW_GRID = 1;
 
 const unsigned int EDGE_TILE = 0;

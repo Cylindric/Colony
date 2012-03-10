@@ -1,10 +1,10 @@
 #include "CApp.h"
 
+#include <iostream>
 #include "CCamera.h"
 #include "CCursor.h"
 #include "CFont.h"
 #include "CMap.h"
-#include <iostream>
 
 
 bool CApp::OnInit() {
@@ -20,7 +20,7 @@ bool CApp::OnInit() {
 	Surf_Display = CCamera::CameraControl.OnInit();
 	if(Surf_Display == false) return false;
 
-	if(CMap::MapControl.OnLoad("./maps/maze.txt") == false) {
+	if(CMap::MapControl.onLoad("./maps/maze.txt") == false) {
 		std::cerr << "Error loading map";
 		return false;
 	}

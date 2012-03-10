@@ -10,6 +10,6 @@ void CApp::OnCleanup() {
 
 	SDL_FreeSurface(Default_Tileset);
 	SDL_FreeSurface(Surf_Display);
-	CMap::MapControl.OnCleanup();
+	CMap::MapControl.onCleanup();
 	SDL_Quit();
 }

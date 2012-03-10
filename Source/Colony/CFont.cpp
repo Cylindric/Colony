@@ -6,10 +6,10 @@ CFont::CFont() {
 }
 
 bool CFont::OnInit() {
-	this->NormalFont = TTF_OpenFont("./fonts/regular.ttf", 16);
+	this->NormalFont = TTF_OpenFont("./fonts/DejaVuSans.ttf", 16);
 	if(this->NormalFont == NULL) return false;
 
-	this->TileFont = TTF_OpenFont("./fonts/Instruction.ttf", 10);
+	this->TileFont = TTF_OpenFont("./fonts/DejaVuSans.ttf", 10);
 	if(this->TileFont == NULL) return false;
 
 	return true;

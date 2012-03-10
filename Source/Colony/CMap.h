@@ -1,37 +1,46 @@
 #ifndef _CMAP_H_
 #define _CMAP_H_
 
-// Forward declared dependencies
+// Included dependencies
+#include <vector>
+
+// Forward declarations
 class CEntity_Buggy;
 struct SDL_Surface;
 class CTile;
 class CCoord;
 
-// Included dependencies
-#include <vector>
 
 class CMap {
 
-public: // constructor
+public: // constructors
 	CMap();
 
 public: // public properties
 	static CMap MapControl;
-	std::vector<CTile*> TileList;
-	int Width;
-	int Height;
-
-private: // private properties
-	SDL_Surface* Surf_Tileset;
 
 public: // public methods
-	bool OnLoad(char* File);
-	void OnRender(SDL_Surface* Surf_Display, int MapX, int MapY);
-	void OnCleanup();
+	bool onLoad(char* filename);
+	void onRender(SDL_Surface* displaySurface, int mapX, int mapY);
+	void onCleanup();
 
-	CTile* GetTile(CCoord coord);
-	CTile* GetTile(int X, int Y);
-	SDL_Surface* GetTileset();
+	CTile* getTile(CCoord coord);
+	CTile* getTile(int x, int y);
+	int getTileSize();
+	int getTilesetColumns();
+	int getWidth();
+	int getHeight();
+	SDL_Surface* getTileset();
+	std::vector<CTile*>* getTiles();
+
+private: // private properties
+	SDL_Surface* tileset_;
+	std::vector<CTile*> tileList_;
+	int tileSize_;
+	int tileColumns_;
+	int width_;
+	int height_;
+
 };
 
 #endif

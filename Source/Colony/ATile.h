@@ -20,7 +20,7 @@ public:
 	int Fscore;
 	bool operator==(const ATile &other) const;
 	bool operator!=(const ATile &other) const;
-
+	bool operator<(ATile &rhs) { return Fscore < rhs.Fscore; }
 };
 
 #endif
