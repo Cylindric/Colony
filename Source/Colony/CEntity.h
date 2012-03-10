@@ -47,6 +47,8 @@ protected: // properties
 protected: //methods
 	int CostToDestination();
 	void CalcRoute(CTile* StartNode, CTile* EndNode);
+	void decorateClosedList();
+	void decorateFinalPath();
 
 private: //methods
 	int GetHeuristic(CCoord A, CCoord B);

@@ -24,8 +24,8 @@ TTF_Font* CFont::GetFont(int Font) {
 }
 
 
-void CFont::AddTextToSurface(SDL_Surface* Surface, int Font, int X, int Y, SDL_Color Colour, char Text[]) {
-	this->SetTextSurface(Font, Colour, Text);
+void CFont::AddTextToSurface(SDL_Surface* Surface, int Font, int X, int Y, SDL_Color Colour, std::wstring text) {
+	this->SetTextSurface(Font, Colour, text);
 
 	SDL_Rect r;
 	r.x = X;
@@ -35,10 +35,10 @@ void CFont::AddTextToSurface(SDL_Surface* Surface, int Font, int X, int Y, SDL_C
 }
 
 
-void CFont::AddTextToSurface(SDL_Surface* Surface, int Font, int X1, int Y1, int X2, int Y2, SDL_Color Colour, char Text[]) {
-	if(Text[0]==0) return;
+void CFont::AddTextToSurface(SDL_Surface* Surface, int Font, int X1, int Y1, int X2, int Y2, SDL_Color Colour, std::wstring text) {
+	if(text.length()==0) return;
 
-	this->SetTextSurface(Font, Colour, Text);
+	this->SetTextSurface(Font, Colour, text);
 
 	int offsetX = ((X2-X1) - this->TextSurface->w)/2;
 	int offsetY = ((Y2-Y1) - this->TextSurface->h)/2;
@@ -49,6 +49,6 @@ void CFont::AddTextToSurface(SDL_Surface* Surface, int Font, int X1, int Y1, int
 }
 
 
-void CFont::SetTextSurface(int Font, SDL_Color Colour, char Text[]) {
-	this->TextSurface = TTF_RenderText_Blended(this->GetFont(Font), Text, Colour);
+void CFont::SetTextSurface(int Font, SDL_Color Colour, std::wstring text) {
+	this->TextSurface = TTF_RenderUNICODE_Blended(this->GetFont(Font), (uint16_t*)text.c_str(), Colour);
 }

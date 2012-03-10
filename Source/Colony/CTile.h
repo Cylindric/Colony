@@ -3,6 +3,7 @@
 
 // Included dependencies
 #include <vector>
+#include <string>
 #include "CCoord.h"
 
 // Forward declarations
@@ -21,13 +22,13 @@ public:
 	std::vector<CEntity*> EntityList;
 	int TileID;
 	int TypeID;
-	char Label[5];
+	std::wstring Label;
 	CCoord Coord;
 
-	char LTopLeft[5];
-	char LTopRight[5];
-	char LBottomLeft[5];
-	char LBottomRight[5];
+	std::wstring LTopLeft;
+	std::wstring LTopRight;
+	std::wstring LBottomLeft;
+	std::wstring LBottomRight;
 
 public:
 	CTile(void);

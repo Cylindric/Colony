@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <algorithm>
 #include "CEntity.h"
@@ -60,11 +60,16 @@ void CEntity::OnCleanup() {
 
 void CEntity::CalcRoute(CTile* StartNode, CTile* EndNode) {
 	// A* help from http://www.policyalmanac.org/games/aStarTutorial.htm
+	std::cout << "A* calculating route from " << StartNode->Coord << " to " << EndNode->Coord << std::endl;
 
 	bool Finished = false;
 	int Iteration = 0; // for tracking the loop-count and bailing out early - mostly for visualisation reasons
 	int newCost = 0;
 	long startTime = SDL_GetTicks();
+	openList_.clear();
+	closedList_.clear();
+	pathToDestination_.clear();
+
 
 	// push the StartNode into the Open List to start things off
 	ATile* tile = new ATile();
@@ -152,11 +157,20 @@ void CEntity::CalcRoute(CTile* StartNode, CTile* EndNode) {
 			pathToDestination_.clear();
 			bool finished = false;
 			CTile* pathTile = EndNode;
+
+			ATile* startTileFromList = FindTileOnList(closedList_, StartNode);
+			if(startTileFromList == NULL) {
+				finished = true;
+			}
 			while(finished == false) {
 				ATile* thisATile = FindTileOnList(closedList_, pathTile);
 				pathToDestination_.insert(pathToDestination_.begin(), thisATile->tile);
 				pathTile = thisATile->parent;
 				if(pathTile == StartNode) {
+					finished = true;
+				}
+				if(pathToDestination_.size() > closedList_.size()) {
+					// error!
 					finished = true;
 				}
 			}
@@ -195,4 +209,38 @@ ATile* CEntity::FindTileOnList(std::set<ATile*> List, CTile* Tile) {
 		}
 	}
 	return 0;
+}
+
+
+void CEntity::decorateClosedList() {
+	for (std::set<ATile*>::iterator i=closedList_.begin(); i!=closedList_.end(); ++i) {
+		CTile* tile = (*i)->tile;
+		CTile* parent = (*i)->parent;
+
+		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"↖";
+		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"←";
+		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"↙";
+		if ((parent->Coord.X == tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"↑";
+		if ((parent->Coord.X == tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"↓";
+		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"↗";
+		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"→";
+		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"↘";
+	}
+}
+
+
+void CEntity::decorateFinalPath() {
+	CTile* parent = (*pathToDestination_.begin());
+	for(std::vector<CTile*>::iterator i = pathToDestination_.begin(); i!=pathToDestination_.end(); ++i) {
+		CTile* tile = (*i);
+		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"⇖";
+		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"⇐";
+		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇙";
+		if ((parent->Coord.X == tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"⇑";
+		if ((parent->Coord.X == tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇓";
+		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"⇗";
+		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"⇒";
+		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇘";
+		parent = tile;
+	}
 }

@@ -12,6 +12,10 @@ bool CApp::OnInit() {
 		return false;
 	}
 
+	SDL_EnableUNICODE(SDL_ENABLE);
+
+	// Initialise random seed
+	srand(0);
 
 	if(TTF_Init() != 0) {
 		return false;

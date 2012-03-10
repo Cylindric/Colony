@@ -1,6 +1,8 @@
 #ifndef _CCOORD_H_
 #define _CCOORD_H_
 
+#include <iostream>
+
 class CCoord {
 public:
 	CCoord(void);
@@ -10,5 +12,7 @@ public:
 	int Y;
 
 };
+
+std::ostream& operator<<(std::ostream& output, const CCoord& p);
 
 #endif

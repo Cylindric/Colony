@@ -1,4 +1,4 @@
-#include "CEntity_Buggy.h"
+﻿#include "CEntity_Buggy.h"
 
 #include <iostream>
 #include "Define.h"
@@ -28,64 +28,40 @@ bool CEntity_Buggy::OnLoad() {
 
 
 void CEntity_Buggy::OnLoop() {
-	if(SDL_GetTicks() > (this->lastMoveTime_ + 100)) {
+	if(SDL_GetTicks() > (this->lastMoveTime_ + 200)) {
 		CTile* currentTile = CMap::MapControl.getTile(this->Coord);
 		CTile* targetTile = CMap::MapControl.getTile(this->Destination);
 
-		// decorate the tiles for testing
-		for (std::vector<CTile*>::iterator itTile=CMap::MapControl.getTiles()->begin(); itTile!=CMap::MapControl.getTiles()->end(); ++itTile) {
-			sprintf_s((*itTile)->Label, "");
+		if (currentTile == targetTile) {
+			// target reached, pick a new one
+			bool keepSearching = true;
+			while (keepSearching) {
+				this->Destination.X = (rand() % CMap::MapControl.getWidth());
+				this->Destination.Y = (rand() % CMap::MapControl.getHeight());
+				targetTile = CMap::MapControl.getTile(this->Destination);
+				if(targetTile->TypeID == TILE_TYPE_NORMAL) {
+					keepSearching = false;
+					isValidPath_ = false;
+				}
+			}
+
+		} else {
+
+			// Calculate route to target
+			if (this->isValidPath_ == false) {
+				CalcRoute(currentTile, targetTile);
+			}
+
+			// decorate the path
+			//decorateClosedList();
+			decorateFinalPath();
+
+			// move to the next tile in the path
+			Coord = (*pathToDestination_.begin())->Coord;
+		
+			// remove the first tile from the path
+			pathToDestination_.erase(pathToDestination_.begin());
 		}
-
-		// A* test
-		if (this->isValidPath_ == false) {
-			CalcRoute(currentTile, targetTile);
-		}
-
-
-		//std::list<ATile*>::iterator tile;
-		//for (tile=openList_.begin(); tile!=openList_.end(); ++tile) {
-		//	sprintf_s((*tile)->tile->LTopLeft, "%d", (*tile)->Fscore);
-		//	sprintf_s((*tile)->tile->LBottomLeft, "%d", (*tile)->Gcost);
-		//	sprintf_s((*tile)->tile->LBottomRight, "%d", (*tile)->Hcost);
-		//	(*tile)->tile->TileID = 10;
-		//	if((*tile)->parent->Coord.X == (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y <  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 1; //up
-		//	if((*tile)->parent->Coord.X >  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y == (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 2; //right
-		//	if((*tile)->parent->Coord.X == (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 3; //down
-		//	if((*tile)->parent->Coord.X <  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y == (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 4; //left
-		//	if((*tile)->parent->Coord.X <  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y <  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 5; //up-left
-		//	if((*tile)->parent->Coord.X >  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y <  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 6; //up-right
-		//	if((*tile)->parent->Coord.X >  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 7; //down-right
-		//	if((*tile)->parent->Coord.X <  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 8; //down-left
-		//}
-
-		//for (tile=closedList_.begin(); tile!=closedList_.end(); ++tile) {
-		//	sprintf_s((*tile)->tile->LTopLeft, "%d", (*tile)->Fscore);
-		//	sprintf_s((*tile)->tile->LBottomLeft, "%d", (*tile)->Gcost);
-		//	sprintf_s((*tile)->tile->LBottomRight, "%d", (*tile)->Hcost);
-		//	(*tile)->tile->TileID = 20;
-		//	if((*tile)->parent->Coord.X == (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y <  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 1; //up
-		//	if((*tile)->parent->Coord.X >  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y == (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 2; //right
-		//	if((*tile)->parent->Coord.X == (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 3; //down
-		//	if((*tile)->parent->Coord.X <  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y == (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 4; //left
-		//	if((*tile)->parent->Coord.X <  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y <  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 5; //up-left
-		//	if((*tile)->parent->Coord.X a>  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y <  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 6; //up-right
-		//	if((*tile)->parent->Coord.X >  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 7; //down-right
-		//	if((*tile)->parent->Coord.X <  (*tile)->tile->Coord.X && (*tile)->parent->Coord.Y >  (*tile)->tile->Coord.Y) (*tile)->tile->TileID += 8; //down-left
-		//}
-
-
-		// highlight the path
-		for(std::vector<CTile*>::iterator tile = this->pathToDestination_.begin(); tile!=this->pathToDestination_.end(); ++tile) {
-			(*tile)->TileID = 2;
-		}
-
-
-		sprintf_s(currentTile->Label, "S");
-		sprintf_s(currentTile->LTopLeft, "F");
-		sprintf_s(currentTile->LBottomLeft, "G");
-		sprintf_s(currentTile->LBottomRight, "H");
-
 		this->lastMoveTime_ = SDL_GetTicks();
 	}
 

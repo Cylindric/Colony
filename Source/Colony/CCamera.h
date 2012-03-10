@@ -26,9 +26,6 @@ class CCamera {
  
         int* TargetX;
         int* TargetY;
-		SDL_Surface* text;
-		SDL_Color* text_color;
-		char DebugTextBuffer[50];
 
     public:
         int TargetMode;

@@ -109,6 +109,7 @@ void CMap::onRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
         int TilesetX = (tID % tileColumns_) * tileSize_;
         int TilesetY = (tID / tileColumns_) * tileSize_;
 
+		// draw the base tile
         CSurface::OnDraw(Surf_Display, tileset_, tX, tY, TilesetX, TilesetY, tileSize_, tileSize_);
 
 		// draw a grid
@@ -121,19 +122,20 @@ void CMap::onRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
 		C.r = 255;
 		C.g = 255;
 		C.b = 255;
-		char label[10] = "";
-		label[0]=0;
+		std::wstring label = L"";
 
 		// check for any lables from resident entities
 		for(unsigned int i = 0; i < tile->EntityList.size(); i++) {
 			if (tile->EntityList[i]->Label[0] != 0) {
-				label[0] = tile->EntityList[i]->Label[0];
+				label = tile->EntityList[i]->Label[0];
 			}
 		}
 
-		// check for a label on the tile itself
-		if(label[0] == 0) {
-			sprintf_s(label, "%s", tile->Label);
+		// if there is no label yet, check for a label on the tile itself
+		if(label.length() == 0) {
+			if (tile->Label.length() > 0) {
+				label = tile->Label;
+			}
 		}
 
 		// if no entity labels, check for labels for the tile-type
@@ -146,7 +148,7 @@ void CMap::onRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
 		//}
 
 		// if there is a label to show, show it
-		if(label[0] != 0) {
+		if(label.length() > 0) {
 			CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY, tX+tileSize_, tY+tileSize_, C, label);
 		}
 

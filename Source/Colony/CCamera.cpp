@@ -101,14 +101,4 @@ void CCamera::SetTarget(int* X, int* Y) {
 }
 
 void CCamera::OnRender(SDL_Surface* Surf_Display) {
-	DebugTextBuffer[0] = 0;
-	int fps = CFPS::FPSControl.GetFPS();
-	float sf = CFPS::FPSControl.GetSpeedFactor();
-	sprintf_s(DebugTextBuffer, "X:%i Y:%i  FPS:%i F:%3.2f", CCursor::CursorControl.GetX(), CCursor::CursorControl.GetY(), fps, sf);
-
-	SDL_Color c;
-	c.r = 255;
-	c.g = 255;
-	c.b = 255;
-	CFont::FontControl.AddTextToSurface(Surf_Display, FONT_NORMAL, 0, 0, c, DebugTextBuffer);
 }
