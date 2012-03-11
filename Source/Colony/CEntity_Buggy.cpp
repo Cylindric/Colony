@@ -42,35 +42,16 @@ void CEntity_Buggy::OnLoop() {
 			this->Destination = CCoord(5, 3);
 			currentTile = CMap::MapControl.getTile(this->Coord);
 			targetTile = CMap::MapControl.getTile(this->Destination);
-			CalcRoute(currentTile, targetTile);
+			setSearchStates(currentTile, targetTile);
+			while(searchStep() <= SEARCH_STATE_SEARCHING) {
+				// search until end
+			}
 		}
 		long tDuration = SDL_GetTicks() - tStart;
 		std::cout << "Test of " << tests << " A* loops took " << tDuration << "ms, " << (tDuration/tests) << " avg" << std::endl;
 #endif
 
 		this->isValidPath_ = false; // force re-calc every loop
-		//CalcRoute(currentTile, targetTile);
-
-		//if (currentTile == targetTile) {
-		//	// target reached, pick a new one
-		//	bool keepSearching = true;
-		//	while (keepSearching) {
-		//		this->Destination.X = (rand() % CMap::MapControl.getWidth());
-		//		this->Destination.Y = (rand() % CMap::MapControl.getHeight());
-		//		targetTile = CMap::MapControl.getTile(this->Destination);
-		//		if(targetTile->TypeID == TILE_TYPE_NORMAL) {
-		//			keepSearching = false;
-		//			isValidPath_ = false;
-		//		}
-		//	}
-
-		//} else {
-
-			// Calculate route to target
-			if (this->isValidPath_ == false) {
-				CalcRoute(currentTile, targetTile);
-			}
-
 			// move to the next tile in the path
 			//Coord = (*pathToDestination_.begin())->Coord;
 		

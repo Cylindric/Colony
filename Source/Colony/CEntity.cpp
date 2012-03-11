@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 #include <algorithm>
+#include <assert.h>
 #include "CEntity.h"
 #include "CMap.h"
 #include "ATile.h"
@@ -10,6 +11,13 @@
 
 std::vector<CEntity*> CEntity::EntityList;
 
+class HeapCompare_f {
+public:
+	bool operator() ( const ATile* x, const ATile* y ) const {
+		return x->f > y->f;
+	}
+};
+
 
 CEntity::CEntity() {
 	this->EntityTileset = NULL;
@@ -18,6 +26,7 @@ CEntity::CEntity() {
 	this->SpriteHeight = CMap::MapControl.getTileSize();
 	this->AnimState = 0;
 	this->Label[0] = 0;
+	currentState = SEARCH_STATE_NOT_INITIALISED;
 }
 
 
@@ -58,127 +67,184 @@ void CEntity::OnCleanup() {
 }
 
 
-void CEntity::CalcRoute(CTile* StartNode, CTile* EndNode) {
-	// A* help from http://www.policyalmanac.org/games/aStarTutorial.htm
-	//std::cout << "A* calculating route from " << StartNode->Coord << " to " << EndNode->Coord << std::endl;
-
-	bool Finished = false;
-	int Iteration = 0; // for tracking the loop-count and bailing out early - mostly for visualisation reasons
-	int newCost = 0;
-	long startTime = SDL_GetTicks();
+void CEntity::setSearchStates(CTile* start, CTile* goal) {
 	openList_.clear();
 	closedList_.clear();
 	pathToDestination_.clear();
+	startTile_ = new ATile();
+	goalTile_ = new ATile();
+
+	startTile_->tile = start;
+	goalTile_->tile = goal;
+
+	currentState = SEARCH_STATE_SEARCHING;
+
+	startTile_->g = 0;
+	startTile_->h = GetHeuristic(start->Coord, goal->Coord);
+	startTile_->f = startTile_->g + startTile_->h;
+	startTile_->parent = NULL;
+	openList_.push_back(startTile_);
+	std::push_heap(openList_.begin(), openList_.end(), HeapCompare_f());
+	stepCount_ = 0;
+}
 
 
-	// push the StartNode into the Open List to start things off
-	ATile* tile = new ATile();
-	tile->tile = StartNode;
-	tile->parent = StartNode;
-	tile->Gcost = 0;
-	tile->Hcost = GetHeuristic(StartNode->Coord, EndNode->Coord);
-	tile->Fscore = tile->Gcost + tile->Hcost;
-	openList_.insert(tile);
+unsigned int CEntity::searchStep() {
+	// A* help from http://www.policyalmanac.org/games/aStarTutorial.htm
+	// More help from http://code.google.com/p/a-star-algorithm-implementation/source/browse/trunk/stlastar.h
 
-	while(Finished == false) {
+	bool Finished = false;
+	int Iteration = 0; // for tracking the loop-count and bailing out early - mostly for visualisation reasons
+	int newG = 0;
+	long startTime = SDL_GetTicks();
 
-		if (openList_.size() == 0) {
-			Finished = true;
-			continue;
-		}
+	// break if not initialised
+	assert( (currentState > SEARCH_STATE_NOT_INITIALISED) && (currentState < SEARCH_STATE_INVALID) );
 
-		// Find the tile with the lowest F in the Open List
-		ATile* currentTile = GetLowestF(openList_);
-
-		// Move the closest tile off the Open List, onto the Closed List
-		openList_.erase(currentTile);
-		closedList_.insert(currentTile);
-
-		if(currentTile->tile == EndNode) {
-			openList_.clear();
-			Finished = true;
-		} else {
-
-			// Check each neighbouring cell of the current cell
-			for(int row = currentTile->tile->Coord.Y - 1; row <= currentTile->tile->Coord.Y + 1; row++) {
-				for(int col = currentTile->tile->Coord.X - 1; col <= currentTile->tile->Coord.X + 1; col++) {
-
-					if(row == currentTile->tile->Coord.Y && col == currentTile->tile->Coord.X) continue; // skip current cell
-					if(row < 0 || row > CMap::MapControl.getHeight()) continue; // skip tiles outside map
-					if(col < 0 || col > CMap::MapControl.getWidth()) continue; // skip tiles outside map
-
-					CTile* neighbour = CMap::MapControl.getTile(col, row);
-
-					// Only passable tiles are processed
-					if (neighbour->TypeID == TILE_TYPE_NORMAL) {
-						// is it on the Closed List already?
-						ATile* foundNeighbour = FindTileOnList(closedList_, neighbour);
-						if (foundNeighbour == 0) {
-
-							if (row == currentTile->tile->Coord.Y || col == currentTile->tile->Coord.X) {
-								newCost = currentTile->Gcost + COST_STRAIGHT; // perpendicular tiles
-							} else {
-								newCost = currentTile->Gcost + COST_DIAGONAL; // diagonal tiles
-							}
-
-							// is it on the Open List already?
-							foundNeighbour = FindTileOnList(openList_, neighbour);
-							if (foundNeighbour == 0) {
-								// not on list
-								foundNeighbour = new ATile();
-								foundNeighbour->parent = currentTile->tile;
-								foundNeighbour->tile = neighbour;
-								foundNeighbour->Gcost = newCost;
-								foundNeighbour->Hcost = GetHeuristic(neighbour->Coord, EndNode->Coord);
-								foundNeighbour->Fscore = foundNeighbour->Gcost + foundNeighbour->Hcost;
-
-								openList_.insert(foundNeighbour);
-							} else {
-								// on list
-								if(newCost < foundNeighbour->Gcost) {
-									// on list, and this route is cheaper
-									foundNeighbour->parent = currentTile->tile;
-									foundNeighbour->Gcost = newCost;
-									foundNeighbour->Hcost = GetHeuristic(neighbour->Coord, EndNode->Coord);
-									foundNeighbour->Fscore = foundNeighbour->Gcost + foundNeighbour->Hcost;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		Iteration++;
+	// just return if the search is already finished or failed
+	if (currentState == SEARCH_STATE_SUCCEEDED || currentState == SEARCH_STATE_FAILED) {
+		return currentState;
 	}
 
-	// Populate the final path to destination
-	if (isValidPath_ == false) {
-		if (openList_.size() == 0) {
-			pathToDestination_.clear();
-			bool finished = false;
-			CTile* pathTile = EndNode;
-
-			ATile* startTileFromList = FindTileOnList(closedList_, StartNode);
-			if(startTileFromList == NULL) {
-				finished = true;
-			}
-			while(finished == false) {
-				ATile* thisATile = FindTileOnList(closedList_, pathTile);
-				pathToDestination_.insert(pathToDestination_.begin(), thisATile->tile);
-				pathTile = thisATile->parent;
-				if(pathTile == StartNode) {
-					finished = true;
-				}
-				if(pathToDestination_.size() > closedList_.size()) {
-					// error!
-					finished = true;
-				}
-			}
-			isValidPath_ = true;
-		}
+	// if the open list is empty, we're done
+	if (openList_.empty()) {
+		FreeAllNodes();
+		currentState = SEARCH_STATE_FAILED;
+		return currentState;
 	}
 
-	//std::cout << "A* took " << (SDL_GetTicks() - startTime) << std::endl;
+	stepCount_++;
+
+
+	// Find the tile with the lowest F in the Open List
+	ATile* currentTile = openList_.front();
+	std::pop_heap(openList_.begin(), openList_.end(), HeapCompare_f());
+	openList_.pop_back();
+
+	if(currentTile->tile == goalTile_->tile) {
+
+		goalTile_->parent = currentTile->tile;
+
+		currentState = SEARCH_STATE_SUCCEEDED;
+		return currentState;
+
+	} else {
+
+		AddSuccessors(currentTile);
+		for (std::vector<ATile*>::iterator successor = successorList_.begin(); successor != successorList_.end(); successor++) {
+
+			if ((*successor)->tile->Coord.Y == currentTile->tile->Coord.Y || (*successor)->tile->Coord.X == currentTile->tile->Coord.X) {
+				newG = currentTile->g + COST_STRAIGHT; // perpendicular tiles
+			} else {
+				newG = currentTile->g + COST_DIAGONAL; // diagonal tiles
+			}
+
+			// is it on the Open List?
+			std::vector<ATile*>::iterator openListResult;
+			for (openListResult = openList_.begin(); openListResult != openList_.end(); openListResult++) {
+				if ( (*openListResult)->tile == (*successor)->tile ) {
+					break;
+				}
+			}
+			if (openListResult != openList_.end()) {
+				// already on open list
+				if ((*openListResult)->g <= newG) {
+					// the current G in the open list is better than this one
+					FreeNode((*successor));
+					continue;
+				}
+			}
+
+			// is it on the Closed list?
+			std::vector<ATile*>::iterator closedListResult;
+			for (closedListResult = closedList_.begin(); closedListResult != closedList_.end(); closedListResult++) {
+				if ( (*closedListResult)->tile == (*successor)->tile ) {
+					break;
+				}
+			}
+			if (closedListResult != closedList_.end()) {
+				// on closed list
+				if((*closedListResult)->g <= newG) {
+					// the current G in the closed list is better than this one
+					FreeNode((*successor));
+					continue;
+				}
+			}
+
+			// To get here, the current node is better than any open or closed nodes
+			(*successor)->parent = currentTile->tile;
+			(*successor)->g = newG;
+			(*successor)->h = GetHeuristic((*successor)->tile->Coord, goalTile_->tile->Coord);
+			(*successor)->f = (*successor)->g + (*successor)->h;
+
+			// if the current tile is on the closed list, remove it
+			if (closedListResult != closedList_.end()) {
+				FreeNode((*closedListResult));
+				closedList_.erase(closedListResult);
+			}
+
+			// if the current tile is on the open list already, remove it (it will be added back in the correct place later
+			if (openListResult != openList_.end()) {
+				FreeNode((*openListResult));
+				openList_.erase(openListResult);
+				std::make_heap(openList_.begin(), openList_.end(), HeapCompare_f());
+			}
+
+			// push the current tile onto the open list (which unsorts the heap, so resort it)
+			openList_.push_back((*successor));
+			std::push_heap(openList_.begin(), openList_.end(), HeapCompare_f());
+		}
+
+		// current tile has now been expanded, so close it
+		closedList_.push_back(currentTile);
+	}
+	return currentState;
+}
+
+
+void CEntity::FreeAllNodes() {
+	std::vector<ATile*>::iterator i;
+	
+	i = openList_.begin();
+	while (i != openList_.end()) {
+		ATile* n = (*i);
+		FreeNode(n);
+	}
+	openList_.clear();
+
+	i = closedList_.begin();
+	while (i != closedList_.end()) {
+		ATile* n = (*i);
+		FreeNode(n);
+	}
+	closedList_.clear();
+}
+
+
+void CEntity::FreeNode(ATile* n) {
+	delete n;
+}
+
+
+void CEntity::AddSuccessors(ATile* tile) {
+	successorList_.clear();
+	for(int row = tile->tile->Coord.Y - 1; row <= tile->tile->Coord.Y + 1; row++) {
+		for(int col = tile->tile->Coord.X - 1; col <= tile->tile->Coord.X + 1; col++) {
+
+			if(row == tile->tile->Coord.Y && col == tile->tile->Coord.X) continue; // skip current cell
+			if(row < 0 || row > CMap::MapControl.getHeight()) continue; // skip tiles outside map
+			if(col < 0 || col > CMap::MapControl.getWidth()) continue; // skip tiles outside map
+
+			CTile* successorTile = CMap::MapControl.getTile(col, row);
+
+			// Only passable tiles are processed
+			if (successorTile->TypeID == TILE_TYPE_NORMAL) {
+				ATile* successor = new ATile();
+				successor->tile = successorTile;
+				successorList_.push_back(successor);
+			}
+		}
+	}
 }
 
 
@@ -188,31 +254,8 @@ int CEntity::GetHeuristic(CCoord A, CCoord B) {
 }
 
 
-ATile* CEntity::GetLowestF(std::set<ATile*> List) {
-	int lowestF = -1;
-	ATile* lowestTile = 0;
-	for (std::set<ATile*>::iterator tile=List.begin(); tile!=List.end(); ++tile) {
-		if(lowestF == -1 || (*tile)->Fscore < lowestF) {
-			lowestF = (*tile)->Fscore;
-			lowestTile = *tile;
-		}
-	}
-	return lowestTile;
-}
-
-
-ATile* CEntity::FindTileOnList(std::set<ATile*> List, CTile* Tile) {
-	for (std::set<ATile*>::iterator tile=List.begin(); tile!=List.end(); ++tile) {
-		if((*tile)->tile == Tile) {
-			return (*tile);
-		}
-	}
-	return 0;
-}
-
-
 void CEntity::decorateClosedList() {
-	for (std::set<ATile*>::iterator i=closedList_.begin(); i!=closedList_.end(); ++i) {
+	for (std::vector<ATile*>::iterator i=closedList_.begin(); i!=closedList_.end(); ++i) {
 		CTile* tile = (*i)->tile;
 		CTile* parent = (*i)->parent;
 

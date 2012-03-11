@@ -17,12 +17,21 @@ class CTile;
 class CEntity {
 
 public:
+	enum SearchState {
+		SEARCH_STATE_NOT_INITIALISED = 0,
+		SEARCH_STATE_SEARCHING,
+		SEARCH_STATE_SUCCEEDED,
+		SEARCH_STATE_FAILED,
+		SEARCH_STATE_INVALID
+	};
+
 	static std::vector<CEntity*> EntityList;
 	CCoord Coord;
 	int SpriteWidth;
 	int SpriteHeight;
 	int AnimState;
 	char Label[1];
+	unsigned int currentState;
 	CEntity();
 	virtual ~CEntity();
 	virtual bool OnLoad();
@@ -39,21 +48,27 @@ protected: // properties
 	bool isValidPath_;
 	std::vector<CTile*> pathToDestination_;
 	unsigned long lastMoveTime_;
-	//std::list<ATile*> openList_;
-	//std::list<ATile*> closedList_;
-	std::set<ATile*> openList_;
-	std::set<ATile*> closedList_;
 
-protected: //methods
+protected: // methods
 	int CostToDestination();
-	void CalcRoute(CTile* StartNode, CTile* EndNode);
+	void setSearchStates(CTile* start, CTile* goal);
+	unsigned int searchStep();
 	void decorateClosedList();
 	void decorateFinalPath();
 
-private: //methods
+private: // methods
 	int GetHeuristic(CCoord A, CCoord B);
-	ATile* GetLowestF(std::set<ATile*> List);
-	ATile* FindTileOnList(std::set<ATile*> List, CTile* Tile);
+	void AddSuccessors(ATile* tile);
+	void FreeAllNodes();
+	void FreeNode(ATile* n);
+
+private: // properties
+	unsigned int stepCount_;
+	ATile* startTile_;
+	ATile* goalTile_;
+	std::vector<ATile*> openList_;
+	std::vector<ATile*> closedList_;
+	std::vector<ATile*> successorList_;
 };
 
 #endif

@@ -15,12 +15,9 @@ public:
 public:
 	CTile* tile;
 	CTile* parent;
-	int Gcost;
-	int Hcost;
-	int Fscore;
-	bool operator==(const ATile &other) const;
-	bool operator!=(const ATile &other) const;
-	bool operator<(ATile &rhs) { return Fscore < rhs.Fscore; }
+	int g;
+	int h;
+	int f;
 };
 
 #endif
