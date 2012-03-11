@@ -60,7 +60,7 @@ void CEntity::OnCleanup() {
 
 void CEntity::CalcRoute(CTile* StartNode, CTile* EndNode) {
 	// A* help from http://www.policyalmanac.org/games/aStarTutorial.htm
-	std::cout << "A* calculating route from " << StartNode->Coord << " to " << EndNode->Coord << std::endl;
+	//std::cout << "A* calculating route from " << StartNode->Coord << " to " << EndNode->Coord << std::endl;
 
 	bool Finished = false;
 	int Iteration = 0; // for tracking the loop-count and bailing out early - mostly for visualisation reasons
@@ -178,8 +178,7 @@ void CEntity::CalcRoute(CTile* StartNode, CTile* EndNode) {
 		}
 	}
 
-	std::cout << "A* took " << (SDL_GetTicks() - startTime) << std::endl;
-
+	//std::cout << "A* took " << (SDL_GetTicks() - startTime) << std::endl;
 }
 
 
@@ -230,6 +229,8 @@ void CEntity::decorateClosedList() {
 
 
 void CEntity::decorateFinalPath() {
+	if (pathToDestination_.size() == 0) return;
+
 	CTile* parent = (*pathToDestination_.begin());
 	for(std::vector<CTile*>::iterator i = pathToDestination_.begin(); i!=pathToDestination_.end(); ++i) {
 		CTile* tile = (*i);

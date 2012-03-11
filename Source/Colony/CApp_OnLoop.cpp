@@ -2,6 +2,7 @@
 #include "CFPS.h"
 #include "CEntity.h"
 
+
 void CApp::OnLoop() {
 	CFPS::FPSControl.OnLoop();
 

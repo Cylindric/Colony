@@ -25,9 +25,9 @@ void CApp::OnRender() {
 	SDL_Flip(Surf_Display);
 
 	// clear the tiles
-	//for (std::vector<CTile*>::iterator itTile=CMap::MapControl.getTiles()->begin(); itTile!=CMap::MapControl.getTiles()->end(); ++itTile) {
-	//	(*itTile)->Label = L"";
-	//}
+	for (std::vector<CTile*>::iterator itTile=CMap::MapControl.getTiles()->begin(); itTile!=CMap::MapControl.getTiles()->end(); ++itTile) {
+		(*itTile)->Label = L"";
+	}
 
 	char buffer[30];
 	sprintf_s(buffer, "Colony FPS:%i SF:%f",  CFPS::FPSControl.GetFPS(), CFPS::FPSControl.GetSpeedFactor());

@@ -14,4 +14,6 @@ const unsigned int TARGET_TILE = 40;
 const unsigned int COST_STRAIGHT = 10;
 const unsigned int COST_DIAGONAL = 14;
 
+#define RUN_AI_TESTS 1
+
 #endif

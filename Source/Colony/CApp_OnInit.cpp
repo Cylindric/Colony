@@ -9,6 +9,7 @@
 
 bool CApp::OnInit() {
 	if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+		std::cerr << "Error initialising SDL library" << std::endl;
 		return false;
 	}
 
@@ -18,6 +19,7 @@ bool CApp::OnInit() {
 	srand(0);
 
 	if(TTF_Init() != 0) {
+		std::cerr << "Error initialising TTF library" << std::endl;
 		return false;
 	}
 
@@ -25,12 +27,12 @@ bool CApp::OnInit() {
 	if(Surf_Display == false) return false;
 
 	if(CMap::MapControl.onLoad("./maps/maze.txt") == false) {
-		std::cerr << "Error loading map";
+		std::cerr << "Error loading map" << std::endl;
 		return false;
 	}
 
 	if(CFont::FontControl.OnInit() == false) {
-		std::cout << "Error initialising fonts";
+		std::cout << "Error initialising fonts" << std::endl;
 		return false;
 	}
 
