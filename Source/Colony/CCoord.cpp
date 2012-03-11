@@ -10,7 +10,7 @@ CCoord::CCoord(void)
 CCoord::CCoord(int X, int Y)
 {
 	this->X = X;
-	this->Y = X;
+	this->Y = Y;
 }
 
 std::ostream& operator<<(std::ostream& output, const CCoord& p) {
