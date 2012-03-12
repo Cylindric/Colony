@@ -12,6 +12,9 @@ bool CFont::OnInit() {
 	this->TileFont = TTF_OpenFont("./fonts/DejaVuSans.ttf", 10);
 	if(this->TileFont == NULL) return false;
 
+	this->DebugFont = TTF_OpenFont("./fonts/DejaVuSans.ttf", 4);
+	if(this->DebugFont == NULL) return false;
+
 	return true;
 }
 

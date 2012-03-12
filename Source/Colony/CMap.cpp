@@ -152,11 +152,27 @@ void CMap::onRender(SDL_Surface* Surf_Display, int MapX, int MapY) {
 			CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY, tX+tileSize_, tY+tileSize_, C, label);
 		}
 
+
+		int font = FONT_TILE;
+		
+#if DEBUG_SHOW_TILE_COORDS
+		if (tile->LTopLeft.length() == 0) {
+			std::stringstream ss;
+			ss << tile->Coord.X << "," << tile->Coord.Y;
+			
+			std::string tmp1 = ss.str();
+			std::wstring temp(tmp1.length(), L' ');
+			std::copy(tmp1.begin(), tmp1.end(), temp.begin());
+			tile->LTopLeft = temp;
+			font = FONT_DEBUG_COORD;
+		}
+#endif
+
 		// tile labels
-		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY, tX+(tileSize_/2), tY+(tileSize_/2), C, tile->LTopLeft);
-		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX+(tileSize_/2), tY, tX+tileSize_, tY+(tileSize_/2), C, tile->LTopRight);
-		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX, tY+(tileSize_/2), tX+(tileSize_/2), tY+tileSize_, C, tile->LBottomLeft);
-		CFont::FontControl.AddTextToSurface(Surf_Display, FONT_TILE, tX+(tileSize_/2), tY+(tileSize_/2), tX+tileSize_, tY+tileSize_, C, tile->LBottomRight);
+		CFont::FontControl.AddTextToSurface(Surf_Display, font, tX, tY, tX+(tileSize_/2), tY+(tileSize_/2), C, tile->LTopLeft);
+		CFont::FontControl.AddTextToSurface(Surf_Display, font, tX+(tileSize_/2), tY, tX+tileSize_, tY+(tileSize_/2), C, tile->LTopRight);
+		CFont::FontControl.AddTextToSurface(Surf_Display, font, tX, tY+(tileSize_/2), tX+(tileSize_/2), tY+tileSize_, C, tile->LBottomLeft);
+		CFont::FontControl.AddTextToSurface(Surf_Display, font, tX+(tileSize_/2), tY+(tileSize_/2), tX+tileSize_, tY+tileSize_, C, tile->LBottomRight);
 
 		id++;
 	}

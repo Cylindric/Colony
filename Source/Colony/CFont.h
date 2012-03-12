@@ -8,7 +8,8 @@
 
 enum {
 	FONT_NORMAL = 0,
-	FONT_TILE
+	FONT_TILE,
+	FONT_DEBUG_COORD
 };
 
 class CFont {
@@ -21,6 +22,7 @@ public:
 private:
 	TTF_Font* NormalFont;
 	TTF_Font* TileFont;
+	TTF_Font* DebugFont;
 	SDL_Surface* TextSurface;
 	void SetTextSurface(int Font, SDL_Color Colour, std::wstring text);
 

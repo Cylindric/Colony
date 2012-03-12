@@ -20,4 +20,6 @@ public:
 	int f;
 };
 
+std::ostream& operator<<(std::ostream& output, const ATile* p);
+
 #endif

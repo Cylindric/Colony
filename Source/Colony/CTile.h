@@ -4,6 +4,8 @@
 // Included dependencies
 #include <vector>
 #include <string>
+#include <iostream>
+#include <iomanip>
 #include "CCoord.h"
 
 // Forward declarations
@@ -34,5 +36,8 @@ public:
 	CTile(void);
 
 };
+
+
+std::ostream& operator<<(std::ostream& output, const CTile& p);
 
 #endif

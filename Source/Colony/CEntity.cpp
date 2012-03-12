@@ -124,6 +124,7 @@ unsigned int CEntity::searchStep() {
 	openList_.pop_back();
 
 	if(currentTile->tile == goalTile_->tile) {
+		std::cout << "Current ATile: " << currentTile << std::endl;
 		goalTile_->parent = currentTile;
 
 		if (currentTile->tile != startTile_->tile) {
@@ -131,8 +132,8 @@ unsigned int CEntity::searchStep() {
 			ATile* nodeChild = goalTile_;
 			ATile* nodeParent = goalTile_->parent;
 			do {
-				std::cout << "T:" << nodeChild->tile->Coord;
-				std::cout << " P:" << nodeParent->tile->Coord;
+				//std::cout << "T:" << nodeChild->tile->Coord;
+				//std::cout << " P:" << nodeParent->tile->Coord;
 
 				nodeParent->child = nodeChild;
 				nodeChild = nodeParent;

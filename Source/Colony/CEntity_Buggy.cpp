@@ -33,7 +33,7 @@ void CEntity_Buggy::OnLoop() {
 		CTile* currentTile = CMap::MapControl.getTile(this->Coord);
 		CTile* targetTile = CMap::MapControl.getTile(this->Destination);
 
-#ifdef RUN_AI_TESTS
+#ifdef DEBUG_SHOW_TILE_COORDS
 		// AI tests
 		long tStart = SDL_GetTicks();
 		int tests = 10;

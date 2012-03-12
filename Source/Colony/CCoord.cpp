@@ -1,5 +1,6 @@
 #include "CCoord.h"
 #include <iostream>
+#include <iomanip>
 
 CCoord::CCoord(void)
 {
@@ -14,6 +15,6 @@ CCoord::CCoord(int X, int Y)
 }
 
 std::ostream& operator<<(std::ostream& output, const CCoord& p) {
-	output << p.X << "," << p.Y;
+	output << std::setw(2) << p.X << "," << std::setw(2) << p.Y;
 	return output;
 }
