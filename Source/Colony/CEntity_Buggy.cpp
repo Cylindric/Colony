@@ -37,16 +37,30 @@ void CEntity_Buggy::OnLoop() {
 		// AI tests
 		long tStart = SDL_GetTicks();
 		int tests = 10;
+		unsigned int searchState;
 		for (int i = 0; i < tests; i++) {
 			this->Coord = CCoord(1,1);
 			this->Destination = CCoord(5, 3);
 			currentTile = CMap::MapControl.getTile(this->Coord);
 			targetTile = CMap::MapControl.getTile(this->Destination);
-			setSearchStates(currentTile, targetTile);
-			while(searchStep() <= SEARCH_STATE_SEARCHING) {
+			
+			searchState = setSearchStates(currentTile, targetTile);
+			while(searchState == SEARCH_STATE_SEARCHING) {
 				// search until end
+				searchState = searchStep();
 			}
 		}
+
+		// check for solution
+		if (searchState == SEARCH_STATE_SUCCEEDED) {
+			CTile* node = getSolutionStart();
+			while (node != NULL) {
+				std::cout << node->Coord << ", ";
+				node = getSolutionNext();
+			}
+			std::cout << std::endl;
+		}
+
 		long tDuration = SDL_GetTicks() - tStart;
 		std::cout << "Test of " << tests << " A* loops took " << tDuration << "ms, " << (tDuration/tests) << " avg" << std::endl;
 #endif

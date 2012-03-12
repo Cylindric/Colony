@@ -51,16 +51,20 @@ protected: // properties
 
 protected: // methods
 	int CostToDestination();
-	void setSearchStates(CTile* start, CTile* goal);
+	unsigned int setSearchStates(CTile* start, CTile* goal);
 	unsigned int searchStep();
 	void decorateClosedList();
 	void decorateFinalPath();
+	CTile* getSolutionStart();
+	CTile* getSolutionNext();
 
 private: // methods
 	int GetHeuristic(CCoord A, CCoord B);
 	void AddSuccessors(ATile* tile);
 	void FreeAllNodes();
 	void FreeNode(ATile* n);
+	void FreeUnusedNodes();
+	void dumpClosedList();
 
 private: // properties
 	unsigned int stepCount_;
@@ -69,6 +73,7 @@ private: // properties
 	std::vector<ATile*> openList_;
 	std::vector<ATile*> closedList_;
 	std::vector<ATile*> successorList_;
+	ATile* currentSolutionNode_;
 };
 
 #endif

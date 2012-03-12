@@ -67,7 +67,7 @@ void CEntity::OnCleanup() {
 }
 
 
-void CEntity::setSearchStates(CTile* start, CTile* goal) {
+unsigned int CEntity::setSearchStates(CTile* start, CTile* goal) {
 	openList_.clear();
 	closedList_.clear();
 	pathToDestination_.clear();
@@ -86,6 +86,8 @@ void CEntity::setSearchStates(CTile* start, CTile* goal) {
 	openList_.push_back(startTile_);
 	std::push_heap(openList_.begin(), openList_.end(), HeapCompare_f());
 	stepCount_ = 0;
+
+	return currentState;
 }
 
 
@@ -122,8 +124,23 @@ unsigned int CEntity::searchStep() {
 	openList_.pop_back();
 
 	if(currentTile->tile == goalTile_->tile) {
+		goalTile_->parent = currentTile;
 
-		goalTile_->parent = currentTile->tile;
+		if (currentTile->tile != startTile_->tile) {
+			///FreeNode(currentTile);
+			ATile* nodeChild = goalTile_;
+			ATile* nodeParent = goalTile_->parent;
+			do {
+				std::cout << "T:" << nodeChild->tile->Coord;
+				std::cout << " P:" << nodeParent->tile->Coord;
+
+				nodeParent->child = nodeChild;
+				nodeChild = nodeParent;
+				nodeParent = nodeParent->parent;
+			} while (nodeChild != startTile_);
+		}
+
+		FreeUnusedNodes();
 
 		currentState = SEARCH_STATE_SUCCEEDED;
 		return currentState;
@@ -172,7 +189,7 @@ unsigned int CEntity::searchStep() {
 			}
 
 			// To get here, the current node is better than any open or closed nodes
-			(*successor)->parent = currentTile->tile;
+			(*successor)->parent = currentTile;
 			(*successor)->g = newG;
 			(*successor)->h = GetHeuristic((*successor)->tile->Coord, goalTile_->tile->Coord);
 			(*successor)->f = (*successor)->g + (*successor)->h;
@@ -202,6 +219,27 @@ unsigned int CEntity::searchStep() {
 }
 
 
+CTile* CEntity::getSolutionStart() {
+	currentSolutionNode_ = startTile_;
+	if (currentSolutionNode_) {
+		return currentSolutionNode_->tile;
+	} else {
+		return NULL;
+	}
+}
+
+
+CTile* CEntity::getSolutionNext() {
+	if (currentSolutionNode_) {
+		if (currentSolutionNode_->child) {
+			ATile* child = currentSolutionNode_->child;
+			return child->tile;
+		}
+	}
+	return NULL;
+}
+
+
 void CEntity::FreeAllNodes() {
 	std::vector<ATile*>::iterator i;
 	
@@ -223,6 +261,29 @@ void CEntity::FreeAllNodes() {
 
 void CEntity::FreeNode(ATile* n) {
 	delete n;
+}
+
+
+void CEntity::FreeUnusedNodes() {
+	std::vector<ATile*>::iterator iterOpen = openList_.begin();
+	while (iterOpen != openList_.end()) {
+		ATile* n = (*iterOpen);
+		if (!n->child) {
+			FreeNode(n);
+			n = NULL;
+		}
+		iterOpen++;
+	}
+
+	std::vector<ATile*>::iterator iterClosed = closedList_.begin();
+	while (iterClosed != closedList_.end()) {
+		ATile* n = (*iterClosed);
+		if (!n->child) {
+			FreeNode(n);
+			n = NULL;
+		}
+		iterClosed++;
+	}
 }
 
 
@@ -257,7 +318,7 @@ int CEntity::GetHeuristic(CCoord A, CCoord B) {
 void CEntity::decorateClosedList() {
 	for (std::vector<ATile*>::iterator i=closedList_.begin(); i!=closedList_.end(); ++i) {
 		CTile* tile = (*i)->tile;
-		CTile* parent = (*i)->parent;
+		CTile* parent = (*i)->parent->tile;
 
 		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"↖";
 		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"←";
@@ -286,5 +347,17 @@ void CEntity::decorateFinalPath() {
 		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"⇒";
 		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇘";
 		parent = tile;
+	}
+}
+
+
+
+void CEntity::dumpClosedList() {
+	for(std::vector<ATile*>::iterator i = closedList_.begin(); i!=closedList_.end(); ++i) {
+		std::cout << "T:" << (*i)->tile->Coord;
+		if ((*i)->parent != NULL) {
+			std::cout << " P:" << (*i)->parent->tile->Coord;
+		}
+		std::cout << std::endl;
 	}
 }

@@ -9,12 +9,12 @@ class ATile {
 
 public:
 	ATile(void);
-	ATile(CTile* Tile, CTile* Parent, int G, int H);
 	~ATile(void);
 
 public:
 	CTile* tile;
-	CTile* parent;
+	ATile* parent;
+	ATile* child;
 	int g;
 	int h;
 	int f;
