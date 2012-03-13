@@ -26,6 +26,13 @@ bool CEntity_Buggy::OnLoad() {
 
 
 void CEntity_Buggy::OnLoop() {
+	unsigned long searchStartTime = SDL_GetTicks();
+	if (currentState == SEARCH_STATE_SEARCHING) {
+		unsigned long runningTime = (SDL_GetTicks() - searchStartTime);
+		while((currentState == SEARCH_STATE_SEARCHING) && (runningTime < 10) ) {
+			doSearchStep();
+		}
+	}
 
 	if(SDL_GetTicks() > (this->lastMoveTime_ + 500)) {
 		CTile* currentTile = CMap::MapControl.getTile(this->Position);
@@ -76,16 +83,11 @@ void CEntity_Buggy::OnLoop() {
 		std::cout << "Test of " << tests << " A* loops took " << tDuration << "ms, " << (tDuration/tests) << " avg" << std::endl;
 #endif
 
-		
-		// move to the next tile towards the destination
-		unsigned int searchState;
 
 		if (currentState == SEARCH_STATE_NOT_INITIALISED) {
-			searchState = setSearchStates(currentTile, targetTile);
-			while(searchState == SEARCH_STATE_SEARCHING) {
-				searchState = doSearchStep();
-			}
+			setSearchStates(currentTile, targetTile);
 		}
+
 		if (currentState == SEARCH_STATE_SUCCEEDED) {
 			CTile* node = getSolutionStart();
 			if (node != NULL) {
