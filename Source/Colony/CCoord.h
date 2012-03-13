@@ -7,11 +7,11 @@ class CCoord {
 public:
 	CCoord(void);
 	CCoord(int X, int Y);
-	
+	bool operator==(CCoord& rhs);
 	int X;
 	int Y;
-
 };
+
 
 std::ostream& operator<<(std::ostream& output, const CCoord& p);
 

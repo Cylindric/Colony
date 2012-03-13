@@ -25,45 +25,46 @@ public:
 		SEARCH_STATE_INVALID
 	};
 
-	static std::vector<CEntity*> EntityList;
-	CCoord Coord;
-	int SpriteWidth;
-	int SpriteHeight;
-	int AnimState;
-	char Label[1];
-	unsigned int currentState;
+public: //methods
 	CEntity();
 	virtual ~CEntity();
 	virtual bool OnLoad();
 	virtual void OnLoop();
 	virtual void OnRender(SDL_Surface* Surf_Display);
 	virtual void OnCleanup();
+
+public: // properties
+	static std::vector<CEntity*> EntityList;
+	CCoord Position;
+	int SpriteWidth;
+	int SpriteHeight;
+	int AnimState;
+	char Label[1];
+	unsigned int currentState;
 	CCoord Destination;
 
 protected: // properties
 	CAnimation Anim_Control;
-	SDL_Surface* EntityTileset;
+	SDL_Surface* tileset_;
 
 	// A* objects
-	bool isValidPath_;
-	std::vector<CTile*> pathToDestination_;
 	unsigned long lastMoveTime_;
+	unsigned int currentPathStep_;
 
 protected: // methods
-	int CostToDestination();
 	unsigned int setSearchStates(CTile* start, CTile* goal);
-	unsigned int searchStep();
+	unsigned int doSearchStep();
 	void decorateClosedList();
 	void decorateFinalPath();
 	CTile* getSolutionStart();
 	CTile* getSolutionNext();
 
 private: // methods
-	int GetHeuristic(CCoord A, CCoord B);
-	void AddSuccessors(ATile* tile);
-	void FreeAllNodes();
-	void FreeNode(ATile* n);
-	void FreeUnusedNodes();
+	int getHeuristic(CCoord A, CCoord B);
+	void addSuccessors(ATile* tile);
+	void freeAllNodes();
+	void freeNode(ATile* n);
+	void freeUnusedNodes();
 	void dumpClosedList();
 
 private: // properties

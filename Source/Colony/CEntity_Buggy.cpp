@@ -12,8 +12,6 @@ CEntity_Buggy::CEntity_Buggy() {
 	Destination = CCoord();
 	lastMoveTime_ = SDL_GetTicks();
 	DestinationCursor = new CEntity_TargetCursor();
-	isValidPath_ = false;
-	pathToDestination_.clear();
 }
 
 
@@ -30,17 +28,30 @@ bool CEntity_Buggy::OnLoad() {
 void CEntity_Buggy::OnLoop() {
 
 	if(SDL_GetTicks() > (this->lastMoveTime_ + 500)) {
-		CTile* currentTile = CMap::MapControl.getTile(this->Coord);
+		CTile* currentTile = CMap::MapControl.getTile(this->Position);
 		CTile* targetTile = CMap::MapControl.getTile(this->Destination);
 
-#ifdef DEBUG_SHOW_TILE_COORDS
+		// if the current destination is the same as the current tile, randomise a new target
+		if ((currentTile->Coord == this->Destination)) {
+			currentState = SEARCH_STATE_NOT_INITIALISED;
+			CCoord nextCoord;
+			do {
+				nextCoord.X = (rand() % (CMap::MapControl.getWidth()-1));
+				nextCoord.Y = (rand() % (CMap::MapControl.getHeight()-1));
+				targetTile = CMap::MapControl.getTile(nextCoord);
+			} while (targetTile->TypeID != TILE_TYPE_NORMAL);
+			this->Destination = nextCoord;
+			CTile* targetTile = CMap::MapControl.getTile(this->Destination);
+		}
+
+#ifdef DEBUG_RUN_AI_TESTS
 		// AI tests
 		long tStart = SDL_GetTicks();
 		int tests = 10;
 		unsigned int searchState;
 		for (int i = 0; i < tests; i++) {
-			this->Coord = CCoord(1,1);
-			this->Destination = CCoord(5, 3);
+			this->Coord = CCoord(1,2);
+			this->Destination = CCoord(3, 2);
 			currentTile = CMap::MapControl.getTile(this->Coord);
 			targetTile = CMap::MapControl.getTile(this->Destination);
 			
@@ -65,13 +76,31 @@ void CEntity_Buggy::OnLoop() {
 		std::cout << "Test of " << tests << " A* loops took " << tDuration << "ms, " << (tDuration/tests) << " avg" << std::endl;
 #endif
 
-		this->isValidPath_ = false; // force re-calc every loop
-			// move to the next tile in the path
-			//Coord = (*pathToDestination_.begin())->Coord;
 		
-			// remove the first tile from the path
-			//pathToDestination_.erase(pathToDestination_.begin());
-		//}
+		// move to the next tile towards the destination
+		unsigned int searchState;
+
+		if (currentState == SEARCH_STATE_NOT_INITIALISED) {
+			searchState = setSearchStates(currentTile, targetTile);
+			while(searchState == SEARCH_STATE_SEARCHING) {
+				searchState = doSearchStep();
+			}
+		}
+		if (currentState == SEARCH_STATE_SUCCEEDED) {
+			CTile* node = getSolutionStart();
+			if (node != NULL) {
+				unsigned int s = 0;
+				while (s <= currentPathStep_) {
+					node = getSolutionNext();
+					if (node != NULL) {
+						Position = (*node).Coord;
+					}
+					s++;
+				}
+			}
+			currentPathStep_++;
+		}
+		
 		this->lastMoveTime_ = SDL_GetTicks();
 	}
 
@@ -79,8 +108,8 @@ void CEntity_Buggy::OnLoop() {
 	//decorateClosedList();
 	decorateFinalPath();
 
-	(*this->DestinationCursor).Coord.X = this->Destination.X;
-	(*this->DestinationCursor).Coord.Y = this->Destination.Y;
+	(*this->DestinationCursor).Position.X = this->Destination.X;
+	(*this->DestinationCursor).Position.Y = this->Destination.Y;
 	Anim_Control.OnAnimate();
 	(*this->DestinationCursor).OnLoop();
 }

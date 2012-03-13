@@ -71,11 +71,11 @@ bool CMap::onLoad(char* filename) {
 		if (objectName == "buggy") {
 			CEntity_Buggy* ent = new CEntity_Buggy();
 			ent->OnLoad();
-			ent->Coord.X = valA;
-			ent->Coord.Y = valB;
+			ent->Position.X = valA;
+			ent->Position.Y = valB;
 			ent->Destination.X = valC;
 			ent->Destination.Y = valD;
-			CTile* entTile = CMap::MapControl.getTile(ent->Coord);
+			CTile* entTile = CMap::MapControl.getTile(ent->Position);
 			entTile->EntityList.push_back(ent);
 			CEntity::EntityList.push_back(ent);
 		}

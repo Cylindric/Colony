@@ -26,7 +26,7 @@ bool CApp::OnInit() {
 	Surf_Display = CCamera::CameraControl.OnInit();
 	if(Surf_Display == false) return false;
 
-	if(CMap::MapControl.onLoad("./maps/maze.txt") == false) {
+	if(CMap::MapControl.onLoad("./maps/maze2.txt") == false) {
 		std::cerr << "Error loading map" << std::endl;
 		return false;
 	}

@@ -20,12 +20,13 @@ public:
 
 
 CEntity::CEntity() {
-	this->EntityTileset = NULL;
-	this->Coord = CCoord();
+	this->tileset_ = NULL;
+	this->Position = CCoord();
 	this->SpriteWidth = CMap::MapControl.getTileSize();
 	this->SpriteHeight = CMap::MapControl.getTileSize();
 	this->AnimState = 0;
 	this->Label[0] = 0;
+	this->currentPathStep_ = 0;
 	currentState = SEARCH_STATE_NOT_INITIALISED;
 }
 
@@ -35,7 +36,7 @@ CEntity::~CEntity() {
 
 
 bool CEntity::OnLoad() {
-	this->EntityTileset = CMap::MapControl.getTileset();
+	this->tileset_ = CMap::MapControl.getTileset();
 	return true;
 }
 
@@ -46,11 +47,11 @@ void CEntity::OnLoop() {
 
 
 void CEntity::OnRender(SDL_Surface* Surf_Display) {
-	if(this->EntityTileset == NULL || Surf_Display == NULL) return;
+	if(this->tileset_ == NULL || Surf_Display == NULL) return;
 
 	// calculate the 'real' position on the view
-	int screenX = ((this->Coord.X * CMap::MapControl.getTileSize()) + CCamera::CameraControl.GetX());
-	int screenY = ((this->Coord.Y * CMap::MapControl.getTileSize()) + CCamera::CameraControl.GetY());
+	int screenX = ((this->Position.X * CMap::MapControl.getTileSize()) + CCamera::CameraControl.GetX());
+	int screenY = ((this->Position.Y * CMap::MapControl.getTileSize()) + CCamera::CameraControl.GetY());
 
 	// if the sprite is off-camera, don't bother drawing it
 	if((screenX + SpriteWidth < 0) || (screenY + SpriteHeight < 0)) return;
@@ -60,7 +61,7 @@ void CEntity::OnRender(SDL_Surface* Surf_Display) {
     int cellX = (cell % CMap::MapControl.getTilesetColumns()) * CMap::MapControl.getTileSize();
     int cellY = (cell / CMap::MapControl.getTilesetColumns()) * CMap::MapControl.getTileSize();
 
-	CSurface::OnDraw(Surf_Display, this->EntityTileset, screenX, screenY, cellX, cellY, SpriteWidth, SpriteHeight);
+	CSurface::OnDraw(Surf_Display, this->tileset_, screenX, screenY, cellX, cellY, SpriteWidth, SpriteHeight);
 }
 
 void CEntity::OnCleanup() {
@@ -70,7 +71,6 @@ void CEntity::OnCleanup() {
 unsigned int CEntity::setSearchStates(CTile* start, CTile* goal) {
 	openList_.clear();
 	closedList_.clear();
-	pathToDestination_.clear();
 	startTile_ = new ATile();
 	goalTile_ = new ATile();
 
@@ -80,18 +80,19 @@ unsigned int CEntity::setSearchStates(CTile* start, CTile* goal) {
 	currentState = SEARCH_STATE_SEARCHING;
 
 	startTile_->g = 0;
-	startTile_->h = GetHeuristic(start->Coord, goal->Coord);
+	startTile_->h = getHeuristic(start->Coord, goal->Coord);
 	startTile_->f = startTile_->g + startTile_->h;
 	startTile_->parent = NULL;
 	openList_.push_back(startTile_);
 	std::push_heap(openList_.begin(), openList_.end(), HeapCompare_f());
 	stepCount_ = 0;
+	currentPathStep_ = 0;
 
 	return currentState;
 }
 
 
-unsigned int CEntity::searchStep() {
+unsigned int CEntity::doSearchStep() {
 	// A* help from http://www.policyalmanac.org/games/aStarTutorial.htm
 	// More help from http://code.google.com/p/a-star-algorithm-implementation/source/browse/trunk/stlastar.h
 
@@ -110,7 +111,7 @@ unsigned int CEntity::searchStep() {
 
 	// if the open list is empty, we're done
 	if (openList_.empty()) {
-		FreeAllNodes();
+		freeAllNodes();
 		currentState = SEARCH_STATE_FAILED;
 		return currentState;
 	}
@@ -124,31 +125,25 @@ unsigned int CEntity::searchStep() {
 	openList_.pop_back();
 
 	if(currentTile->tile == goalTile_->tile) {
-		std::cout << "Current ATile: " << currentTile << std::endl;
 		goalTile_->parent = currentTile;
 
 		if (currentTile->tile != startTile_->tile) {
-			///FreeNode(currentTile);
-			ATile* nodeChild = goalTile_;
-			ATile* nodeParent = goalTile_->parent;
+			ATile* nodeChild = currentTile;
+			ATile* nodeParent = currentTile->parent;
 			do {
-				//std::cout << "T:" << nodeChild->tile->Coord;
-				//std::cout << " P:" << nodeParent->tile->Coord;
-
 				nodeParent->child = nodeChild;
 				nodeChild = nodeParent;
 				nodeParent = nodeParent->parent;
 			} while (nodeChild != startTile_);
 		}
-
-		FreeUnusedNodes();
+		freeUnusedNodes();
 
 		currentState = SEARCH_STATE_SUCCEEDED;
 		return currentState;
 
 	} else {
 
-		AddSuccessors(currentTile);
+		addSuccessors(currentTile);
 		for (std::vector<ATile*>::iterator successor = successorList_.begin(); successor != successorList_.end(); successor++) {
 
 			if ((*successor)->tile->Coord.Y == currentTile->tile->Coord.Y || (*successor)->tile->Coord.X == currentTile->tile->Coord.X) {
@@ -168,7 +163,7 @@ unsigned int CEntity::searchStep() {
 				// already on open list
 				if ((*openListResult)->g <= newG) {
 					// the current G in the open list is better than this one
-					FreeNode((*successor));
+					freeNode((*successor));
 					continue;
 				}
 			}
@@ -184,7 +179,7 @@ unsigned int CEntity::searchStep() {
 				// on closed list
 				if((*closedListResult)->g <= newG) {
 					// the current G in the closed list is better than this one
-					FreeNode((*successor));
+					freeNode((*successor));
 					continue;
 				}
 			}
@@ -192,18 +187,18 @@ unsigned int CEntity::searchStep() {
 			// To get here, the current node is better than any open or closed nodes
 			(*successor)->parent = currentTile;
 			(*successor)->g = newG;
-			(*successor)->h = GetHeuristic((*successor)->tile->Coord, goalTile_->tile->Coord);
+			(*successor)->h = getHeuristic((*successor)->tile->Coord, goalTile_->tile->Coord);
 			(*successor)->f = (*successor)->g + (*successor)->h;
 
 			// if the current tile is on the closed list, remove it
 			if (closedListResult != closedList_.end()) {
-				FreeNode((*closedListResult));
+				freeNode((*closedListResult));
 				closedList_.erase(closedListResult);
 			}
 
 			// if the current tile is on the open list already, remove it (it will be added back in the correct place later
 			if (openListResult != openList_.end()) {
-				FreeNode((*openListResult));
+				freeNode((*openListResult));
 				openList_.erase(openListResult);
 				std::make_heap(openList_.begin(), openList_.end(), HeapCompare_f());
 			}
@@ -234,6 +229,7 @@ CTile* CEntity::getSolutionNext() {
 	if (currentSolutionNode_) {
 		if (currentSolutionNode_->child) {
 			ATile* child = currentSolutionNode_->child;
+			currentSolutionNode_ = currentSolutionNode_->child;
 			return child->tile;
 		}
 	}
@@ -241,36 +237,36 @@ CTile* CEntity::getSolutionNext() {
 }
 
 
-void CEntity::FreeAllNodes() {
+void CEntity::freeAllNodes() {
 	std::vector<ATile*>::iterator i;
 	
 	i = openList_.begin();
 	while (i != openList_.end()) {
 		ATile* n = (*i);
-		FreeNode(n);
+		freeNode(n);
 	}
 	openList_.clear();
 
 	i = closedList_.begin();
 	while (i != closedList_.end()) {
 		ATile* n = (*i);
-		FreeNode(n);
+		freeNode(n);
 	}
 	closedList_.clear();
 }
 
 
-void CEntity::FreeNode(ATile* n) {
+void CEntity::freeNode(ATile* n) {
 	delete n;
 }
 
 
-void CEntity::FreeUnusedNodes() {
+void CEntity::freeUnusedNodes() {
 	std::vector<ATile*>::iterator iterOpen = openList_.begin();
 	while (iterOpen != openList_.end()) {
 		ATile* n = (*iterOpen);
 		if (!n->child) {
-			FreeNode(n);
+			freeNode(n);
 			n = NULL;
 		}
 		iterOpen++;
@@ -280,15 +276,17 @@ void CEntity::FreeUnusedNodes() {
 	while (iterClosed != closedList_.end()) {
 		ATile* n = (*iterClosed);
 		if (!n->child) {
-			FreeNode(n);
+			closedList_.erase(iterClosed);
+			freeNode(n);
 			n = NULL;
+		} else {
+			iterClosed++;
 		}
-		iterClosed++;
 	}
 }
 
 
-void CEntity::AddSuccessors(ATile* tile) {
+void CEntity::addSuccessors(ATile* tile) {
 	successorList_.clear();
 	for(int row = tile->tile->Coord.Y - 1; row <= tile->tile->Coord.Y + 1; row++) {
 		for(int col = tile->tile->Coord.X - 1; col <= tile->tile->Coord.X + 1; col++) {
@@ -310,7 +308,7 @@ void CEntity::AddSuccessors(ATile* tile) {
 }
 
 
-int CEntity::GetHeuristic(CCoord A, CCoord B) {
+int CEntity::getHeuristic(CCoord A, CCoord B) {
 	//return COST_STRAIGHT * std::max(abs(A.X-B.X), abs(A.Y-B.Y));
 	return COST_STRAIGHT * (abs(A.X-B.X) + abs(A.Y-B.Y)); // Manhattan Distance
 }
@@ -334,23 +332,31 @@ void CEntity::decorateClosedList() {
 
 
 void CEntity::decorateFinalPath() {
-	if (pathToDestination_.size() == 0) return;
-
-	CTile* parent = (*pathToDestination_.begin());
-	for(std::vector<CTile*>::iterator i = pathToDestination_.begin(); i!=pathToDestination_.end(); ++i) {
-		CTile* tile = (*i);
-		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"⇖";
-		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"⇐";
-		if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇙";
-		if ((parent->Coord.X == tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"⇑";
-		if ((parent->Coord.X == tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇓";
-		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"⇗";
-		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"⇒";
-		if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇘";
-		parent = tile;
+	if (currentState == SEARCH_STATE_SUCCEEDED) {
+		CTile* parent = getSolutionStart();
+		while (parent != NULL) {
+			parent->Label = L"X";
+			parent = getSolutionNext();
+		}
 	}
-}
 
+
+	//if (pathToDestination_.size() == 0) return;
+
+	//CTile* parent = (*pathToDestination_.begin());
+	//for(std::vector<CTile*>::iterator i = pathToDestination_.begin(); i!=pathToDestination_.end(); ++i) {
+	//	CTile* tile = (*i);
+	//	if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"⇖";
+	//	if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"⇐";
+	//	if ((parent->Coord.X <  tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇙";
+	//	if ((parent->Coord.X == tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"⇑";
+	//	if ((parent->Coord.X == tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇓";
+	//	if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y <  tile->Coord.Y)) tile->Label = L"⇗";
+	//	if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y == tile->Coord.Y)) tile->Label = L"⇒";
+	//	if ((parent->Coord.X >  tile->Coord.X) && (parent->Coord.Y >  tile->Coord.Y)) tile->Label = L"⇘";
+	//	parent = tile;
+	//}
+}
 
 
 void CEntity::dumpClosedList() {
@@ -359,6 +365,10 @@ void CEntity::dumpClosedList() {
 		if ((*i)->parent != NULL) {
 			std::cout << " P:" << (*i)->parent->tile->Coord;
 		}
+		if ((*i)->child != NULL) {
+			std::cout << " C:" << (*i)->child->tile->Coord;
+		}
 		std::cout << std::endl;
 	}
+	std::cout << std::endl;
 }
