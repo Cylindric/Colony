@@ -38,7 +38,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\SDL\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\freeglut\include;$(SolutionDir)\glew-1.7.0\include;$(SolutionDir)\SDL\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\SDL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -49,8 +49,9 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDLmain.lib;SDL_Image.lib;SDL_ttf.lib;SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>SDLmain.lib;SDL_Image.lib;SDL_ttf.lib;SDL.lib;$(SolutionDir)glew-1.7.0\lib\glew32.lib;$(SolutionDir)freeglut\lib\freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalOptions>/ENTRY:mainCRTStartup %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -73,12 +74,7 @@
   <ItemGroup>
     <ClCompile Include="ATile.cpp" />
     <ClCompile Include="CAnimation.cpp" />
-    <ClCompile Include="CApp.cpp" />
-    <ClCompile Include="CApp_OnCleanup.cpp" />
-    <ClCompile Include="CApp_OnEvent.cpp" />
-    <ClCompile Include="CApp_OnInit.cpp" />
-    <ClCompile Include="CApp_OnLoop.cpp" />
-    <ClCompile Include="CApp_OnRender.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCoord.cpp" />
     <ClCompile Include="CCursor.cpp" />
@@ -95,7 +91,6 @@
   <ItemGroup>
     <ClInclude Include="ATile.h" />
     <ClInclude Include="CAnimation.h" />
-    <ClInclude Include="CApp.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCoord.h" />
     <ClInclude Include="CCursor.h" />
