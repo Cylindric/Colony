@@ -38,7 +38,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\freeglut\include;$(SolutionDir)\glew-1.7.0\include;$(SolutionDir)\SDL\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)freeglut\include;$(SolutionDir)soil\src;$(SolutionDir)glew-1.7.0\include;$(SolutionDir)SDL\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\SDL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -49,9 +49,9 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDLmain.lib;SDL_Image.lib;SDL_ttf.lib;SDL.lib;$(SolutionDir)glew-1.7.0\lib\glew32.lib;$(SolutionDir)freeglut\lib\freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDLmain.lib;SDL_Image.lib;SDL_ttf.lib;SDL.lib;$(SolutionDir)glew-1.7.0\lib\glew32.lib;$(SolutionDir)soil\lib\soil.lib;$(SolutionDir)freeglut\lib\freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
-      <AdditionalOptions>/ENTRY:mainCRTStartup %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/ENTRY:mainCRTStartup /NODEFAULTLIB:MSVCRTD %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>
