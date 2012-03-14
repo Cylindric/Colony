@@ -84,7 +84,7 @@ void onRenderScene(void) {
 	glVertex3f( 10.0f, 10.0f, 0.0f); //A
 	glVertex3f( 90.0f, 10.0f, 0.0f); //C
 	glVertex3f( 10.0f, 90.0f, 0.0f); //B
-	glVertex3f( 90.0f, 90.0f, 0.0f); //B
+	glVertex3f( 90.0f, 90.0f, 0.0f); //D
 	glEnd();
 
 	// text
