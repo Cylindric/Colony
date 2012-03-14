@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Colony", "Colony\Colony.vcxproj", "{198B2AFD-8C8F-4CF0-9D97-7C6374041899}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Soil", "Soil\Soil.vcxproj", "{2A8A7CDB-E56B-C277-9BFB-8253D167CC84}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Soil", "Soil\Soil.vcxproj", "{19C72685-1F5A-472C-C0F4-0EF1E16A9970}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,10 +14,10 @@ Global
 		{198B2AFD-8C8F-4CF0-9D97-7C6374041899}.Debug|Win32.Build.0 = Debug|Win32
 		{198B2AFD-8C8F-4CF0-9D97-7C6374041899}.Release|Win32.ActiveCfg = Release|Win32
 		{198B2AFD-8C8F-4CF0-9D97-7C6374041899}.Release|Win32.Build.0 = Release|Win32
-		{2A8A7CDB-E56B-C277-9BFB-8253D167CC84}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2A8A7CDB-E56B-C277-9BFB-8253D167CC84}.Debug|Win32.Build.0 = Debug|Win32
-		{2A8A7CDB-E56B-C277-9BFB-8253D167CC84}.Release|Win32.ActiveCfg = Release|Win32
-		{2A8A7CDB-E56B-C277-9BFB-8253D167CC84}.Release|Win32.Build.0 = Release|Win32
+		{19C72685-1F5A-472C-C0F4-0EF1E16A9970}.Debug|Win32.ActiveCfg = Debug|Win32
+		{19C72685-1F5A-472C-C0F4-0EF1E16A9970}.Debug|Win32.Build.0 = Debug|Win32
+		{19C72685-1F5A-472C-C0F4-0EF1E16A9970}.Release|Win32.ActiveCfg = Release|Win32
+		{19C72685-1F5A-472C-C0F4-0EF1E16A9970}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
