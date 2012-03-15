@@ -72,38 +72,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ATile.cpp" />
-    <ClCompile Include="CAnimation.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="CCamera.cpp" />
-    <ClCompile Include="CCoord.cpp" />
-    <ClCompile Include="CCursor.cpp" />
-    <ClCompile Include="CEntity.cpp" />
-    <ClCompile Include="CEntity_Buggy.cpp" />
-    <ClCompile Include="CEntity_TargetCursor.cpp" />
-    <ClCompile Include="CEvent.cpp" />
-    <ClCompile Include="CFont.cpp" />
-    <ClCompile Include="CFPS.cpp" />
-    <ClCompile Include="CMap.cpp" />
-    <ClCompile Include="CSurface.cpp" />
-    <ClCompile Include="CTile.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ATile.h" />
-    <ClInclude Include="CAnimation.h" />
-    <ClInclude Include="CCamera.h" />
-    <ClInclude Include="CCoord.h" />
-    <ClInclude Include="CCursor.h" />
-    <ClInclude Include="CEntity.h" />
-    <ClInclude Include="CEntity_Buggy.h" />
-    <ClInclude Include="CEntity_TargetCursor.h" />
-    <ClInclude Include="CEvent.h" />
-    <ClInclude Include="CFont.h" />
-    <ClInclude Include="CFPS.h" />
-    <ClInclude Include="CMap.h" />
-    <ClInclude Include="CSurface.h" />
-    <ClInclude Include="CTile.h" />
-    <ClInclude Include="Define.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
