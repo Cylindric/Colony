@@ -58,13 +58,8 @@
       <AdditionalOptions>/ENTRY:mainCRTStartup /NODEFAULTLIB:MSVCRTD %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)*.dll $(SolutionDir)$(Configuration) /Y
-xcopy $(ProjectDir)gfx $(SolutionDir)$(Configuration)\gfx /S /I /Y
-xcopy $(ProjectDir)maps $(SolutionDir)$(Configuration)\maps /S /I /Y
-xcopy $(ProjectDir)fonts $(SolutionDir)$(Configuration)\fonts /S /I /Y
-
-
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -92,6 +87,8 @@ xcopy $(ProjectDir)fonts $(SolutionDir)$(Configuration)\fonts /S /I /Y
     <ClCompile Include="Soil\SOIL.c" />
     <ClCompile Include="Soil\stb_image_aug.c" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Vector2i.cpp" />
+    <ClCompile Include="Vector4f.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Map.h" />
@@ -102,7 +99,8 @@ xcopy $(ProjectDir)fonts $(SolutionDir)$(Configuration)\fonts /S /I /Y
     <ClInclude Include="Soil\stbi_DDS_aug_c.h" />
     <ClInclude Include="Soil\stb_image_aug.h" />
     <ClInclude Include="Tile.h" />
-    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Vector2i.h" />
+    <ClInclude Include="Vector4f.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

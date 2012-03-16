@@ -5,6 +5,8 @@
 #include <GL/freeglut.h>
 #include "Soil\SOIL.h"
 #include "Map.h"
+#include "Vector2i.h"
+#include "Vector4f.h"
 
 using namespace std;
 
@@ -12,7 +14,19 @@ int w;
 int h;
 GLuint texture;
 float deltaMove;
+int lastUpdateTime;
 
+// camera control states
+const float scrollFactor = 2.0f;
+Vector4f cameraDelta;
+Vector4f cameraOffset;
+Vector2i mouseDragStart;
+bool mouseDragging = false;
+
+// framerate tracking
+unsigned int frames;
+unsigned int timebase;
+float fps;
 
 void renderBitmapString(float x, float y, float z, char* string) 
 {
@@ -44,6 +58,24 @@ void restorePerpectiveProjection(void)
 
 void onRenderScene(void) {
 
+	// update the fps
+	frames++;
+	int t = glutGet(GLUT_ELAPSED_TIME);
+	if (t - timebase > 1000) {
+		fps = (float)frames * 1000 / (t-timebase);
+		timebase = t;
+		frames = 0;
+	}
+
+	// update the camera position
+	cameraOffset += cameraDelta;
+
+	// set the camera viewport
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(cameraOffset.x, w+cameraOffset.x, cameraOffset.y, h+cameraOffset.y);
+	glMatrixMode(GL_MODELVIEW);
+
 	// clear the colour and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -58,7 +90,10 @@ void onRenderScene(void) {
 	glPushMatrix();
 	glLoadIdentity();
 	glColor3f(1.0f, 0.0f, 0.0f);
-	renderBitmapString(10, 10, 0, "Test");
+	char status[10];
+	sprintf(status, "FPS: %d", (int)fps);
+	renderBitmapString(10, 10, 0, status);
+
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glPopMatrix();
 	restorePerpectiveProjection();
@@ -66,7 +101,6 @@ void onRenderScene(void) {
 	// swap the buffers
 	glutSwapBuffers();
 }
-
 
 void onChangeSize(int newW, int newH) {
 	w = newW;
@@ -82,7 +116,6 @@ void onChangeSize(int newW, int newH) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, w, h);
-	gluOrtho2D(0, w, 0, h);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -95,10 +128,10 @@ void onKeyDown(unsigned char key, int xx, int yy)
 void onKeyDown(int key, int xx, int yy) 
 {
 	switch (key) {
-	case GLUT_KEY_LEFT : deltaMove = -0.01f; break;
-	case GLUT_KEY_RIGHT : deltaMove = 0.01f; break;
-	case GLUT_KEY_UP : deltaMove = 0.5f; break;
-	case GLUT_KEY_DOWN : deltaMove = -0.5f; break;
+	case GLUT_KEY_LEFT : cameraDelta.x = scrollFactor; break;
+	case GLUT_KEY_RIGHT : cameraDelta.x = -scrollFactor; break;
+	case GLUT_KEY_UP : cameraDelta.y = -scrollFactor; break;
+	case GLUT_KEY_DOWN : cameraDelta.y = scrollFactor; break;
 	}
 }
 
@@ -106,7 +139,7 @@ void onKeyDown(int key, int xx, int yy)
 void onKeyUp(unsigned char key, int xx, int yy) 
 {
 	switch (key) {
-	case 27: exit(0);
+	case 27: exit(0); // escape
 	}
 }
 
@@ -114,22 +147,43 @@ void onKeyUp(unsigned char key, int xx, int yy)
 void onKeyUp(int key, int xx, int yy) 
 {
 	switch (key) {
-	case 27: exit(0);
-	case GLUT_KEY_LEFT : deltaMove = 0.0f; break;
-	case GLUT_KEY_RIGHT : deltaMove = 0.0f; break;
-	case GLUT_KEY_UP : deltaMove = 0.0f; break;
-	case GLUT_KEY_DOWN : deltaMove = 0.0f; break;
+	case GLUT_KEY_LEFT : cameraDelta.x = 0.0f; break;
+	case GLUT_KEY_RIGHT : cameraDelta.x = 0.0f; break;
+	case GLUT_KEY_UP : cameraDelta.y = 0.0f; break;
+	case GLUT_KEY_DOWN : cameraDelta.y = 0.0f; break;
 	}
 }
 
 
 void onMouseClick(int button, int state, int x, int y) 
 {
+	if (button == GLUT_LEFT_BUTTON)
+	{
+		if (state == GLUT_UP)
+		{
+			mouseDragging = false;
+			mouseDragStart.x = 0;
+			mouseDragStart.y = 0;
+		} 
+		else if (state == GLUT_DOWN)
+		{
+			mouseDragging = true;
+			mouseDragStart.x = x;
+			mouseDragStart.y = y;
+		}
+	}
 }
 
 
 void onMouseMove(int x, int y) 
 {
+	if (mouseDragging)
+	{
+		cameraOffset.x -= (x - mouseDragStart.x);
+		cameraOffset.y += (y - mouseDragStart.y);
+		mouseDragStart.x = x;
+		mouseDragStart.y = y;
+	}
 }
 
 

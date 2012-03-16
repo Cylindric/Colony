@@ -42,21 +42,18 @@
     <ClCompile Include="Soil\stb_image_aug.c">
       <Filter>Source Files\Soil</Filter>
     </ClCompile>
+    <ClCompile Include="Vector4f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2i.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Soil\image_DXT.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Soil\image_helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Soil\SOIL.h">
@@ -70,6 +67,18 @@
     </ClInclude>
     <ClInclude Include="Soil\stbi_DDS_aug_c.h">
       <Filter>Header Files\Soil</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Soil\image_DXT.h">
+      <Filter>Header Files\Soil</Filter>
+    </ClInclude>
+    <ClInclude Include="Soil\image_helper.h">
+      <Filter>Header Files\Soil</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2i.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

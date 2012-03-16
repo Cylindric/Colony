@@ -2,7 +2,7 @@
 #include <GL/freeglut.h>
 #include "Soil\SOIL.h"
 #include "Tile.h"
-#include "Vertex.h"
+#include "Vector4f.h"
 
 
 CTile::CTile(void)
@@ -39,7 +39,7 @@ void CTile::setTextureId(int id)
 
 void CTile::onRender(GLuint texture) 
 {
-	int size = 100;
+	int size = 20;
 	int texSize = 256;
 	int tileSize = 20;
 
@@ -58,7 +58,7 @@ void CTile::onRender(GLuint texture)
 
 	/*  1 3
 	 *  0 2 */
-	Vertex vertices[4];
+	Vector4f vertices[4];
 
 	vertices[0].x = 0.0f;
 	vertices[0].y = 0.0f;
@@ -88,8 +88,8 @@ void CTile::onRender(GLuint texture)
 
 	glPushMatrix();
 	glTranslatef(px, py, 0);
-	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &vertices[0].x);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &vertices[0].u);
+	glVertexPointer(2, GL_FLOAT, sizeof(Vector4f), &vertices[0].x);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(Vector4f), &vertices[0].u);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glPopMatrix();
 }
