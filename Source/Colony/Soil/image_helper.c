@@ -322,7 +322,7 @@ find_max_RGBE
 	for( i = width * height; i > 0; --i )
 	{
 		/* float scale = powf( 2.0f, img[3] - 128.0f ) / 255.0f; */
-		float scale = ldexp( 1.0f / 255.0f, (int)(img[3]) - 128 );
+		float scale = (float)ldexp( 1.0f / 255.0f, (int)(img[3]) - 128 );
 		for( j = 0; j < 3; ++j )
 		{
 			if( img[j] * scale > max_val )
