@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <SOIL.h>
-#include "Tile.h"
+#include "Map.h"
 
 using namespace std;
 
@@ -50,23 +50,8 @@ void onRenderScene(void) {
 	// reset any transforms
 	glLoadIdentity();
 
-	// test tiles
-	vector<CTile> tiles;
-	unsigned int rows = 100;
-	unsigned int cols = 100;
-	for (unsigned int row = 0; row < rows; row++) {
-		for (unsigned int col = 0; col < cols; col++) {
-			CTile tile;
-			tile.tileId = ((row*cols)+col)%6;
-			tile.x = col;
-			tile.y = row;
-			tiles.push_back(tile);
-		}
-	} 
-	for (vector<CTile>::iterator t = tiles.begin(); t < tiles.end(); t++)
-	{
-		(*t).onRender(texture);
-	}
+	// get map tiles and render them
+	CMap::getInstance()->onRender(texture);
 
 	// text
 	setOrthographicProjection();
@@ -163,6 +148,8 @@ int main(int argc, char* args[])
 	glutCreateWindow("Colony");
 	glutIgnoreKeyRepeat(true);
 
+	glewInit();
+
 	// register callbacks
 	glutDisplayFunc(onRenderScene);
 	glutReshapeFunc(onChangeSize);
@@ -190,6 +177,8 @@ int main(int argc, char* args[])
 	{
 		printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
 	}
+
+	CMap::getInstance()->onInit();
 
 	// enter main processing cycle
 	glutMainLoop();
