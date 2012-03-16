@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-#include <SOIL.h>
+#include "Soil\SOIL.h"
 #include "Tile.h"
 #include "Vertex.h"
 

@@ -38,8 +38,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)freeglut\include;$(SolutionDir)soil\src;$(SolutionDir)glew-1.7.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\SDL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)freeglut\include;$(SolutionDir)glew-1.7.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -49,7 +49,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)glew-1.7.0\lib\glew32.lib;$(SolutionDir)soil\lib\soil.lib;$(SolutionDir)freeglut\lib\freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)glew-1.7.0\lib\glew32.lib;$(SolutionDir)freeglut\lib\freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <AdditionalOptions>/ENTRY:mainCRTStartup /NODEFAULTLIB:MSVCRTD %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -74,10 +74,20 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Soil\image_DXT.c" />
+    <ClCompile Include="Soil\image_helper.c" />
+    <ClCompile Include="Soil\SOIL.c" />
+    <ClCompile Include="Soil\stb_image_aug.c" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Soil\image_DXT.h" />
+    <ClInclude Include="Soil\image_helper.h" />
+    <ClInclude Include="Soil\SOIL.h" />
+    <ClInclude Include="Soil\stbi_DDS_aug.h" />
+    <ClInclude Include="Soil\stbi_DDS_aug_c.h" />
+    <ClInclude Include="Soil\stb_image_aug.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
