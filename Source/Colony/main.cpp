@@ -6,10 +6,6 @@
 #include "Soil\SOIL.h"
 #include "Map.h"
 
-// prevent compiler warnings for non-secure function calls
-#define _CRT_SECURE_NO_WARNINGS
-
-
 using namespace std;
 
 int w;

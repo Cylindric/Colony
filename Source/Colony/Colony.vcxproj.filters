@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Soil">
+      <UniqueIdentifier>{becbcd56-7f66-4e46-91a9-a9615fbe53d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Soil">
+      <UniqueIdentifier>{849dfe00-24cf-4638-a3de-cc1ec7832eb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -25,16 +31,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Soil\image_DXT.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Soil</Filter>
     </ClCompile>
     <ClCompile Include="Soil\image_helper.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Soil</Filter>
     </ClCompile>
     <ClCompile Include="Soil\SOIL.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Soil</Filter>
     </ClCompile>
     <ClCompile Include="Soil\stb_image_aug.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Soil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,20 +60,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Soil\SOIL.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Soil</Filter>
     </ClInclude>
     <ClInclude Include="Soil\stb_image_aug.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Soil</Filter>
     </ClInclude>
     <ClInclude Include="Soil\stbi_DDS_aug.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Soil</Filter>
     </ClInclude>
     <ClInclude Include="Soil\stbi_DDS_aug_c.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Soil</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="freeglut.dll" />
-    <None Include="glew32.dll" />
   </ItemGroup>
 </Project>

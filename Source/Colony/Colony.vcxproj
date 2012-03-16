@@ -41,6 +41,9 @@
     <IncludePath>$(SolutionDir)freeglut\include;$(SolutionDir)glew-1.7.0\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)glew-1.7.0\include;$(SolutionDir)freeglut\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -54,8 +57,13 @@
       <AdditionalOptions>/ENTRY:mainCRTStartup /NODEFAULTLIB:MSVCRTD %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy $(ProjectDir)*.dll $(SolutionDir)$(Configuration) /Y
+xcopy $(ProjectDir)gfx $(SolutionDir)$(Configuration)\gfx /S /I /Y
+xcopy $(ProjectDir)maps $(SolutionDir)$(Configuration)\maps /S /I /Y
+xcopy $(ProjectDir)fonts $(SolutionDir)$(Configuration)\fonts /S /I /Y
+
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -69,7 +77,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(SolutionDir)glew-1.7.0\lib\glew32.lib;$(SolutionDir)freeglut\lib\freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)*.dll $(SolutionDir)$(Configuration)\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -90,10 +102,6 @@
     <ClInclude Include="Soil\stb_image_aug.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Vertex.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="freeglut.dll" />
-    <None Include="glew32.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
