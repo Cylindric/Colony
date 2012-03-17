@@ -12,7 +12,6 @@ using namespace std;
 
 int w;
 int h;
-GLuint texture;
 float deltaMove;
 int lastUpdateTime;
 
@@ -83,7 +82,7 @@ void onRenderScene(void) {
 	glLoadIdentity();
 
 	// get map tiles and render them
-	CMap::getInstance()->onRender(texture);
+	CMap::getInstance()->onRender();
 
 	// text
 	setOrthographicProjection();
@@ -220,19 +219,7 @@ int main(int argc, char* args[])
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
 
-	// test a texture load from png
-	texture = SOIL_load_OGL_texture (
-		"./gfx/tiles.png",
-		SOIL_LOAD_AUTO,
-		SOIL_CREATE_NEW_ID,
-		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-	);
-	if( 0 == texture )
-	{
-		printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
-	}
-
-	CMap::getInstance()->onInit();
+	CMap::getInstance()->onInit("./maps/maze2.txt");
 
 	// enter main processing cycle
 	glutMainLoop();

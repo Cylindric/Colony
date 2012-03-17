@@ -7,15 +7,16 @@
 
 CTile::CTile(void)
 {
-	CTile(0, 0, 0);
+	CTile(0, 0, 0, 0);
 }
 
 
-CTile::CTile(int x, int y, int texId)
+CTile::CTile(int x, int y, int type, int tex)
 {
 	posX = x;
 	posY = y;
-	textureId = texId;
+	typeId = type;
+	textureId = tex;
 }
 
 
@@ -28,6 +29,12 @@ void CTile::setPosition(int x, int y)
 {
 	posX = x;
 	posY = y;
+}
+
+
+void CTile::setTypeId(int id)
+{
+	typeId = id;
 }
 
 

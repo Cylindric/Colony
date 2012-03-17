@@ -14,8 +14,8 @@ class CMap
 {
 public:
 	static CMap* getInstance();
-	void onInit(void);
-	void onRender(GLuint texture);
+	bool onInit(char* filename);
+	void onRender();
     vector<CTile*> getTiles(void);
 
 private:
@@ -23,6 +23,13 @@ private:
 	~CMap(void);
 	static CMap* instance;
 	vector<CTile*> tiles;
+	unsigned int tileColumns;
+	unsigned int tileRows;
+		
+	unsigned int tileSize;
+	unsigned int tilesetColumns;
+	string tilesetFilename;
+	GLuint tilesetTextureId;
 };
 
 #endif
