@@ -15,8 +15,9 @@ class CMap
 public:
 	static CMap* getInstance();
 	bool onInit(char* filename);
-	void onRender();
+	void onRender(void);
     vector<CTile*> getTiles(void);
+	unsigned int getTileSize(void);
 
 private:
 	CMap(void);

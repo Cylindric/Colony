@@ -12,11 +12,18 @@ using namespace std;
 CMap* CMap::instance = NULL;
 
 
-CMap* CMap::getInstance() {
+CMap* CMap::getInstance(void)
+{
 	if (instance == NULL) {
 		instance = new CMap();
 	}
 	return instance;
+}
+
+
+unsigned int CMap::getTileSize(void)
+{
+	return tileSize;
 }
 
 
@@ -48,9 +55,9 @@ bool CMap::onInit(char* filename)
 
 	// First line must be the tileset
 	string tilesetFilename;
-	mapFile >> tilesetFilename >> tileSize >> tilesetColumns;
+	mapFile >> tilesetFilename >> tileSize;
 	tilesetTextureId = SOIL_load_OGL_texture(
-		"./gfx/tiles.png",
+		tilesetFilename.c_str(),
 		SOIL_LOAD_AUTO,
 		SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
@@ -71,16 +78,17 @@ bool CMap::onInit(char* filename)
 	// Next should be lines of tiles
 	unsigned int tileCount = 0;
 	while (tileCount < (tileColumns * tileRows)) {
-		int valA = 0;
-		int valB = 0;
+		int tileTexId = 0;
+		int tileTypeId = 0;
 		char sep = ' ';
+		int row = tileRows - (tileCount / tileColumns) - 1;
 
-		mapFile >> valA >> sep >> valB;
+		mapFile >> tileTexId >> sep >> tileTypeId;
 
 		CTile* t = new CTile();
-		t->setPosition((tileCount % tileColumns), (tileCount / tileColumns));
-		t->setTypeId(valA);
-		t->setTextureId(valB);
+		t->setPosition((tileCount % tileColumns), row);
+		t->setTypeId(tileTypeId);
+		t->setTextureId(tileTexId);
 		tiles.push_back(t);
 		tileCount++;
 	}

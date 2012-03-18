@@ -99,8 +99,10 @@
     <ClInclude Include="Soil\stbi_DDS_aug_c.h" />
     <ClInclude Include="Soil\stb_image_aug.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="Vector2f.h" />
     <ClInclude Include="Vector2i.h" />
     <ClInclude Include="Vector4f.h" />
+    <ClInclude Include="Vector6f.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

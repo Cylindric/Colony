@@ -6,6 +6,7 @@
 #include "Soil\SOIL.h"
 #include "Map.h"
 #include "Vector2i.h"
+#include "Vector2f.h"
 #include "Vector4f.h"
 
 using namespace std;
@@ -21,6 +22,7 @@ Vector4f cameraDelta;
 Vector4f cameraOffset;
 Vector2i mouseDragStart;
 bool mouseDragging = false;
+Vector2i mouseLocation;
 
 // framerate tracking
 unsigned int frames;
@@ -29,11 +31,12 @@ float fps;
 
 void renderBitmapString(float x, float y, float z, char* string) 
 {
-	char *c;
 	glRasterPos3f(x, y, z);
+	char *c;
 	for (c = string; *c != '\0'; c++) {
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *c);
 	}
+	//glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char*)string);
 }
 
 
@@ -88,10 +91,10 @@ void onRenderScene(void) {
 	setOrthographicProjection();
 	glPushMatrix();
 	glLoadIdentity();
-	glColor3f(1.0f, 0.0f, 0.0f);
-	char status[10];
-	sprintf(status, "FPS: %d", (int)fps);
-	renderBitmapString(10, 10, 0, status);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	//char status[32];
+	//sprintf(status, "FPS: %d, Mouse: %d,%d", (int)fps, mouseLocation.x, mouseLocation.y);
+	renderBitmapString(0, 0, 0, "wut");
 
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glPopMatrix();
@@ -188,6 +191,8 @@ void onMouseMove(int x, int y)
 
 void onMousePassiveMotion(int x, int y) 
 {
+	mouseLocation.x = x;
+	mouseLocation.y = y;
 }
 
 
@@ -215,11 +220,17 @@ int main(int argc, char* args[])
 	glutMotionFunc(onMouseMove);
 
 	// OpenGL init
+	//glClearColor(1.0f, 1.0f, 0.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	CMap::getInstance()->onInit("./maps/maze2.txt");
+	CMap::getInstance()->onInit("./maps/maze.txt");
+
+	mouseLocation.x = 0;
+	mouseLocation.y = 0;
 
 	// enter main processing cycle
 	glutMainLoop();
