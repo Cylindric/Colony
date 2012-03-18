@@ -34,7 +34,7 @@ void renderBitmapString(float x, float y, float z, char* string)
 	glRasterPos3f(x, y, z);
 	char *c;
 	for (c = string; *c != '\0'; c++) {
-		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *c);
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 	}
 	//glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char*)string);
 }
@@ -89,15 +89,15 @@ void onRenderScene(void) {
 
 	// text
 	setOrthographicProjection();
-	glPushMatrix();
 	glLoadIdentity();
-	glColor3f(1.0f, 1.0f, 1.0f);
-	//char status[32];
-	//sprintf(status, "FPS: %d, Mouse: %d,%d", (int)fps, mouseLocation.x, mouseLocation.y);
-	renderBitmapString(0, 0, 0, "wut");
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+	char status[32];
+	sprintf(status, "FPS: %d, Mouse: %d,%d", (int)fps, mouseLocation.x, mouseLocation.y);
+	glDisable(GL_BLEND);
+	renderBitmapString(0, 0, 0.1, status);
+	glEnable(GL_BLEND);
 
 	glColor3f(1.0f, 1.0f, 1.0f);
-	glPopMatrix();
 	restorePerpectiveProjection();
 
 	// swap the buffers
@@ -218,9 +218,10 @@ int main(int argc, char* args[])
 	glutSpecialUpFunc(onKeyUp);
 	glutMouseFunc(onMouseClick);
 	glutMotionFunc(onMouseMove);
+	glutPassiveMotionFunc(onMousePassiveMotion);
 
 	// OpenGL init
-	//glClearColor(1.0f, 1.0f, 0.0f, 0.0f);
+	glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
