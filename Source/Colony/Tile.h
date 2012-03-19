@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 
 class Vector2f;
+class Vector2i;
 
 enum TileTextureId
 {
@@ -19,6 +20,7 @@ public:
 	CTile(int x, int y, int typeId, int texId);
 	void onRender(GLuint texture);
 	void setPosition(int x, int y);
+	Vector2i getPosition();
 	void setTextureId(int id);
 	void setTypeId(int id);
 	void setHighlight(bool active);

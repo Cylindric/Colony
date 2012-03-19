@@ -3,6 +3,7 @@
 #include "Soil\SOIL.h"
 #include "Tile.h"
 #include "Vector2f.h"
+#include "Vector2i.h"
 #include "Vector4f.h"
 #include "Vector6f.h"
 #include "Map.h"
@@ -32,6 +33,12 @@ void CTile::setPosition(int x, int y)
 {
 	posX = x;
 	posY = y;
+}
+
+
+Vector2i CTile::getPosition()
+{
+	return Vector2i(posX, posY);
 }
 
 
@@ -65,7 +72,7 @@ Vector2f* CTile::getTilesetCoords(int t)
 	float tv = (t / texColumns)*th; // bottom-left v-coordinate of the texture map tile
 	float j = (0.5f / (float)texSize); // half-pixel offset to prevent tile bleed
 	
-	Vector2f* ret = new Vector2f[4];
+	Vector2f ret[4];
 	ret[0].u = tu+j;
 	ret[0].v = 1.0f-(tv+th)+j;
 	ret[1].u = tu+tw-j;

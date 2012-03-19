@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "Tile.h"
 #include "Soil\SOIL.h"
+#include "Vector2i.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ unsigned int CMap::getTileSize(void)
 
 CMap::CMap(void) 
 {
+	highlightedTile = new Vector2i(0, 0);
 }
 
 CMap::~CMap(void)
@@ -41,14 +43,6 @@ CMap::~CMap(void)
 bool CMap::onInit(char* filename)
 {
 	tiles.clear();
-	//unsigned int rows = 100;
-	//unsigned int cols = 100;
-	//for (unsigned int row = 0; row < rows; row++) {
-	//	for (unsigned int col = 0; col < cols; col++) {
-	//		CTile* tile = new CTile(col, row, ((row*cols)+col)%6);
-	//		tiles.push_back(tile);
-	//	}
-	//} 
 
 	// open the map file
 	ifstream mapFile(filename);
@@ -124,6 +118,34 @@ void CMap::onRender()
 {
 	for (vector<CTile*>::iterator t = tiles.begin(); t < tiles.end(); t++)
 	{
+		Vector2i tp = (*t)->getPosition();
+		if (tp == *highlightedTile)
+		{
+			(*t)->setHighlight(true);
+		}
+		else
+		{
+			(*t)->setHighlight(false);
+		}
 		(*t)->onRender(tilesetTextureId);
 	}
+}
+
+
+CTile* CMap::getTileAt(unsigned int x, unsigned int y)
+{
+	return tiles[((tileRows-y-1)*tileColumns) + x];
+}
+
+
+void CMap::setHighlightedTile(int x, int y)
+{
+	if (x > tileColumns - 1) x = tileColumns - 1;
+	if (x < 0) x = 0;
+
+	if (y > tileRows - 1) y = tileRows - 1;
+	if (y < 0) y = 0;
+
+	highlightedTile->x = x;
+	highlightedTile->y = y;
 }

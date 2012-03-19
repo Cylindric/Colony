@@ -5,6 +5,7 @@
 #include <GL/freeglut.h>
 #include "Soil\SOIL.h"
 #include "Map.h"
+#include "Tile.h"
 #include "Vector2i.h"
 #include "Vector2f.h"
 #include "Vector4f.h"
@@ -23,6 +24,7 @@ Vector4f cameraOffset;
 Vector2i mouseDragStart;
 bool mouseDragging = false;
 Vector2i mouseLocation;
+GLint viewportDim[4];
 
 // framerate tracking
 unsigned int frames;
@@ -91,10 +93,19 @@ void onRenderScene(void) {
 	setOrthographicProjection();
 	glLoadIdentity();
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	char status[32];
-	sprintf(status, "FPS: %d, Mouse: %d,%d", (int)fps, mouseLocation.x, mouseLocation.y);
+
+	int tileX = mouseLocation.x / 32;
+	tileX += (cameraOffset.x / 32);
+
+	int tileY = (h-mouseLocation.y) / 32;
+	tileY += (cameraOffset.y / 32);
+
+	CMap::getInstance()->setHighlightedTile(tileX, tileY);
+
+	char status[128];
+	sprintf(status, "FPS: %d, Mouse: %d,%d, Cam: %4.0f,%4.0f, Tile: %d,%d", (int)fps, mouseLocation.x, mouseLocation.y, cameraOffset.x, cameraOffset.y, tileX, tileY);
 	glDisable(GL_BLEND);
-	renderBitmapString(0, 0, 0.1, status);
+	renderBitmapString(5, 5, 0.1f, status);
 	glEnable(GL_BLEND);
 
 	glColor3f(1.0f, 1.0f, 1.0f);
@@ -103,6 +114,7 @@ void onRenderScene(void) {
 	// swap the buffers
 	glutSwapBuffers();
 }
+
 
 void onChangeSize(int newW, int newH) {
 	w = newW;
@@ -177,6 +189,13 @@ void onMouseClick(int button, int state, int x, int y)
 }
 
 
+void onMousePassiveMotion(int x, int y) 
+{
+	mouseLocation.x = x;
+	mouseLocation.y = y;
+}
+
+
 void onMouseMove(int x, int y) 
 {
 	if (mouseDragging)
@@ -188,12 +207,6 @@ void onMouseMove(int x, int y)
 	}
 }
 
-
-void onMousePassiveMotion(int x, int y) 
-{
-	mouseLocation.x = x;
-	mouseLocation.y = y;
-}
 
 
 int main(int argc, char* args[]) 
