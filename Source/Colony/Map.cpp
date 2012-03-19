@@ -2,6 +2,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 #include "Map.h"
 #include "Tile.h"
 #include "Soil\SOIL.h"
@@ -132,13 +134,29 @@ void CMap::onRender()
 }
 
 
+void CMap::onClick(int button, Vector2i mouseXY)
+{
+	int tileX = mouseXY.x/32;
+	int tileY = mouseXY.y/32;
+	CTile* t = getTileAt(tileX, tileY);
+	if (button == GLUT_LEFT_BUTTON)
+	{
+		t->nextTextureId();
+	} 
+	else
+	{
+		t->previousTextureId();
+	}
+}
+
+
 CTile* CMap::getTileAt(unsigned int x, unsigned int y)
 {
 	return tiles[((tileRows-y-1)*tileColumns) + x];
 }
 
 
-void CMap::setHighlightedTile(int x, int y)
+void CMap::setHighlightedTile(unsigned int x, unsigned int y)
 {
 	if (x > tileColumns - 1) x = tileColumns - 1;
 	if (x < 0) x = 0;

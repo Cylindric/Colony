@@ -20,7 +20,7 @@ int lastUpdateTime;
 // camera control states
 const float scrollFactor = 2.0f;
 Vector4f cameraDelta;
-Vector4f cameraOffset;
+Vector2i cameraOffset;
 Vector2i mouseDragStart;
 bool mouseDragging = false;
 Vector2i mouseLocation;
@@ -30,6 +30,26 @@ GLint viewportDim[4];
 unsigned int frames;
 unsigned int timebase;
 float fps;
+
+
+Vector2i mouseToMapCoord()
+{
+	Vector2i v;
+	v.x = (mouseLocation.x + cameraOffset.x);
+	v.y = (h - mouseLocation.y + cameraOffset.y);
+	return v;
+}
+
+
+
+Vector2i mouseToTileCoord()
+{
+	Vector2i v;
+	v.x = (mouseLocation.x + cameraOffset.x) / 32;
+	v.y = (h - mouseLocation.y + cameraOffset.y) / 32;
+	return v;
+}
+
 
 void renderBitmapString(float x, float y, float z, char* string) 
 {
@@ -72,7 +92,8 @@ void onRenderScene(void) {
 	}
 
 	// update the camera position
-	cameraOffset += cameraDelta;
+	cameraOffset.x += (int)cameraDelta.x;
+	cameraOffset.y += (int)cameraDelta.y;
 
 	// set the camera viewport
 	glMatrixMode(GL_PROJECTION);
@@ -94,16 +115,12 @@ void onRenderScene(void) {
 	glLoadIdentity();
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 
-	int tileX = mouseLocation.x / 32;
-	tileX += (cameraOffset.x / 32);
-
-	int tileY = (h-mouseLocation.y) / 32;
-	tileY += (cameraOffset.y / 32);
-
-	CMap::getInstance()->setHighlightedTile(tileX, tileY);
+	// highlight the tile under the cursor
+	Vector2i mouseCoords = mouseToTileCoord();
+	CMap::getInstance()->setHighlightedTile(mouseCoords.x, mouseCoords.y);
 
 	char status[128];
-	sprintf(status, "FPS: %d, Mouse: %d,%d, Cam: %4.0f,%4.0f, Tile: %d,%d", (int)fps, mouseLocation.x, mouseLocation.y, cameraOffset.x, cameraOffset.y, tileX, tileY);
+	sprintf(status, "FPS: %d, Mouse: %d,%d, Cam: %d,%d, Tile: %d,%d", (int)fps, mouseLocation.x, mouseLocation.y, cameraOffset.x, cameraOffset.y, mouseCoords.x, mouseCoords.y);
 	glDisable(GL_BLEND);
 	renderBitmapString(5, 5, 0.1f, status);
 	glEnable(GL_BLEND);
@@ -175,6 +192,11 @@ void onMouseClick(int button, int state, int x, int y)
 	{
 		if (state == GLUT_UP)
 		{
+			if ((mouseLocation.x == mouseDragStart.x) && (mouseLocation.y == mouseDragStart.y))
+			{
+				CMap::getInstance()->onClick(button, mouseToMapCoord());
+			}
+
 			mouseDragging = false;
 			mouseDragStart.x = 0;
 			mouseDragStart.y = 0;
@@ -184,6 +206,13 @@ void onMouseClick(int button, int state, int x, int y)
 			mouseDragging = true;
 			mouseDragStart.x = x;
 			mouseDragStart.y = y;
+		}
+	}
+	else if (button == GLUT_RIGHT_BUTTON)
+	{
+		if (state == GLUT_UP)
+		{
+			CMap::getInstance()->onClick(button, mouseToMapCoord());
 		}
 	}
 }

@@ -24,6 +24,8 @@ public:
 	void setTextureId(int id);
 	void setTypeId(int id);
 	void setHighlight(bool active);
+	void nextTextureId();
+	void previousTextureId();
 
 private:
 	int typeId;

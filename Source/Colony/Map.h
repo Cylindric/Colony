@@ -18,10 +18,11 @@ public:
 	static CMap* getInstance();
 	bool onInit(char* filename);
 	void onRender(void);
-    vector<CTile*> getTiles(void);
+	void onClick(int button, Vector2i mouseXY);
+	vector<CTile*> getTiles(void);
 	unsigned int getTileSize(void);
 	CTile* getTileAt(unsigned int x, unsigned int y);
-	void setHighlightedTile(int x, int y);
+	void setHighlightedTile(unsigned int x, unsigned int y);
 
 private:
 	CMap(void);

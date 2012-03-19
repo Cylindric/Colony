@@ -60,6 +60,18 @@ void CTile::setTextureId(int id)
 }
 
 
+void CTile::nextTextureId()
+{
+	textureId++;
+}
+
+
+void CTile::previousTextureId()
+{
+	textureId--;
+}
+
+
 Vector2f* CTile::getTilesetCoords(int t)
 {
 	int texTileSize = CMap::getInstance()->getTileSize();
