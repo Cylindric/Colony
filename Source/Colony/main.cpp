@@ -31,6 +31,9 @@ unsigned int frames;
 unsigned int timebase;
 float fps;
 
+// keyboard state
+bool ctrl = false;
+
 
 Vector2i mouseToMapCoord()
 {
@@ -153,6 +156,32 @@ void onChangeSize(int newW, int newH) {
 
 void onKeyDown(unsigned char key, int xx, int yy) 
 {
+	int mod = glutGetModifiers();
+	Vector2i tc = mouseToTileCoord();
+
+	switch (key) {
+	case 19: // Ctrl+s for some reason??
+		if (mod == GLUT_ACTIVE_CTRL)
+		{
+			CMap::getInstance()->saveMap();
+		}
+		break;
+	case 'c':
+		CMap::getInstance()->getTileAt(tc.x, tc.y)->cycleType(TILE_TEXTYPE_CORNER);
+		break;
+	case 'e':
+		CMap::getInstance()->getTileAt(tc.x, tc.y)->cycleType(TILE_TEXTYPE_END);
+		break;
+	case 't':
+		CMap::getInstance()->getTileAt(tc.x, tc.y)->cycleType(TILE_TEXTYPE_TEE);
+		break;
+	case 's':
+		CMap::getInstance()->getTileAt(tc.x, tc.y)->cycleType(TILE_TEXTYPE_STRAIGHT);
+		break;
+	case 'x':
+		CMap::getInstance()->getTileAt(tc.x, tc.y)->cycleType(TILE_TEXTYPE_CROSS);
+		break;
+	}
 }
 
 
@@ -163,6 +192,8 @@ void onKeyDown(int key, int xx, int yy)
 	case GLUT_KEY_RIGHT : cameraDelta.x = -scrollFactor; break;
 	case GLUT_KEY_UP : cameraDelta.y = -scrollFactor; break;
 	case GLUT_KEY_DOWN : cameraDelta.y = scrollFactor; break;
+	case GLUT_KEY_CTRL_L : ctrl = true; break;
+	case GLUT_KEY_CTRL_R : ctrl = true; break;
 	}
 }
 
@@ -170,7 +201,16 @@ void onKeyDown(int key, int xx, int yy)
 void onKeyUp(unsigned char key, int xx, int yy) 
 {
 	switch (key) {
-	case 27: exit(0); // escape
+	case 27: 
+		exit(0); // escape
+		break;
+	case 's':
+		int mod = glutGetModifiers();
+		if (mod == GLUT_ACTIVE_CTRL)
+		{
+			CMap::getInstance()->saveMap();
+		}
+		break;
 	}
 }
 
@@ -182,6 +222,8 @@ void onKeyUp(int key, int xx, int yy)
 	case GLUT_KEY_RIGHT : cameraDelta.x = 0.0f; break;
 	case GLUT_KEY_UP : cameraDelta.y = 0.0f; break;
 	case GLUT_KEY_DOWN : cameraDelta.y = 0.0f; break;
+	case GLUT_KEY_CTRL_L : ctrl = false; break;
+	case GLUT_KEY_CTRL_R : ctrl = false; break;
 	}
 }
 
@@ -270,7 +312,7 @@ int main(int argc, char* args[])
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	CMap::getInstance()->onInit("./maps/maze.txt");
+	CMap::getInstance()->onInit("./maps/maze2.txt");
 
 	mouseLocation.x = 0;
 	mouseLocation.y = 0;

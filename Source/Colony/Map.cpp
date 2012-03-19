@@ -1,4 +1,5 @@
-// includes
+﻿// includes
+#define UNICODE
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -44,14 +45,16 @@ CMap::~CMap(void)
 
 bool CMap::onInit(char* filename)
 {
+	mapFilename = filename;
+
 	tiles.clear();
 
 	// open the map file
 	ifstream mapFile(filename);
 
 	// First line must be the tileset
-	string tilesetFilename;
 	mapFile >> tilesetFilename >> tileSize;
+
 	tilesetTextureId = SOIL_load_OGL_texture(
 		tilesetFilename.c_str(),
 		SOIL_LOAD_AUTO,
@@ -74,45 +77,135 @@ bool CMap::onInit(char* filename)
 	// Next should be lines of tiles
 	unsigned int tileCount = 0;
 	while (tileCount < (tileColumns * tileRows)) {
-		int tileTexId = 0;
-		int tileTypeId = 0;
-		char sep = ' ';
+		char c = ' ';
 		int row = tileRows - (tileCount / tileColumns) - 1;
 
-		mapFile >> tileTexId >> sep >> tileTypeId;
+		mapFile >> c;
 
 		CTile* t = new CTile();
 		t->setPosition((tileCount % tileColumns), row);
-		t->setTypeId(tileTypeId);
-		t->setTextureId(tileTexId);
+		switch (c) 
+		{
+		case '.':
+			t->setTypeId(TILE_TYPE_OPEN);
+			t->setTextureId(0);
+			break;
+		case '#':
+			t->setTypeId(TILE_TYPE_WALL);
+			t->setTextureId(31);
+			break;
+		}
 		tiles.push_back(t);
 		tileCount++;
 	}
 
-	// Next should be any entities
-	//while (mapFile.good()) {
-	//	std::string objectName = "";
-	//	int valA = 0;
-	//	int valB = 0;
-	//	int valC = 0;
-	//	int valD = 0;
+	mapFile.close();
 
-	//	mapFile >> objectName >> valA >> valB >> valC >> valD;
-	//	if (objectName == "buggy") {
-	//		CEntity_Buggy* ent = new CEntity_Buggy();
-	//		ent->OnLoad();
-	//		ent->Position.X = valA;
-	//		ent->Position.Y = valB;
-	//		ent->Destination.X = valC;
-	//		ent->Destination.Y = valD;
-	//		CTile* entTile = CMap::MapControl.getTile(ent->Position);
-	//		entTile->EntityList.push_back(ent);
-	//		CEntity::EntityList.push_back(ent);
-	//	}
-	//}
+	// process walls
+	bool wallN, wallS, wallE, wallW;
+	CTile* tileN;
+	CTile* tileE;
+	CTile* tileS;
+	CTile* tileW;
+	for (unsigned int row = 0; row < tileRows; row++)
+	{
+		for (unsigned int col = 0; col < tileColumns; col++)
+		{
+			CTile* tile = getTileAt(col, row);
+
+			wallN = false;
+			wallS = false;
+			wallE = false;
+			wallW = false;
+
+			if (col == 5 && row == 2)
+			{
+				cerr << "wut";
+			}
+
+			if (tile->getTypeId() == TILE_TYPE_WALL)
+			{
+				char walls = 0;
+
+				tileN = getTileAt(col, row+1);
+				tileE = getTileAt(col+1, row);
+				tileS = getTileAt(col, row-1);
+				tileW = getTileAt(col-1, row);
+				if (row > 0) 
+				{
+					if(tileS->getTypeId() == TILE_TYPE_WALL) walls += DIRECTION_S;
+				}
+				if (row < tileRows-1)
+				{
+					if(tileN->getTypeId() == TILE_TYPE_WALL) walls += DIRECTION_N;
+				}
+				if (col > 0)
+				{
+					if(tileW->getTypeId() == TILE_TYPE_WALL) walls += DIRECTION_W;
+				}
+				if (col < tileColumns-1)
+				{
+					if(tileE->getTypeId() == TILE_TYPE_WALL) walls += DIRECTION_E;
+				}
+
+				if (walls == DIRECTION_E) tile->setTextureId(16); // end
+				if (walls == DIRECTION_S) tile->setTextureId(17); // end
+				if (walls == DIRECTION_N) tile->setTextureId(18); // end
+				if (walls == DIRECTION_W) tile->setTextureId(19); // end
+
+				if (walls == (DIRECTION_E + DIRECTION_S)) tile->setTextureId(20); // corner
+				if (walls == (DIRECTION_W + DIRECTION_S)) tile->setTextureId(21); // corner
+				if (walls == (DIRECTION_N + DIRECTION_E)) tile->setTextureId(22); // corner
+				if (walls == (DIRECTION_N + DIRECTION_W)) tile->setTextureId(23); // corner
+
+				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_E)) tile->setTextureId(24); // tee
+				if (walls == (DIRECTION_E + DIRECTION_S + DIRECTION_W)) tile->setTextureId(25); // tee
+				if (walls == (DIRECTION_E + DIRECTION_N + DIRECTION_W)) tile->setTextureId(26); // tee
+				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W)) tile->setTextureId(27); // tee
+
+				if (walls == (DIRECTION_N + DIRECTION_S)) tile->setTextureId(28); // straight
+				if (walls == (DIRECTION_E + DIRECTION_W)) tile->setTextureId(29); // straight
+
+				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W + DIRECTION_E)) tile->setTextureId(30); // cross
+
+				if (walls == 0) tile->setTextureId(31); // single
+
+			}
+		}
+	}
+
+
+	return true;
+}
+
+
+void CMap::saveMap()
+{
+	// open the map file
+	ofstream mapFile(mapFilename);
+
+	// First line must be the tileset
+	mapFile << tilesetFilename << endl << tileSize << endl;
+
+	// Next is the width and height of the map
+	mapFile << tileColumns << " " << tileRows << endl;
+
+	// Next should be lines of tiles
+	for (unsigned int row = 0; row < tileRows; row++)
+	{
+		for (unsigned int col = 0; col < tileColumns; col++)
+		{
+			CTile* tile = getTileAt(col, (tileRows - row - 1));
+			switch (tile->getTypeId())
+			{
+			case TILE_TYPE_OPEN: mapFile << '.'; break;
+			case TILE_TYPE_WALL: mapFile << '#'; break;
+			}
+		}
+		mapFile << endl;
+	}
 
 	mapFile.close();
-	return true;
 }
 
 

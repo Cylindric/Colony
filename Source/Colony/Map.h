@@ -23,6 +23,7 @@ public:
 	unsigned int getTileSize(void);
 	CTile* getTileAt(unsigned int x, unsigned int y);
 	void setHighlightedTile(unsigned int x, unsigned int y);
+	void saveMap();
 
 private:
 	CMap(void);
@@ -35,6 +36,7 @@ private:
 	unsigned int tileSize;
 	unsigned int tilesetColumns;
 	string tilesetFilename;
+	string mapFilename;
 	GLuint tilesetTextureId;
 
 	Vector2i* highlightedTile;

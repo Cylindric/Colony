@@ -54,11 +54,22 @@ void CTile::setTypeId(int id)
 }
 
 
+int CTile::getTypeId()
+{
+	return typeId;
+}
+
+
 void CTile::setTextureId(int id)
 {
 	textureId = id;
 }
 
+
+int CTile::getTextureId()
+{
+	return textureId;
+}
 
 void CTile::nextTextureId()
 {
@@ -69,6 +80,44 @@ void CTile::nextTextureId()
 void CTile::previousTextureId()
 {
 	textureId--;
+}
+
+
+void CTile::cycleType(int type)
+{
+	switch (type)
+	{
+	case TILE_TEXTYPE_CORNER:
+		typeId = TILE_TYPE_WALL;
+		if (textureId == 20) textureId++;
+		else if (textureId == 21) textureId++;
+		else if (textureId == 22) textureId++;
+		else textureId = 20;
+		break;
+	case TILE_TEXTYPE_END:
+		typeId = TILE_TYPE_WALL;
+		if (textureId == 16) textureId++;
+		else if (textureId == 17) textureId++;
+		else if (textureId == 19) textureId++;
+		else textureId = 16;
+		break;
+	case TILE_TEXTYPE_TEE:
+		typeId = TILE_TYPE_WALL;
+		if (textureId == 24) textureId++;
+		else if (textureId == 25) textureId++;
+		else if (textureId == 26) textureId++;
+		else textureId = 24;
+		break;
+	case TILE_TEXTYPE_STRAIGHT:
+		typeId = TILE_TYPE_WALL;
+		if (textureId == 28) textureId++;
+		else textureId = 28;
+		break;
+	case TILE_TEXTYPE_CROSS:
+		typeId = TILE_TYPE_WALL;
+		textureId = 30;
+		break;
+	}
 }
 
 
