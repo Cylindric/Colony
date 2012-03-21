@@ -181,6 +181,7 @@ void CTile::drawTile(int tileId, float x, float y, int size, int layer) {
 	/*  1 3
 	 *  0 2 */
 	Vector6f vertices[4];
+	GLfloat verts[4*5];
 
 	vertices[0].x = 0.0f;
 	vertices[0].y = 0.0f;
