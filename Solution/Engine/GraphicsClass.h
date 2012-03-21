@@ -6,6 +6,9 @@
 // INCLUDES //
 //////////////
 #include "D3DClass.h"
+#include "CameraClass.h"
+#include "ModelClass.h"
+#include "TextureShaderClass.h"
 
 
 /////////////
@@ -32,6 +35,9 @@ private:
 
 private:
 	D3DClass* m_D3D;
+	CameraClass* m_Camera;
+	ModelClass* m_Model;
+	TextureShaderClass* m_TextureShader;
 
 };
 
