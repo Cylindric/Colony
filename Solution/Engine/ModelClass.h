@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: modelclass.h
+// Filename: ModelClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _MODELCLASS_H_
 #define _MODELCLASS_H_
@@ -8,8 +8,15 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <fstream>
 #include <d3d10.h>
 #include <d3dx10math.h>
+using namespace std;
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
 #include "TextureClass.h"
 
 
@@ -23,6 +30,14 @@ private:
 	{
 		D3DXVECTOR3 position;
 	    D3DXVECTOR2 texture;
+		D3DXVECTOR3 normal;
+	};
+
+	struct ModelType
+	{
+		float x, y, z;
+		float tu, tv;
+		float nx, ny, nz;
 	};
 
 public:
@@ -30,7 +45,7 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialise(ID3D10Device*, WCHAR*);
+	bool Initialise(ID3D10Device*, char*, WCHAR*);
 	void Shutdown();
 	void Render(ID3D10Device*);
 
@@ -43,11 +58,14 @@ private:
 	void RenderBuffers(ID3D10Device*);
 	bool LoadTexture(ID3D10Device*, WCHAR*);
 	void ReleaseTexture();
+	bool LoadModel(char*);
+	void ReleaseModel();
 
 private:
 	ID3D10Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
+	ModelType* m_model;
 };
 
 #endif

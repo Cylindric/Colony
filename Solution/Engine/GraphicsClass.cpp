@@ -40,14 +40,14 @@ bool GraphicsClass::Initialise(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	m_Camera->SetPosition(0.0f, 0.0f, -20.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	m_Model = new ModelClass;
 	if(!m_Model)
 	{
 		return false;
 	}
-	result = m_Model->Initialise(m_D3D->GetDevice(), L"tileset.dds");
+	result = m_Model->Initialise(m_D3D->GetDevice(), "Cube.txt", L"Tileset.dds");
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialise the model object.", L"Error", MB_OK);
@@ -105,7 +105,15 @@ void GraphicsClass::Shutdown()
 bool GraphicsClass::Frame()
 {
 	bool result;
-	result = Render();
+	static float rotation = 0.0f;
+
+	rotation += (float)D3DX_PI * 0.005f;
+	if(rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+
+	result = Render(rotation);
 	if(!result)
 	{
 		return false;
@@ -114,7 +122,7 @@ bool GraphicsClass::Frame()
 }
 
 
-bool GraphicsClass::Render()
+bool GraphicsClass::Render(float rotation)
 {
 	D3DXMATRIX viewMatrix, projectionMatrix, worldMatrix;
 
@@ -124,6 +132,8 @@ bool GraphicsClass::Render()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_D3D->GetWorldMatrix(worldMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
+
+	D3DXMatrixRotationY(&worldMatrix, rotation);
 
 	m_Model->Render(m_D3D->GetDevice());
 
