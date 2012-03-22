@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: TextureShaderClass.cpp
+// Filename: textureshaderclass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "TextureShaderClass.h"
 
@@ -27,13 +27,13 @@ TextureShaderClass::~TextureShaderClass()
 }
 
 
-bool TextureShaderClass::Initialise(ID3D10Device* device, HWND hwnd)
+bool TextureShaderClass::Initialize(ID3D10Device* device, HWND hwnd)
 {
 	bool result;
 
 
 	// Initialize the shader that will be used to draw the triangle.
-	result = InitialiseShader(device, hwnd, L"Texture.fx");
+	result = InitializeShader(device, hwnd, L"Texture.fx");
 	if(!result)
 	{
 		return false;
@@ -52,7 +52,8 @@ void TextureShaderClass::Shutdown()
 }
 
 
-void TextureShaderClass::Render(ID3D10Device* device, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D10ShaderResourceView* texture)
+void TextureShaderClass::Render(ID3D10Device* device, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, 
+								ID3D10ShaderResourceView* texture)
 {
 	// Set the shader parameters that it will use for rendering.
 	SetShaderParameters(worldMatrix, viewMatrix, projectionMatrix, texture);
@@ -64,7 +65,7 @@ void TextureShaderClass::Render(ID3D10Device* device, int indexCount, D3DXMATRIX
 }
 
 
-bool TextureShaderClass::InitialiseShader(ID3D10Device* device, HWND hwnd, WCHAR* filename)
+bool TextureShaderClass::InitializeShader(ID3D10Device* device, HWND hwnd, WCHAR* filename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -114,7 +115,7 @@ bool TextureShaderClass::InitialiseShader(ID3D10Device* device, HWND hwnd, WCHAR
 
 	polygonLayout[1].SemanticName = "TEXCOORD";
 	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	polygonLayout[1].InputSlot = 0;
 	polygonLayout[1].AlignedByteOffset = D3D10_APPEND_ALIGNED_ELEMENT;
 	polygonLayout[1].InputSlotClass = D3D10_INPUT_PER_VERTEX_DATA;
@@ -137,15 +138,20 @@ bool TextureShaderClass::InitialiseShader(ID3D10Device* device, HWND hwnd, WCHAR
     m_worldMatrixPtr = m_effect->GetVariableByName("worldMatrix")->AsMatrix();
 	m_viewMatrixPtr = m_effect->GetVariableByName("viewMatrix")->AsMatrix();
     m_projectionMatrixPtr = m_effect->GetVariableByName("projectionMatrix")->AsMatrix();
+
+	// Get pointer to the texture resource inside the shader.
 	m_texturePtr = m_effect->GetVariableByName("shaderTexture")->AsShaderResource();
+
 	return true;
 }
 
 
 void TextureShaderClass::ShutdownShader()
 {
-	// Release the pointers to the matrices inside the shader.
+	// Release the pointer to the texture in the shader file.
 	m_texturePtr = 0;
+
+	// Release the pointers to the matrices inside the shader.
 	m_worldMatrixPtr = 0;
 	m_viewMatrixPtr = 0;
 	m_projectionMatrixPtr = 0;
@@ -207,7 +213,8 @@ void TextureShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND
 }
 
 
-void TextureShaderClass::SetShaderParameters(D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D10ShaderResourceView* texture)
+void TextureShaderClass::SetShaderParameters(D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, 
+											 ID3D10ShaderResourceView* texture)
 {
 	// Set the world matrix variable inside the shader.
     m_worldMatrixPtr->SetMatrix((float*)&worldMatrix);

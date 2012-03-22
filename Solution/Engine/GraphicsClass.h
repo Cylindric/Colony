@@ -1,14 +1,18 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: graphicsclass.h
+////////////////////////////////////////////////////////////////////////////////
 #ifndef _GRAPHICSCLASS_H_
 #define _GRAPHICSCLASS_H_
 
 
-//////////////
-// INCLUDES //
-//////////////
-#include "D3DClass.h"
-#include "CameraClass.h"
-#include "ModelClass.h"
-#include "TextureShaderClass.h"
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
+#include "main.h"
+class D3DClass;
+class CameraClass;
+class MapClass;
+class TextureShaderClass;
 
 
 /////////////
@@ -19,6 +23,10 @@ const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: GraphicsClass
+////////////////////////////////////////////////////////////////////////////////
 class GraphicsClass
 {
 public:
@@ -26,7 +34,7 @@ public:
 	GraphicsClass(const GraphicsClass&);
 	~GraphicsClass();
 
-	bool Initialise(int, int, HWND);
+	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame();
 
@@ -36,9 +44,8 @@ private:
 private:
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
-	ModelClass* m_Model;
 	TextureShaderClass* m_TextureShader;
-
+	MapClass* m_Map;
 };
 
 #endif

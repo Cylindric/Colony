@@ -1,4 +1,8 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: systemclass.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include "SystemClass.h"
+
 
 SystemClass::SystemClass()
 {
@@ -17,29 +21,38 @@ SystemClass::~SystemClass()
 }
 
 
-bool SystemClass::Initialise()
+bool SystemClass::Initialize()
 {
 	int screenWidth, screenHeight;
 	bool result;
 
+
+	// Initialize the width and height of the screen to zero before sending the variables into the function.
 	screenWidth = 0;
 	screenHeight = 0;
 
-	InitialiseWindows(screenWidth, screenHeight);
+	// Initialize the windows api.
+	InitializeWindows(screenWidth, screenHeight);
 
+	// Create the input object.  This object will be used to handle reading the keyboard input from the user.
 	m_Input = new InputClass;
 	if(!m_Input)
 	{
 		return false;
 	}
-	m_Input->Initialise();
 
+	// Initialize the input object.
+	m_Input->Initialize();
+
+	// Create the graphics object.  This object will handle rendering all the graphics for this application.
 	m_Graphics = new GraphicsClass;
 	if(!m_Graphics)
 	{
 		return false;
 	}
-	result = m_Graphics->Initialise(screenWidth, screenHeight, m_hwnd);
+
+	// Initialize the graphics object.
+	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
 	if(!result)
 	{
 		return false;
@@ -51,6 +64,7 @@ bool SystemClass::Initialise()
 
 void SystemClass::Shutdown()
 {
+	// Release the graphics object.
 	if(m_Graphics)
 	{
 		m_Graphics->Shutdown();
@@ -58,13 +72,16 @@ void SystemClass::Shutdown()
 		m_Graphics = 0;
 	}
 
+	// Release the input object.
 	if(m_Input)
 	{
 		delete m_Input;
 		m_Input = 0;
 	}
 
+	// Shutdown the window.
 	ShutdownWindows();
+	
 	return;
 }
 
@@ -72,35 +89,40 @@ void SystemClass::Shutdown()
 void SystemClass::Run()
 {
 	MSG msg;
-	bool done;
-	bool result;
+	bool done, result;
 
+
+	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
-
+	
+	// Loop until there is a quit message from the window or the user.
 	done = false;
 	while(!done)
 	{
-		// Handle the windows messages
+		// Handle the windows messages.
 		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 
-		// If windows signals to end the app then exit
+		// If windows signals to end the application then exit out.
 		if(msg.message == WM_QUIT)
 		{
 			done = true;
 		}
 		else
 		{
+			// Otherwise do the frame processing.
 			result = Frame();
 			if(!result)
 			{
 				done = true;
 			}
 		}
+
 	}
+
 	return;
 }
 
@@ -108,6 +130,7 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool result;
+
 
 	// Check if the user pressed escape and wants to exit the application.
 	if(m_Input->IsKeyDown(VK_ESCAPE))
@@ -155,14 +178,14 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 }
 
 
-void SystemClass::InitialiseWindows(int& screenWidth, int& screenHeight)
+void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 {
 	WNDCLASSEX wc;
 	DEVMODE dmScreenSettings;
 	int posX, posY;
 
 
-	// Get an external pointer to this object.
+	// Get an external pointer to this object.	
 	ApplicationHandle = this;
 
 	// Get the instance of this application.
@@ -172,18 +195,18 @@ void SystemClass::InitialiseWindows(int& screenWidth, int& screenHeight)
 	m_applicationName = L"Engine";
 
 	// Setup the windows class with default settings.
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = WndProc;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = m_hinstance;
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm = wc.hIcon;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.lpfnWndProc   = WndProc;
+	wc.cbClsExtra    = 0;
+	wc.cbWndExtra    = 0;
+	wc.hInstance     = m_hinstance;
+	wc.hIcon		 = LoadIcon(NULL, IDI_WINLOGO);
+	wc.hIconSm       = wc.hIcon;
+	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName = NULL;
+	wc.lpszMenuName  = NULL;
 	wc.lpszClassName = m_applicationName;
-	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.cbSize        = sizeof(WNDCLASSEX);
 	
 	// Register the window class.
 	RegisterClassEx(&wc);
@@ -222,8 +245,8 @@ void SystemClass::InitialiseWindows(int& screenWidth, int& screenHeight)
 
 	// Create the window with the screen settings and get the handle to it.
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName, 
-				WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-				posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
+						    WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+						    posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
 
 	// Bring the window up on the screen and set it as main focus.
 	ShowWindow(m_hwnd, SW_SHOW);

@@ -1,4 +1,7 @@
-#include "inputclass.h"
+////////////////////////////////////////////////////////////////////////////////
+// Filename: inputclass.cpp
+////////////////////////////////////////////////////////////////////////////////
+#include "InputClass.h"
 
 
 InputClass::InputClass()
@@ -16,7 +19,7 @@ InputClass::~InputClass()
 }
 
 
-void InputClass::Initialise()
+void InputClass::Initialize()
 {
 	int i;
 	
