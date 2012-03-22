@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: main.cpp
 ////////////////////////////////////////////////////////////////////////////////
+#include "main.h"
 #include "SystemClass.h"
 
 
@@ -8,7 +9,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 {
 	SystemClass* System;
 	bool result;
-	
 	
 	// Create the system object.
 	System = new SystemClass;
