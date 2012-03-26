@@ -4,11 +4,11 @@
 
 TileClass::TileClass()
 {
-	m_vertexBuffer = 0;
-	m_indexBuffer = 0;
+	m_VertexBuffer = 0;
+	m_IndexBuffer = 0;
 	m_Texture = 0;
-	m_posX = 0;
-	m_posY = 0;
+	m_PosX = 0;
+	m_PosY = 0;
 }
 
 
@@ -22,17 +22,13 @@ TileClass::~TileClass()
 }
 
 
-bool TileClass::Initialize(ID3D10Device* device, int screenWidth, int screenHeight, TextureClass* texture)
+bool TileClass::Initialize(ID3D10Device* device, TextureClass* texture)
 {
 	bool result;
 
-	// Store the screen size.
-	m_screenWidth = screenWidth;
-	m_screenHeight = screenHeight;
-
 	// Initialize the previous rendering position to negative one.
-	m_previousPosX = -1;
-	m_previousPosY = -1;
+	m_PreviousPosX = -1;
+	m_PreviousPosY = -1;
 
 	// Initialize the vertex and index buffer that hold the geometry for the triangle.
 	result = InitializeBuffers(device);
@@ -61,13 +57,16 @@ void TileClass::Shutdown()
 }
 
 
-bool TileClass::Render(ID3D10Device* device)
+bool TileClass::Render(ID3D10Device* device, int screenWidth, int screenHeight)
 {
 	bool result;
 
+	m_ScreenWidth = screenWidth;
+	m_ScreenHeight = screenHeight;
+
 
 	// Re-build the dynamic vertex buffer for rendering to possibly a different location on the screen.
-	result = UpdateBuffers(m_posX, m_posY);
+	result = UpdateBuffers(m_PosX, m_PosY);
 	if(!result)
 	{
 		return false;
@@ -82,20 +81,32 @@ bool TileClass::Render(ID3D10Device* device)
 
 int TileClass::GetIndexCount()
 {
-	return m_indexCount;
+	return m_IndexCount;
 }
 
 
-void TileClass::SetId(int id)
+int TileClass::GetTypeId()
 {
-	m_id = id;
+	return m_TypeId;
+}
+
+
+void TileClass::SetTypeId(int id)
+{
+	m_TypeId = id;
+}
+
+
+void TileClass::SetTextureId(int id)
+{
+	m_TextureId = id;
 }
 
 
 void TileClass::SetPosition(int x, int y)
 {
-	m_posX = x;
-	m_posY = y;
+	m_PosX = x;
+	m_PosY = y;
 }
 
 
@@ -116,37 +127,37 @@ bool TileClass::InitializeBuffers(ID3D10Device* device)
 
 
 	// Set the number of vertices in the vertex array.
-	m_vertexCount = 6;
+	m_VertexCount = 6;
 
 	// Set the number of indices in the index array.
-	m_indexCount = m_vertexCount;
+	m_IndexCount = m_VertexCount;
 
 	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
+	vertices = new VertexType[m_VertexCount];
 	if(!vertices)
 	{
 		return false;
 	}
 
 	// Create the index array.
-	indices = new unsigned long[m_indexCount];
+	indices = new unsigned long[m_IndexCount];
 	if(!indices)
 	{
 		return false;
 	}
 
 	// Initialize vertex array to zeros at first.
-	memset(vertices, 0, (sizeof(VertexType) * m_vertexCount));
+	memset(vertices, 0, (sizeof(VertexType) * m_VertexCount));
 
 	// Load the index array with data.
-	for(i=0; i<m_indexCount; i++)
+	for(i=0; i<m_IndexCount; i++)
 	{
 		indices[i] = i;
 	}
 
 	// Set up the description of the dynamic vertex buffer.
     vertexBufferDesc.Usage = D3D10_USAGE_DYNAMIC;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_VertexCount;
     vertexBufferDesc.BindFlags = D3D10_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
     vertexBufferDesc.MiscFlags = 0;
@@ -155,7 +166,7 @@ bool TileClass::InitializeBuffers(ID3D10Device* device)
     vertexData.pSysMem = vertices;
 
 	// Now finally create the vertex buffer.
-    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_VertexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -163,7 +174,7 @@ bool TileClass::InitializeBuffers(ID3D10Device* device)
 
 	// Set up the description of the index buffer.
     indexBufferDesc.Usage = D3D10_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_IndexCount;
     indexBufferDesc.BindFlags = D3D10_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
@@ -172,7 +183,7 @@ bool TileClass::InitializeBuffers(ID3D10Device* device)
     indexData.pSysMem = indices;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_IndexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -192,17 +203,17 @@ bool TileClass::InitializeBuffers(ID3D10Device* device)
 void TileClass::ShutdownBuffers()
 {
 	// Release the index buffer.
-	if(m_indexBuffer)
+	if(m_IndexBuffer)
 	{
-		m_indexBuffer->Release();
-		m_indexBuffer = 0;
+		m_IndexBuffer->Release();
+		m_IndexBuffer = 0;
 	}
 
 	// Release the vertex buffer.
-	if(m_vertexBuffer)
+	if(m_VertexBuffer)
 	{
-		m_vertexBuffer->Release();
-		m_vertexBuffer = 0;
+		m_VertexBuffer->Release();
+		m_VertexBuffer = 0;
 	}
 
 	return;
@@ -219,29 +230,29 @@ bool TileClass::UpdateBuffers(int positionX, int positionY)
 
 	// If the position we are rendering this bitmap to has not changed then don't update the vertex buffer since it
 	// currently has the correct parameters.
-	if((positionX == m_previousPosX) && (positionY == m_previousPosY))
+	if((positionX == m_PreviousPosX) && (positionY == m_PreviousPosY))
 	{
 		return true;
 	}
 	
 	// If it has changed then update the position it is being rendered to.
-	m_previousPosX = positionX;
-	m_previousPosY = positionY;
+	m_PreviousPosX = positionX;
+	m_PreviousPosY = positionY;
 
 	// Calculate the screen coordinates of the left side of the bitmap.
-	left = (float)((m_screenWidth / 2) * -1) + ((float)positionX * TILE_SIZE);
+	left = (float)((m_ScreenWidth / 2) * -1) + ((float)positionX * TILE_SIZE);
 
 	// Calculate the screen coordinates of the right side of the bitmap.
 	right = left + (float)TILE_SIZE;
 
 	// Calculate the screen coordinates of the top of the bitmap.
-	top = (float)(m_screenHeight / 2) - ((float)positionY * TILE_SIZE);
+	top = (float)(m_ScreenHeight / 2) - ((float)positionY * TILE_SIZE);
 
 	// Calculate the screen coordinates of the bottom of the bitmap.
 	bottom = top - (float)TILE_SIZE;
 
 	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
+	vertices = new VertexType[m_VertexCount];
 	if(!vertices)
 	{
 		return false;
@@ -256,8 +267,8 @@ bool TileClass::UpdateBuffers(int positionX, int positionY)
 	float j = 0.5/256; // adjust uv's by half a pixel to remove edge-bleed
 
 
-	row = (m_id / textureColumns);
-	col = (m_id % textureColumns);
+	row = (m_TypeId / textureColumns);
+	col = (m_TypeId % textureColumns);
 
 	u0 = (col * twidth) + j + 0.0f;   v0 = (row * twidth) + j + 0.0f;
 	u1 = (col * twidth) - j + twidth; v1 = (row * twidth) - j + twidth;
@@ -289,17 +300,17 @@ bool TileClass::UpdateBuffers(int positionX, int positionY)
 	verticesPtr = 0;
 
 	// Lock the vertex buffer.
-	result = m_vertexBuffer->Map(D3D10_MAP_WRITE_DISCARD, 0, (void**)&verticesPtr);
+	result = m_VertexBuffer->Map(D3D10_MAP_WRITE_DISCARD, 0, (void**)&verticesPtr);
 	if(FAILED(result))
 	{
 		return false;
 	}
 
 	// Copy the data into the vertex buffer.
-	memcpy(verticesPtr, (void*)vertices, (sizeof(VertexType) * m_vertexCount));
+	memcpy(verticesPtr, (void*)vertices, (sizeof(VertexType) * m_VertexCount));
 
 	// Unlock the vertex buffer.
-	m_vertexBuffer->Unmap();
+	m_VertexBuffer->Unmap();
 
 	// Release the vertex array as it is no longer needed.
 	delete [] vertices;
@@ -320,10 +331,10 @@ void TileClass::RenderBuffers(ID3D10Device* device)
 	offset = 0;
     
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	device->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	device->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
     // Set the index buffer to active in the input assembler so it can be rendered.
-    device->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    device->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
     device->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

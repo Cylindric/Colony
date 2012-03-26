@@ -1,6 +1,7 @@
 #ifndef _MAPCLASS_H_
 #define _MAPCLASS_H_
 
+#include <string>
 #include "main.h"
 class TextureShaderClass;
 class TextureClass;
@@ -12,11 +13,20 @@ class MapClass
 public:
 	MapClass(void);
 	~MapClass(void);
-	bool Initialise(ID3D10Device*, int, int);
+	bool Initialise(ID3D10Device* device, WCHAR* mapFile);
 	bool Render(ID3D10Device*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, TextureShaderClass*);
 	void Shutdown();
 
 private:
+	bool LoadFromFile(ID3D10Device* device, WCHAR* filename);
+	TileClass* GetTileAt(unsigned int x, unsigned int y);
+	
+	std::wstring m_MapFile; // filename of the file holding the map data
+	std::wstring m_TextureFile; // filename of the tileset texture file
+	unsigned int m_TileSize; // size of a tile in the texture file, in px
+	unsigned int m_MapWidth; // width of the map, in tiles
+	unsigned int m_MapHeight; // height of the map, in tiles
+
 	TextureClass* m_Texture;
 	std::vector<TileClass*> m_Tiles;
 };

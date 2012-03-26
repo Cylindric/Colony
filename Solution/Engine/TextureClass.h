@@ -8,6 +8,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <string>
 #include "main.h"
 
 
@@ -21,7 +22,7 @@ public:
 	TextureClass(const TextureClass&);
 	~TextureClass();
 
-	bool Initialize(ID3D10Device*, WCHAR*);
+	bool Initialise(ID3D10Device*, std::wstring);
 	void Shutdown();
 
 	ID3D10ShaderResourceView* GetTexture();

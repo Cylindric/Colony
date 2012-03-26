@@ -78,7 +78,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	result = m_Map->Initialise(m_D3D->GetDevice(), screenWidth, screenHeight);
+	result = m_Map->Initialise(m_D3D->GetDevice(), L"BigMaze.txt", screenWidth, screenHeight);
 	if(!result)
 	{
 		return false;

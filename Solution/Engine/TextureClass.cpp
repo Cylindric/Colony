@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "TextureClass.h"
 
+using namespace std;
 
 TextureClass::TextureClass()
 {
@@ -20,13 +21,13 @@ TextureClass::~TextureClass()
 }
 
 
-bool TextureClass::Initialize(ID3D10Device* device, WCHAR* filename)
+bool TextureClass::Initialise(ID3D10Device* device, wstring filename)
 {
 	HRESULT result;
 
 
 	// Load the texture in.
-	result = D3DX10CreateShaderResourceViewFromFile(device, filename, NULL, NULL, &m_texture, NULL);
+	result = D3DX10CreateShaderResourceViewFromFile(device, filename.c_str(), NULL, NULL, &m_texture, NULL);
 	if(FAILED(result))
 	{
 		return false;

@@ -323,7 +323,7 @@ bool BitmapClass::LoadTexture(ID3D10Device* device, WCHAR* filename)
 	}
 
 	// Initialize the texture object.
-	result = m_Texture->Initialize(device, filename);
+	result = m_Texture->Initialise(device, filename);
 	if(!result)
 	{
 		return false;
