@@ -6,6 +6,7 @@
 #include "TextureClass.h"
 #include "TileClass.h"
 #include "TextureShaderClass.h"
+#include "CameraClass.h"
 
 using namespace std;
 
@@ -22,9 +23,12 @@ MapClass::~MapClass(void)
 }
 
 
-bool MapClass::Initialise(ID3D10Device* device, WCHAR* mapFile)
+bool MapClass::Initialise(ID3D10Device* device, CameraClass* camera, WCHAR* mapFile)
 {
 	bool result;
+
+	m_Camera = camera;
+
 	m_Texture = new TextureClass;
 	if(!m_Texture)
 	{
@@ -38,21 +42,6 @@ bool MapClass::Initialise(ID3D10Device* device, WCHAR* mapFile)
 		return false;
 	}
 
-	// initialise a bunch of tiles
-	//TileClass* t;
-	//for(int row = 0; row < 10; row++)
-	//{
-	//	for(int col = 0; col < 15; col++)
-	//	{
-	//		t = new TileClass();
-	//		t->Initialize(device, screenWidth, screenHeight, m_Texture);
-	//		t->SetTypeId(TILE_TYPE_WALL);
-	//		t->SetTextureId((rand() % 16)+16);
-	//		t->SetPosition(col, row);
-	//		m_Tiles.push_back(t);
-	//	}
-	//}
-
 	return true;
 }
 
@@ -63,7 +52,7 @@ bool MapClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX v
 
 	for(vector<TileClass*>::iterator i = m_Tiles.begin(); i < m_Tiles.end(); i++)
 	{
-		result = (*i)->Render(device);
+		result = (*i)->Render(device, m_Camera->GetScreenWidth(), m_Camera->GetScreenHeight());
 		if(!result)
 		{
 			return false;
@@ -126,16 +115,17 @@ bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename)
 		mapFile >> c;
 
 		TileClass* t = new TileClass();
+		t->Initialize(device, m_Texture);
 		t->SetPosition(col, row);
 		switch (c) 
 		{
 		case '.':
 			t->SetTypeId(TILE_TYPE_OPEN);
-			t->SetTextureId(0);
+			t->SetTextureId(TILE_TEX_GROUND);
 			break;
 		case '#':
 			t->SetTypeId(TILE_TYPE_WALL);
-			t->SetTextureId(31);
+			t->SetTextureId(TILE_TEX_WALL_POST);
 			break;
 		}
 		m_Tiles.push_back(t);
@@ -169,23 +159,23 @@ bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename)
 
 				if(row > 0)
 				{
-					tileS = GetTileAt(col, row - 1);
-					wallS = (tileS->GetTypeId() == TILE_TYPE_WALL);
+					tileN = GetTileAt(col, row - 1);
+					wallN = (tileN->GetTypeId() == TILE_TYPE_WALL);
 				}
 				if(row < m_MapHeight - 1)
 				{
-					tileN = GetTileAt(col, row + 1);
-					wallN = (tileN->GetTypeId() == TILE_TYPE_WALL);
+					tileS = GetTileAt(col, row + 1);
+					wallS = (tileS->GetTypeId() == TILE_TYPE_WALL);
 				}
 				if(col > 0)
 				{
-					tileE = GetTileAt(col - 1, row);
-					wallE = (tileE->GetTypeId() == TILE_TYPE_WALL);
+					tileW = GetTileAt(col - 1, row);
+					wallW = (tileW->GetTypeId() == TILE_TYPE_WALL);
 				}
 				if(col < m_MapWidth - 1)
 				{
-					tileW = GetTileAt(col + 1, row);
-					wallW = (tileW->GetTypeId() == TILE_TYPE_WALL);
+					tileE = GetTileAt(col + 1, row);
+					wallE = (tileE->GetTypeId() == TILE_TYPE_WALL);
 				}
 
 
@@ -196,27 +186,27 @@ bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename)
 				if (wallE) walls += DIRECTION_E;
 
 				// work out what sort of wall to draw in the current cell
-				if (walls == DIRECTION_E) tile->SetTextureId(16); // end
-				if (walls == DIRECTION_S) tile->SetTextureId(17); // end
-				if (walls == DIRECTION_N) tile->SetTextureId(18); // end
-				if (walls == DIRECTION_W) tile->SetTextureId(19); // end
+				if (walls == DIRECTION_E) tile->SetTextureId(TILE_TEX_WALL_E); // end
+				if (walls == DIRECTION_S) tile->SetTextureId(TILE_TEX_WALL_S); // end
+				if (walls == DIRECTION_N) tile->SetTextureId(TILE_TEX_WALL_N); // end
+				if (walls == DIRECTION_W) tile->SetTextureId(TILE_TEX_WALL_W); // end
 
-				if (walls == (DIRECTION_E + DIRECTION_S)) tile->SetTextureId(20); // corner
-				if (walls == (DIRECTION_W + DIRECTION_S)) tile->SetTextureId(21); // corner
-				if (walls == (DIRECTION_N + DIRECTION_E)) tile->SetTextureId(22); // corner
-				if (walls == (DIRECTION_N + DIRECTION_W)) tile->SetTextureId(23); // corner
+				if (walls == (DIRECTION_E + DIRECTION_S)) tile->SetTextureId(TILE_TEX_WALL_ES); // corner
+				if (walls == (DIRECTION_W + DIRECTION_S)) tile->SetTextureId(TILE_TEX_WALL_SW); // corner
+				if (walls == (DIRECTION_N + DIRECTION_E)) tile->SetTextureId(TILE_TEX_WALL_NE); // corner
+				if (walls == (DIRECTION_N + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_NW); // corner
 
-				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_E)) tile->SetTextureId(24); // tee
-				if (walls == (DIRECTION_E + DIRECTION_S + DIRECTION_W)) tile->SetTextureId(25); // tee
-				if (walls == (DIRECTION_E + DIRECTION_N + DIRECTION_W)) tile->SetTextureId(26); // tee
-				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W)) tile->SetTextureId(27); // tee
+				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_E)) tile->SetTextureId(TILE_TEX_WALL_NES); // tee
+				if (walls == (DIRECTION_E + DIRECTION_S + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_ESW); // tee
+				if (walls == (DIRECTION_E + DIRECTION_N + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_NEW); // tee
+				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_NSW); // tee
 
-				if (walls == (DIRECTION_N + DIRECTION_S)) tile->SetTextureId(28); // straight
-				if (walls == (DIRECTION_E + DIRECTION_W)) tile->SetTextureId(29); // straight
+				if (walls == (DIRECTION_N + DIRECTION_S)) tile->SetTextureId(TILE_TEX_WALL_NS); // straight
+				if (walls == (DIRECTION_E + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_EW); // straight
 
-				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W + DIRECTION_E)) tile->SetTextureId(30); // cross
+				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W + DIRECTION_E)) tile->SetTextureId(TILE_TEX_WALL_NESW); // cross
 
-				if (walls == 0) tile->SetTextureId(31); // single
+				if (walls == 0) tile->SetTextureId(TILE_TEX_WALL_POST); // single
 
 			}
 		}

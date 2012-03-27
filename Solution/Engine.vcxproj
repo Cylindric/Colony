@@ -24,10 +24,6 @@
     <ClCompile Include="Engine\TileClass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\Texture.fx" />
-    <None Include="Engine\Tileset.dds" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Engine\BitmapClass.h" />
     <ClInclude Include="Engine\CameraClass.h" />
     <ClInclude Include="Engine\D3DClass.h" />

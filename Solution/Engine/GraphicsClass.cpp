@@ -53,6 +53,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
+	m_Camera->SetScreenSize(screenWidth, screenHeight);
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
@@ -78,7 +79,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	result = m_Map->Initialise(m_D3D->GetDevice(), L"BigMaze.txt", screenWidth, screenHeight);
+	result = m_Map->Initialise(m_D3D->GetDevice(), m_Camera, L"./maps/BigMaze.txt");
 	if(!result)
 	{
 		return false;

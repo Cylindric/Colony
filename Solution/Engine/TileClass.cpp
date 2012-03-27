@@ -1,7 +1,6 @@
 #include "TileClass.h"
 #include "TextureClass.h"
 
-
 TileClass::TileClass()
 {
 	m_VertexBuffer = 0;
@@ -9,6 +8,8 @@ TileClass::TileClass()
 	m_Texture = 0;
 	m_PosX = 0;
 	m_PosY = 0;
+	m_PreviousPosX = -1;
+	m_PreviousPosY = -1;
 }
 
 
@@ -57,16 +58,12 @@ void TileClass::Shutdown()
 }
 
 
-bool TileClass::Render(ID3D10Device* device, int screenWidth, int screenHeight)
+bool TileClass::Render(ID3D10Device* device, unsigned int screenWidth, unsigned int screenHeight)
 {
 	bool result;
 
-	m_ScreenWidth = screenWidth;
-	m_ScreenHeight = screenHeight;
-
-
 	// Re-build the dynamic vertex buffer for rendering to possibly a different location on the screen.
-	result = UpdateBuffers(m_PosX, m_PosY);
+	result = UpdateBuffers(screenWidth, screenHeight);
 	if(!result)
 	{
 		return false;
@@ -97,7 +94,7 @@ void TileClass::SetTypeId(int id)
 }
 
 
-void TileClass::SetTextureId(int id)
+void TileClass::SetTextureId(TileTexId id)
 {
 	m_TextureId = id;
 }
@@ -220,33 +217,35 @@ void TileClass::ShutdownBuffers()
 }
 
 
-bool TileClass::UpdateBuffers(int positionX, int positionY)
+bool TileClass::UpdateBuffers(unsigned int screenWidth, unsigned int screenHeight)
 {
-	float left, right, top, bottom;
+	float left = 0;
+	float right = 0;
+	float top = 0;
+	float bottom = 0;
 	VertexType* vertices;
 	void* verticesPtr;
 	HRESULT result;
 
-
 	// If the position we are rendering this bitmap to has not changed then don't update the vertex buffer since it
 	// currently has the correct parameters.
-	if((positionX == m_PreviousPosX) && (positionY == m_PreviousPosY))
+	if((m_PosX == m_PreviousPosX) && (m_PosY == m_PreviousPosY))
 	{
 		return true;
 	}
 	
 	// If it has changed then update the position it is being rendered to.
-	m_PreviousPosX = positionX;
-	m_PreviousPosY = positionY;
+	m_PreviousPosX = m_PosX;
+	m_PreviousPosY = m_PosY;
 
 	// Calculate the screen coordinates of the left side of the bitmap.
-	left = (float)((m_ScreenWidth / 2) * -1) + ((float)positionX * TILE_SIZE);
+	left = ((float)(screenWidth / 2) * -1) + ((float)m_PosX * TILE_SIZE);
 
 	// Calculate the screen coordinates of the right side of the bitmap.
 	right = left + (float)TILE_SIZE;
 
 	// Calculate the screen coordinates of the top of the bitmap.
-	top = (float)(m_ScreenHeight / 2) - ((float)positionY * TILE_SIZE);
+	top = (float)(screenHeight / 2) - ((float)m_PosY * TILE_SIZE);
 
 	// Calculate the screen coordinates of the bottom of the bitmap.
 	bottom = top - (float)TILE_SIZE;
@@ -266,9 +265,8 @@ bool TileClass::UpdateBuffers(int positionX, int positionY)
 	float v0, v1, v2, v3;
 	float j = 0.5/256; // adjust uv's by half a pixel to remove edge-bleed
 
-
-	row = (m_TypeId / textureColumns);
-	col = (m_TypeId % textureColumns);
+	row = (m_TextureId / textureColumns);
+	col = (m_TextureId % textureColumns);
 
 	u0 = (col * twidth) + j + 0.0f;   v0 = (row * twidth) + j + 0.0f;
 	u1 = (col * twidth) - j + twidth; v1 = (row * twidth) - j + twidth;

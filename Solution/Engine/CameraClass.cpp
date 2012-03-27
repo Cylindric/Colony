@@ -13,6 +13,9 @@ CameraClass::CameraClass()
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
+
+	m_ScreenHeight = 0;
+	m_ScreenWidth = 0;
 }
 
 
@@ -41,6 +44,24 @@ void CameraClass::SetRotation(float x, float y, float z)
 	m_rotationY = y;
 	m_rotationZ = z;
 	return;
+}
+
+
+void CameraClass::SetScreenSize(unsigned int screenWidth, unsigned int screenHeight)
+{
+	m_ScreenWidth = screenWidth;
+	m_ScreenHeight = screenHeight;
+}
+
+
+unsigned int CameraClass::GetScreenWidth()
+{
+	return m_ScreenWidth;
+}
+
+unsigned int CameraClass::GetScreenHeight()
+{
+	return m_ScreenHeight;
 }
 
 

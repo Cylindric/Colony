@@ -23,6 +23,9 @@ public:
 
 	void SetPosition(float, float, float);
 	void SetRotation(float, float, float);
+	void SetScreenSize(unsigned int screenWidth, unsigned int screenHeight);
+	unsigned int GetScreenWidth();
+	unsigned int GetScreenHeight();
 
 	D3DXVECTOR3 GetPosition();
 	D3DXVECTOR3 GetRotation();
@@ -31,6 +34,8 @@ public:
 	void GetViewMatrix(D3DXMATRIX&);
 
 private:
+	unsigned int m_ScreenWidth;
+	unsigned int m_ScreenHeight;
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
 	D3DXMATRIX m_viewMatrix;

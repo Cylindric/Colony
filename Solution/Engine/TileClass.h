@@ -28,6 +28,28 @@ enum TileTextureType
 	TILE_TEXTYPE_STRAIGHT
 };
 
+enum TileTexId
+{
+	TILE_TEX_GROUND = 0,
+	TILE_TEX_WALL_E = 16,
+	TILE_TEX_WALL_S = 17,
+	TILE_TEX_WALL_N = 18,
+	TILE_TEX_WALL_W = 19,
+	TILE_TEX_WALL_ES = 20,
+	TILE_TEX_WALL_SW = 21,
+	TILE_TEX_WALL_NE = 22,
+	TILE_TEX_WALL_NW = 23,
+	TILE_TEX_WALL_NES = 24,
+	TILE_TEX_WALL_ESW = 25,
+	TILE_TEX_WALL_NEW = 26,
+	TILE_TEX_WALL_NSW = 27,
+	TILE_TEX_WALL_NS = 28,
+	TILE_TEX_WALL_EW = 29,
+	TILE_TEX_WALL_NESW = 30,
+	TILE_TEX_WALL_POST = 31
+};
+
+
 enum Directions
 {
 	DIRECTION_N = 1,
@@ -53,10 +75,10 @@ public:
 
 	bool Initialize(ID3D10Device* device, TextureClass* texture);
 	void Shutdown();
-	bool Render(ID3D10Device* device, int screenWidth, int screenHeight);
+	bool Render(ID3D10Device* device, unsigned int screenWidth, unsigned int screenHeight);
 	int GetTypeId();
 	void SetTypeId(int);
-	void SetTextureId(int);
+	void SetTextureId(TileTexId);
 	void SetPosition(int x, int y);
 
 	int GetIndexCount();
@@ -65,17 +87,16 @@ public:
 private:
 	bool InitializeBuffers(ID3D10Device*);
 	void ShutdownBuffers();
-	bool UpdateBuffers(int, int);
+	bool UpdateBuffers(unsigned int screenWidth, unsigned int screenHeight);
 	void RenderBuffers(ID3D10Device*);
 
 private:
 	ID3D10Buffer *m_VertexBuffer, *m_IndexBuffer;
 	int m_VertexCount, m_IndexCount;
 	TextureClass* m_Texture;
-	int m_ScreenWidth, m_ScreenHeight;
 	int m_PreviousPosX, m_PreviousPosY;
 	int m_TypeId; // the primary type of the tile
-	int m_TextureId; // the texture tile id
+	TileTexId m_TextureId; // the texture tile id
 	int m_PosX;
 	int m_PosY;
 };
