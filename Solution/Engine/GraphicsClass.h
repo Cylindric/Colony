@@ -37,7 +37,7 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int fps);
+	bool Frame(int mouseX, int mouseY, int fps);
 
 private:
 	bool Render();

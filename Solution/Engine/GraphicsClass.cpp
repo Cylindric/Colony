@@ -150,12 +150,13 @@ void GraphicsClass::Shutdown()
 }
 
 
-bool GraphicsClass::Frame(int fps)
+bool GraphicsClass::Frame(int mouseX, int mouseY, int fps)
 {
 	bool result;
 
 	// Update the stats
 	result = m_Text->SetFps(fps);
+	result = m_Text->SetMousePosition(mouseX, mouseY);
 
 	// Render the graphics scene.
 	result = Render();

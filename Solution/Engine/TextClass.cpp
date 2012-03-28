@@ -127,7 +127,7 @@ void TextClass::Shutdown()
 void TextClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
 {
 	RenderSentence(device, m_sentence1, worldMatrix, orthoMatrix);
-	//RenderSentence(device, m_sentence2, worldMatrix, orthoMatrix);
+	RenderSentence(device, m_sentence2, worldMatrix, orthoMatrix);
 	return;
 }
 
@@ -272,7 +272,7 @@ bool TextClass::SetFps(int fps)
 	}
 
 	// Update the sentence buffer
-	result = UpdateSentence(m_sentence1, fpsString, 20, 20, red, green, blue);
+	result = UpdateSentence(m_sentence1, fpsString, 10, 10, red, green, blue);
 	if(!result)
 	{
 		return false;
@@ -298,7 +298,7 @@ bool TextClass::SetCpu(int cpu)
 	strcat_s(cpuString, "%");
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, cpuString, 20, 40, 0.0f, 1.0f, 0.0f);
+	result = UpdateSentence(m_sentence2, cpuString, 10, 26, 0.0f, 1.0f, 0.0f);
 	if(!result)
 	{
 		return false;
@@ -307,6 +307,31 @@ bool TextClass::SetCpu(int cpu)
 	return true;
 }
 
+
+bool TextClass::SetMousePosition(int mouseX, int mouseY)
+{
+	char tempString[16];
+	char mouseString[16];
+	bool result;
+
+	// Convert the mouseX integer to string format.
+	_itoa_s(mouseX, tempString, 10);
+	strcpy_s(mouseString, "X:");
+	strcat_s(mouseString, tempString);
+
+	_itoa_s(mouseY, tempString, 10);
+	strcat_s(mouseString, " Y:");
+	strcat_s(mouseString, tempString);
+
+	// Update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence2, mouseString, 10, 26, 1.0f, 1.0f, 1.0f);
+	if(!result)
+	{
+		return false;
+	}
+
+	return true;
+}
 
 
 

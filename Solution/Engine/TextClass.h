@@ -42,6 +42,7 @@ public:
 	void Render(ID3D10Device*, D3DXMATRIX, D3DXMATRIX);
 	bool SetFps(int fps);
 	bool SetCpu(int cpu);
+	bool SetMousePosition(int mouseX, int mouseY);
 
 private:
 	bool InitializeSentence(SentenceType**, int, ID3D10Device*);
