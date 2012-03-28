@@ -1,8 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Filename: textclass.cpp
+// Filename: TextClass.cpp
 ///////////////////////////////////////////////////////////////////////////////
 #include "TextClass.h"
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: TextClass
+////////////////////////////////////////////////////////////////////////////////
 TextClass::TextClass()
 {
 	m_Font = 0;
@@ -23,7 +27,7 @@ TextClass::~TextClass()
 }
 
 
-bool TextClass::Initialize(ID3D10Device* device, HWND hwnd, int screenWidth, int screenHeight, D3DXMATRIX baseViewMatrix)
+bool TextClass::Initialise(ID3D10Device* device, HWND hwnd, int screenWidth, int screenHeight, D3DXMATRIX baseViewMatrix)
 {
 	bool result;
 
@@ -41,11 +45,11 @@ bool TextClass::Initialize(ID3D10Device* device, HWND hwnd, int screenWidth, int
 		return false;
 	}
 
-	// Initialize the font object.
-	result = m_Font->Initialize(device, "./fonts/default.txt", L"./fonts/default.dds");
+	// Initialise the font object.
+	result = m_Font->Initialise(device, "./fonts/default.txt", L"./fonts/default.dds");
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the font object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialise the font object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -56,16 +60,16 @@ bool TextClass::Initialize(ID3D10Device* device, HWND hwnd, int screenWidth, int
 		return false;
 	}
 
-	// Initialize the font shader object.
-	result = m_FontShader->Initialize(device, hwnd);
+	// Initialise the font shader object.
+	result = m_FontShader->Initialise(device, hwnd);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the font shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialise the font shader object.", L"Error", MB_OK);
 		return false;
 	}
 
-	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence1, 16, device);
+	// Initialise the first sentence.
+	result = InitialiseSentence(&m_sentence1, 16, device);
 	if(!result)
 	{
 		return false;
@@ -78,8 +82,8 @@ bool TextClass::Initialize(ID3D10Device* device, HWND hwnd, int screenWidth, int
 		return false;
 	}
 
-	// Initialize the second sentence.
-	result = InitializeSentence(&m_sentence2, 16, device);
+	// Initialise the second sentence.
+	result = InitialiseSentence(&m_sentence2, 16, device);
 	if(!result)
 	{
 		return false;
@@ -132,7 +136,7 @@ void TextClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX 
 }
 
 
-bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D10Device* device)
+bool TextClass::InitialiseSentence(SentenceType** sentence, int maxLength, ID3D10Device* device)
 {
 	VertexType* vertices;
 	unsigned long* indices;
@@ -149,7 +153,7 @@ bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D1
 		return false;
 	}
 
-	// Initialize the sentence buffers to null.
+	// Initialise the sentence buffers to null.
 	(*sentence)->vertexBuffer = 0;
 	(*sentence)->indexBuffer = 0;
 
@@ -176,10 +180,10 @@ bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D1
 		return false;
 	}
 
-	// Initialize vertex array to zeros at first.
+	// Initialise vertex array to zeros at first.
 	memset(vertices, 0, (sizeof(VertexType) * (*sentence)->vertexCount));
 
-	// Initialize the index array.
+	// Initialise the index array.
 	for(i=0; i<(*sentence)->indexCount; i++)
 	{
 		indices[i] = i;
@@ -364,7 +368,7 @@ bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX
 		return false;
 	}
 
-	// Initialize vertex array to zeros at first.
+	// Initialise vertex array to zeros at first.
 	memset(vertices, 0, (sizeof(VertexType) * sentence->vertexCount));
 
 	// Calculate the X and Y pixel position on the screen to start drawing to.
@@ -374,7 +378,7 @@ bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX
 	// Use the font class to build the vertex array from the sentence text and sentence draw location.
 	m_Font->BuildVertexArray((void*)vertices, text, drawX, drawY);
 
-	// Initialize the vertex buffer pointer to null first.
+	// Initialise the vertex buffer pointer to null first.
 	verticesPtr = 0;
 
 	// Lock the vertex buffer.

@@ -1,9 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: fontshaderclass.cpp
+// Filename: FontShaderClass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "FontShaderClass.h"
 
 
+//////////////
+// INCLUDES //
+//////////////
+#include <fstream>
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: FontShaderClass
+////////////////////////////////////////////////////////////////////////////////
 FontShaderClass::FontShaderClass()
 {
 	m_effect = 0;
@@ -27,13 +36,13 @@ FontShaderClass::~FontShaderClass()
 {
 }
 
-bool FontShaderClass::Initialize(ID3D10Device* device, HWND hwnd)
+bool FontShaderClass::Initialise(ID3D10Device* device, HWND hwnd)
 {
 	bool result;
 
 
-	// Initialize the shader that will be used to draw the triangle.
-	result = InitializeShader(device, hwnd, L"./shaders/Font.fx");
+	// Initialise the shader that will be used to draw the triangle.
+	result = InitialiseShader(device, hwnd, L"./shaders/Font.fx");
 	if(!result)
 	{
 		return false;
@@ -62,7 +71,7 @@ void FontShaderClass::Render(ID3D10Device* device, int indexCount, D3DXMATRIX wo
 	return;
 }
 
-bool FontShaderClass::InitializeShader(ID3D10Device* device, HWND hwnd, WCHAR* filename)
+bool FontShaderClass::InitialiseShader(ID3D10Device* device, HWND hwnd, WCHAR* filename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -71,7 +80,7 @@ bool FontShaderClass::InitializeShader(ID3D10Device* device, HWND hwnd, WCHAR* f
 	D3D10_PASS_DESC passDesc;
 
 
-	// Initialize the error message.
+	// Initialie the error message.
 	errorMessage = 0;
 
 	// Load the shader in from the file.
@@ -183,7 +192,7 @@ void FontShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hw
 {
 	char* compileErrors;
 	unsigned long bufferSize, i;
-	ofstream fout;
+	std::ofstream fout;
 
 
 	// Get a pointer to the error message text buffer.

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: d3dclass.h
+// Filename: D3DClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
@@ -16,8 +16,8 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <d3d10.h>
-#include <d3dx10.h>
+#include <D3D10.h>
+#include <D3DX10.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ public:
 	D3DClass(const D3DClass&);
 	~D3DClass();
 
-	bool Initialize(int, int, bool, HWND, bool, float, float);
+	bool Initialise(int, int, bool, HWND, bool, float, float);
 	void Shutdown();
 	
 	void BeginScene(float, float, float, float);

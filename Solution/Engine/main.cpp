@@ -17,8 +17,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		return 0;
 	}
 
-	// Initialize and run the system object.
-	result = System->Initialize();
+	// Initialise and run the system object.
+	result = System->Initialise();
 	if(result)
 	{
 		System->Run();

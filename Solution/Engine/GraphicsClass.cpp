@@ -1,14 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: graphicsclass.cpp
+// Filename: GraphicsClass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "GraphicsClass.h"
-#include "D3DClass.h"
-#include "CameraClass.h"
-#include "TextureShaderClass.h"
-#include "MapClass.h"
-#include "TextClass.h"
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Class name: GraphicsClass
+////////////////////////////////////////////////////////////////////////////////
 GraphicsClass::GraphicsClass()
 {
 	m_D3D = 0;
@@ -29,7 +27,7 @@ GraphicsClass::~GraphicsClass()
 }
 
 
-bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
+bool GraphicsClass::Initialise(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
 	D3DXMATRIX baseViewMatrix;
@@ -42,11 +40,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Initialize the Direct3D object.
-	result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	// Initialise the Direct3D object.
+	result = m_D3D->Initialise(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialise Direct3D.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -68,10 +66,10 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	result = m_Text->Initialize(m_D3D->GetDevice(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+	result = m_Text->Initialise(m_D3D->GetDevice(), hwnd, screenWidth, screenHeight, baseViewMatrix);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialise the text object.", L"Error", MB_OK);
 		return false;
 	}
 	
@@ -82,11 +80,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Initialize the texture shader object.
-	result = m_TextureShader->Initialize(m_D3D->GetDevice(), hwnd);
+	// Initialise the texture shader object.
+	result = m_TextureShader->Initialise(m_D3D->GetDevice(), hwnd);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialise the texture shader object.", L"Error", MB_OK);
 		return false;
 	}
 

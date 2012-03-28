@@ -1,8 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: bitmapclass.h
+// Filename: BitmapClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _BITMAPCLASS_H_
 #define _BITMAPCLASS_H_
+
+
+//////////////
+// INCLUDES //
+//////////////
+#include <D3DX10.h>
 
 
 ///////////////////////
@@ -28,7 +34,7 @@ public:
 	BitmapClass(const BitmapClass&);
 	~BitmapClass();
 
-	bool Initialize(ID3D10Device*, int, int, WCHAR*, int, int);
+	bool Initialise(ID3D10Device*, int, int, WCHAR*, int, int);
 	void Shutdown();
 	bool Render(ID3D10Device*, int, int);
 
@@ -36,7 +42,7 @@ public:
 	ID3D10ShaderResourceView* GetTexture();
 
 private:
-	bool InitializeBuffers(ID3D10Device*);
+	bool InitialiseBuffers(ID3D10Device*);
 	void ShutdownBuffers();
 	bool UpdateBuffers(int, int);
 	void RenderBuffers(ID3D10Device*);

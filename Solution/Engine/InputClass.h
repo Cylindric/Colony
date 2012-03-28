@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: inputclass.h
+// Filename: InputClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _INPUTCLASS_H_
 #define _INPUTCLASS_H_
@@ -34,7 +34,7 @@ public:
 	InputClass(const InputClass&);
 	~InputClass();
 
-	bool Initialize(HINSTANCE, HWND, int, int);
+	bool Initialise(HINSTANCE, HWND, int, int);
 	void Shutdown();
 	bool Frame();
 

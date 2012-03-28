@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: timerclass.h
+// Filename: TimerClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _TIMERCLASS_H_
 #define _TIMERCLASS_H_
@@ -21,7 +21,7 @@ public:
 	TimerClass(const TimerClass&);
 	~TimerClass();
 
-	bool Initialize();
+	bool Initialise();
 	void Frame();
 
 	float GetTime();

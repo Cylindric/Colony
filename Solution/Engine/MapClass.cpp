@@ -1,15 +1,12 @@
-#include <iostream>
-#include <sstream>
-
+////////////////////////////////////////////////////////////////////////////////
+// Filename: MapClass.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include "MapClass.h"
 
-#include "TextureClass.h"
-#include "TileClass.h"
-#include "TextureShaderClass.h"
-#include "CameraClass.h"
 
-using namespace std;
-
+////////////////////////////////////////////////////////////////////////////////
+// Class name: MapClass
+////////////////////////////////////////////////////////////////////////////////
 MapClass::MapClass(void)
 {
 	m_Texture = 0;
@@ -115,7 +112,7 @@ bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename)
 		mapFile >> c;
 
 		TileClass* t = new TileClass();
-		t->Initialize(device, m_Texture);
+		t->Initialise(device, m_Texture);
 		t->SetPosition(col, row);
 		switch (c) 
 		{

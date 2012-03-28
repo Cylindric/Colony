@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: graphicsclass.h
+// Filename: GraphicsClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _GRAPHICSCLASS_H_
 #define _GRAPHICSCLASS_H_
@@ -8,19 +8,18 @@
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
-#include "main.h"
-class D3DClass;
-class CameraClass;
-class MapClass;
-class TextureShaderClass;
-class TextClass;
+#include "D3DClass.h"
+#include "CameraClass.h"
+#include "TextureShaderClass.h"
+#include "MapClass.h"
+#include "TextClass.h"
 
 
 /////////////
 // GLOBALS //
 /////////////
 const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = false;
+const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
@@ -35,7 +34,7 @@ public:
 	GraphicsClass(const GraphicsClass&);
 	~GraphicsClass();
 
-	bool Initialize(int, int, HWND);
+	bool Initialise(int, int, HWND);
 	void Shutdown();
 	bool Frame(int mouseX, int mouseY, int fps);
 

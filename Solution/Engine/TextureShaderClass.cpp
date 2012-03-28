@@ -1,9 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: textureshaderclass.cpp
+// Filename: TextureShaderClass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "TextureShaderClass.h"
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Class name: TextureShaderClass
+////////////////////////////////////////////////////////////////////////////////
 TextureShaderClass::TextureShaderClass()
 {
 	m_effect = 0;
@@ -27,13 +30,13 @@ TextureShaderClass::~TextureShaderClass()
 }
 
 
-bool TextureShaderClass::Initialize(ID3D10Device* device, HWND hwnd)
+bool TextureShaderClass::Initialise(ID3D10Device* device, HWND hwnd)
 {
 	bool result;
 
 
-	// Initialize the shader that will be used to draw the triangle.
-	result = InitializeShader(device, hwnd, L"./shaders/Texture.fx");
+	// Initialise the shader that will be used to draw the triangle.
+	result = InitialiseShader(device, hwnd, L"./shaders/Texture.fx");
 	if(!result)
 	{
 		return false;
@@ -65,7 +68,7 @@ void TextureShaderClass::Render(ID3D10Device* device, int indexCount, D3DXMATRIX
 }
 
 
-bool TextureShaderClass::InitializeShader(ID3D10Device* device, HWND hwnd, WCHAR* filename)
+bool TextureShaderClass::InitialiseShader(ID3D10Device* device, HWND hwnd, WCHAR* filename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -74,7 +77,7 @@ bool TextureShaderClass::InitializeShader(ID3D10Device* device, HWND hwnd, WCHAR
     D3D10_PASS_DESC passDesc;
 
 
-	// Initialize the error message.
+	// Initialise the error message.
 	errorMessage = 0;
 
 	// Load the shader in from the file.

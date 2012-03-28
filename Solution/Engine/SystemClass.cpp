@@ -1,9 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: systemclass.cpp
+// Filename: SystemClass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "SystemClass.h"
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Class name: SystemClass
+////////////////////////////////////////////////////////////////////////////////
 SystemClass::SystemClass()
 {
 	m_Input = 0;
@@ -23,18 +26,18 @@ SystemClass::~SystemClass()
 }
 
 
-bool SystemClass::Initialize()
+bool SystemClass::Initialise()
 {
 	int screenWidth, screenHeight;
 	bool result;
 
 
-	// Initialize the width and height of the screen to zero before sending the variables into the function.
+	// Initialise the width and height of the screen to zero before sending the variables into the function.
 	screenWidth = 0;
 	screenHeight = 0;
 
-	// Initialize the windows api.
-	InitializeWindows(screenWidth, screenHeight);
+	// Initialise the windows api.
+	InitialiseWindows(screenWidth, screenHeight);
 
 	// Create the input object.  This object will be used to handle reading the keyboard input from the user.
 	m_Input = new InputClass;
@@ -43,11 +46,11 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
-	// Initialize the input object.
-	result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
+	// Initialise the input object.
+	result = m_Input->Initialise(m_hinstance, m_hwnd, screenWidth, screenHeight);
 	if(!result)
 	{
-		MessageBox(m_hwnd, L"Could not initialize the input object.", L"Error", MB_OK);
+		MessageBox(m_hwnd, L"Could not initialise the input object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -58,31 +61,31 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
-	// Initialize the graphics object.
-	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
+	// Initialise the graphics object.
+	result = m_Graphics->Initialise(screenWidth, screenHeight, m_hwnd);
 	if(!result)
 	{
 		return false;
 	}
 
-	// Create and initialize the fps object.
+	// Create and initialise the fps object.
 	m_Fps = new FpsClass;
 	if(!m_Fps)
 	{
 		return false;
 	}
-	m_Fps->Initialize();
+	m_Fps->Initialise();
 
-	// Create and initialize the timer object.
+	// Create and initialise the timer object.
 	m_Timer = new TimerClass;
 	if(!m_Timer)
 	{
 		return false;
 	}
-	result = m_Timer->Initialize();
+	result = m_Timer->Initialise();
 	if(!result)
 	{
-		MessageBox(m_hwnd, L"Could not initialize the Timer object.", L"Error", MB_OK);
+		MessageBox(m_hwnd, L"Could not initialise the Timer object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -133,7 +136,7 @@ void SystemClass::Run()
 	bool done, result;
 
 
-	// Initialize the message structure.
+	// Initialise the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
 	
 	// Loop until there is a quit message from the window or the user.
@@ -207,7 +210,7 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 }
 
 
-void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
+void SystemClass::InitialiseWindows(int& screenWidth, int& screenHeight)
 {
 	WNDCLASSEX wc;
 	DEVMODE dmScreenSettings;

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: systemclass.h
+// Filename: SystemClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _SYSTEMCLASS_H_
 #define _SYSTEMCLASS_H_
@@ -14,7 +14,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <windows.h>
+#include <Windows.h>
 
 
 ///////////////////////
@@ -36,7 +36,7 @@ public:
 	SystemClass(const SystemClass&);
 	~SystemClass();
 
-	bool Initialize();
+	bool Initialise();
 	void Shutdown();
 	void Run();
 
@@ -44,7 +44,7 @@ public:
 
 private:
 	bool Frame();
-	void InitializeWindows(int&, int&);
+	void InitialiseWindows(int&, int&);
 	void ShutdownWindows();
 
 private:

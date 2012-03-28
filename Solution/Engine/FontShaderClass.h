@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: fontshaderclass.h
+// Filename: FontShaderClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _FONTSHADERCLASS_H_
 #define _FONTSHADERCLASS_H_
@@ -8,10 +8,8 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <d3d10.h>
+#include <D3D10.h>
 #include <D3DX10.h>
-#include <fstream>
-using namespace std;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -24,12 +22,12 @@ public:
 	FontShaderClass(const FontShaderClass&);
 	~FontShaderClass();
 
-	bool Initialize(ID3D10Device*, HWND);
+	bool Initialise(ID3D10Device*, HWND);
 	void Shutdown();
 	void Render(ID3D10Device*, int, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, ID3D10ShaderResourceView*, D3DXVECTOR4);
 
 private:
-	bool InitializeShader(ID3D10Device*, HWND, WCHAR*);
+	bool InitialiseShader(ID3D10Device*, HWND, WCHAR*);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 

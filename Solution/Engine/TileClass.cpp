@@ -1,6 +1,12 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: TileClass.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include "TileClass.h"
-#include "TextureClass.h"
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: TileClass
+////////////////////////////////////////////////////////////////////////////////
 TileClass::TileClass()
 {
 	m_VertexBuffer = 0;
@@ -23,16 +29,16 @@ TileClass::~TileClass()
 }
 
 
-bool TileClass::Initialize(ID3D10Device* device, TextureClass* texture)
+bool TileClass::Initialise(ID3D10Device* device, TextureClass* texture)
 {
 	bool result;
 
-	// Initialize the previous rendering position to negative one.
+	// Initialise the previous rendering position to negative one.
 	m_PreviousPosX = -1;
 	m_PreviousPosY = -1;
 
-	// Initialize the vertex and index buffer that hold the geometry for the triangle.
-	result = InitializeBuffers(device);
+	// Initialise the vertex and index buffer that hold the geometry for the triangle.
+	result = InitialiseBuffers(device);
 	if(!result)
 	{
 		return false;
@@ -113,7 +119,7 @@ ID3D10ShaderResourceView* TileClass::GetTexture()
 }
 
 
-bool TileClass::InitializeBuffers(ID3D10Device* device)
+bool TileClass::InitialiseBuffers(ID3D10Device* device)
 {
 	VertexType* vertices;
 	unsigned long* indices;
@@ -143,7 +149,7 @@ bool TileClass::InitializeBuffers(ID3D10Device* device)
 		return false;
 	}
 
-	// Initialize vertex array to zeros at first.
+	// Initialise vertex array to zeros at first.
 	memset(vertices, 0, (sizeof(VertexType) * m_VertexCount));
 
 	// Load the index array with data.
@@ -294,7 +300,7 @@ bool TileClass::UpdateBuffers(unsigned int screenWidth, unsigned int screenHeigh
 	vertices[5].position = D3DXVECTOR3(right, bottom, 0.0f);  // Bottom right.
 	vertices[5].texture = D3DXVECTOR2(u1, v1);
 
-	// Initialize the vertex buffer pointer to null first.
+	// Initialise the vertex buffer pointer to null first.
 	verticesPtr = 0;
 
 	// Lock the vertex buffer.

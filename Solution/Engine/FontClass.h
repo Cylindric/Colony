@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: fontclass.h
+// Filename: FontClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _FONTCLASS_H_
 #define _FONTCLASS_H_
@@ -9,13 +9,13 @@
 // INCLUDES //
 //////////////
 #include <fstream>
-using namespace std;
+#include <D3DX10.h>
 
 
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
-#include "textureclass.h"
+#include "TextureClass.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,7 @@ public:
 	FontClass(const FontClass&);
 	~FontClass();
 
-	bool Initialize(ID3D10Device*, char*, WCHAR*);
+	bool Initialise(ID3D10Device*, char*, WCHAR*);
 	void Shutdown();
 
 	ID3D10ShaderResourceView* GetTexture();

@@ -37,7 +37,7 @@ public:
 	TextClass(const TextClass&);
 	~TextClass();
 
-	bool Initialize(ID3D10Device*, HWND, int, int, D3DXMATRIX);
+	bool Initialise(ID3D10Device*, HWND, int, int, D3DXMATRIX);
 	void Shutdown();
 	void Render(ID3D10Device*, D3DXMATRIX, D3DXMATRIX);
 	bool SetFps(int fps);
@@ -45,7 +45,7 @@ public:
 	bool SetMousePosition(int mouseX, int mouseY);
 
 private:
-	bool InitializeSentence(SentenceType**, int, ID3D10Device*);
+	bool InitialiseSentence(SentenceType**, int, ID3D10Device*);
 	bool UpdateSentence(SentenceType*, char*, int, int, float, float, float);
 	void ReleaseSentence(SentenceType**);
 	void RenderSentence(ID3D10Device*, SentenceType*, D3DXMATRIX, D3DXMATRIX);

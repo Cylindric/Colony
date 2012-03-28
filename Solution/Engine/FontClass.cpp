@@ -1,8 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Filename: fontclass.cpp
+// Filename: FontClass.cpp
 ///////////////////////////////////////////////////////////////////////////////
 #include "FontClass.h"
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: FontClass
+////////////////////////////////////////////////////////////////////////////////
 FontClass::FontClass()
 {
 	m_Font = 0;
@@ -20,7 +24,7 @@ FontClass::~FontClass()
 }
 
 
-bool FontClass::Initialize(ID3D10Device* device, char* fontFilename, WCHAR* textureFilename)
+bool FontClass::Initialise(ID3D10Device* device, char* fontFilename, WCHAR* textureFilename)
 {
 	bool result;
 
@@ -57,7 +61,7 @@ void FontClass::Shutdown()
 
 bool FontClass::LoadFontData(char* filename)
 {
-	ifstream fin;
+	std::ifstream fin;
 	int i;
 	char temp;
 
@@ -126,7 +130,7 @@ bool FontClass::LoadTexture(ID3D10Device* device, WCHAR* filename)
 		return false;
 	}
 
-	// Initialize the texture object.
+	// Initialise the texture object.
 	result = m_Texture->Initialise(device, filename);
 	if(!result)
 	{
@@ -169,7 +173,7 @@ void FontClass::BuildVertexArray(void* vertices, char* sentence, float drawX, fl
 	// Get the number of letters in the sentence.
 	numLetters = (int)strlen(sentence);
 
-	// Initialize the index to the vertex array.
+	// Initialise the index to the vertex array.
 	index = 0;
 
 	// Draw each letter onto a quad.

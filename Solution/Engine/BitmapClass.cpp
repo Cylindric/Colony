@@ -1,9 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: bitmapclass.cpp
+// Filename: BitmapClass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "BitmapClass.h"
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Class name: BitmapClass
+////////////////////////////////////////////////////////////////////////////////
 BitmapClass::BitmapClass()
 {
 	m_vertexBuffer = 0;
@@ -22,7 +25,7 @@ BitmapClass::~BitmapClass()
 }
 
 
-bool BitmapClass::Initialize(ID3D10Device* device, int screenWidth, int screenHeight, WCHAR* textureFilename, int bitmapWidth, int bitmapHeight)
+bool BitmapClass::Initialise(ID3D10Device* device, int screenWidth, int screenHeight, WCHAR* textureFilename, int bitmapWidth, int bitmapHeight)
 {
 	bool result;
 
@@ -35,12 +38,12 @@ bool BitmapClass::Initialize(ID3D10Device* device, int screenWidth, int screenHe
 	m_bitmapWidth = bitmapWidth;
 	m_bitmapHeight = bitmapHeight;
 
-	// Initialize the previous rendering position to negative one.
+	// Initialise the previous rendering position to negative one.
 	m_previousPosX = -1;
 	m_previousPosY = -1;
 
-	// Initialize the vertex and index buffer that hold the geometry for the triangle.
-	result = InitializeBuffers(device);
+	// Initialise the vertex and index buffer that hold the geometry for the triangle.
+	result = InitialiseBuffers(device);
 	if(!result)
 	{
 		return false;
@@ -100,7 +103,7 @@ ID3D10ShaderResourceView* BitmapClass::GetTexture()
 }
 
 
-bool BitmapClass::InitializeBuffers(ID3D10Device* device)
+bool BitmapClass::InitialiseBuffers(ID3D10Device* device)
 {
 	VertexType* vertices;
 	unsigned long* indices;
@@ -130,7 +133,7 @@ bool BitmapClass::InitializeBuffers(ID3D10Device* device)
 		return false;
 	}
 
-	// Initialize vertex array to zeros at first.
+	// Initialise vertex array to zeros at first.
 	memset(vertices, 0, (sizeof(VertexType) * m_vertexCount));
 
 	// Load the index array with data.
@@ -263,7 +266,7 @@ bool BitmapClass::UpdateBuffers(int positionX, int positionY)
 	vertices[5].position = D3DXVECTOR3(right, bottom, 0.0f);  // Bottom right.
 	vertices[5].texture = D3DXVECTOR2(1.0f, 1.0f);
 
-	// Initialize the vertex buffer pointer to null first.
+	// Initialise the vertex buffer pointer to null first.
 	verticesPtr = 0;
 
 	// Lock the vertex buffer.
@@ -322,7 +325,7 @@ bool BitmapClass::LoadTexture(ID3D10Device* device, WCHAR* filename)
 		return false;
 	}
 
-	// Initialize the texture object.
+	// Initialise the texture object.
 	result = m_Texture->Initialise(device, filename);
 	if(!result)
 	{

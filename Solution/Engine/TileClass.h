@@ -1,11 +1,26 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: TileClass.h
+////////////////////////////////////////////////////////////////////////////////
 #ifndef _TILECLASS_H_
 #define _TILECLASS_H_
 
-#include "main.h"
-class TextureClass;
 
+//////////////
+// INCLUDES //
+//////////////
+#include <D3DX10.h>
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
+#include "TextureClass.h"
+
+
+/////////////
+// GLOBALS //
+/////////////
 static const int TILE_SIZE = 32;
-
 
 enum TileType
 {
@@ -49,7 +64,6 @@ enum TileTexId
 	TILE_TEX_WALL_POST = 31
 };
 
-
 enum Directions
 {
 	DIRECTION_N = 1,
@@ -59,6 +73,9 @@ enum Directions
 };
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Class name: TileClass
+////////////////////////////////////////////////////////////////////////////////
 class TileClass
 {
 private:
@@ -73,7 +90,7 @@ public:
 	TileClass(const TileClass&);
 	~TileClass();
 
-	bool Initialize(ID3D10Device* device, TextureClass* texture);
+	bool Initialise(ID3D10Device* device, TextureClass* texture);
 	void Shutdown();
 	bool Render(ID3D10Device* device, unsigned int screenWidth, unsigned int screenHeight);
 	int GetTypeId();
@@ -85,7 +102,7 @@ public:
 	ID3D10ShaderResourceView* GetTexture();
 
 private:
-	bool InitializeBuffers(ID3D10Device*);
+	bool InitialiseBuffers(ID3D10Device*);
 	void ShutdownBuffers();
 	bool UpdateBuffers(unsigned int screenWidth, unsigned int screenHeight);
 	void RenderBuffers(ID3D10Device*);

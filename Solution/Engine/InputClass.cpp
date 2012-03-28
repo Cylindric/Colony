@@ -1,9 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: inputclass.cpp
+// Filename: InputClass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "InputClass.h"
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Class name: InputClass
+////////////////////////////////////////////////////////////////////////////////
 InputClass::InputClass()
 {
 	m_directInput = 0;
@@ -22,7 +25,7 @@ InputClass::~InputClass()
 }
 
 
-bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
+bool InputClass::Initialise(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
 {
 	HRESULT result;
 
@@ -31,18 +34,18 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
 
-	// Initialize the location of the mouse on the screen.
+	// Initialise the location of the mouse on the screen.
 	m_mouseX = 0;
 	m_mouseY = 0;
 
-	// Initialize the main direct input interface.
+	// Initialise the main direct input interface.
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
 	if(FAILED(result))
 	{
 		return false;
 	}
 
-	// Initialize the direct input interface for the keyboard.
+	// Initialise the direct input interface for the keyboard.
 	result = m_directInput->CreateDevice(GUID_SysKeyboard, &m_keyboard, NULL);
 	if(FAILED(result))
 	{
@@ -70,7 +73,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 		return false;
 	}
 
-	// Initialize the direct input interface for the mouse.
+	// Initialise the direct input interface for the mouse.
 	result = m_directInput->CreateDevice(GUID_SysMouse, &m_mouse, NULL);
 	if(FAILED(result))
 	{
