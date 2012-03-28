@@ -6,6 +6,7 @@
 #include "CameraClass.h"
 #include "TextureShaderClass.h"
 #include "MapClass.h"
+#include "TextClass.h"
 
 
 GraphicsClass::GraphicsClass()
@@ -14,6 +15,7 @@ GraphicsClass::GraphicsClass()
 	m_Camera = 0;
 	m_TextureShader = 0;
 	m_Map = 0;
+	m_Text = 0;
 }
 
 
@@ -30,6 +32,7 @@ GraphicsClass::~GraphicsClass()
 bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
+	D3DXMATRIX baseViewMatrix;
 
 
 	// Create the Direct3D object.
@@ -57,6 +60,20 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->Render();
+	m_Camera->GetViewMatrix(baseViewMatrix);
+
+	m_Text = new TextClass();
+	if(!m_Text)
+	{
+		return false;
+	}
+	result = m_Text->Initialize(m_D3D->GetDevice(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
+		return false;
+	}
 	
 	// Create the texture shader object.
 	m_TextureShader = new TextureShaderClass;
@@ -85,8 +102,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 	
-
-
 	return true;
 }
 
@@ -109,6 +124,13 @@ void GraphicsClass::Shutdown()
 		m_TextureShader = 0;
 	}
 
+	if(m_Text)
+	{
+		m_Text->Shutdown();
+		delete m_Text;
+		m_Text = 0;
+	}
+
 	// Release the camera object.
 	if(m_Camera)
 	{
@@ -128,9 +150,12 @@ void GraphicsClass::Shutdown()
 }
 
 
-bool GraphicsClass::Frame()
+bool GraphicsClass::Frame(int fps)
 {
 	bool result;
+
+	// Update the stats
+	result = m_Text->SetFps(fps);
 
 	// Render the graphics scene.
 	result = Render();
@@ -170,6 +195,8 @@ bool GraphicsClass::Render()
 		return false;
 	}
 
+	m_Text->Render(m_D3D->GetDevice(), worldMatrix, orthoMatrix);
+
 	// Turn the Z buffer back on now that all 2D rendering has completed.
 	m_D3D->TurnZBufferOn();
 
@@ -178,3 +205,5 @@ bool GraphicsClass::Render()
 
 	return true;
 }
+
+

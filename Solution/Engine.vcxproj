@@ -14,27 +14,37 @@
     <ClCompile Include="Engine\BitmapClass.cpp" />
     <ClCompile Include="Engine\CameraClass.cpp" />
     <ClCompile Include="Engine\D3DClass.cpp" />
+    <ClCompile Include="Engine\FontClass.cpp" />
+    <ClCompile Include="Engine\FontShaderClass.cpp" />
+    <ClCompile Include="Engine\FpsClass.cpp" />
     <ClCompile Include="Engine\GraphicsClass.cpp" />
     <ClCompile Include="Engine\InputClass.cpp" />
     <ClCompile Include="Engine\main.cpp" />
     <ClCompile Include="Engine\MapClass.cpp" />
     <ClCompile Include="Engine\SystemClass.cpp" />
+    <ClCompile Include="Engine\TextClass.cpp" />
     <ClCompile Include="Engine\TextureClass.cpp" />
     <ClCompile Include="Engine\TextureShaderClass.cpp" />
     <ClCompile Include="Engine\TileClass.cpp" />
+    <ClCompile Include="Engine\TimerClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BitmapClass.h" />
     <ClInclude Include="Engine\CameraClass.h" />
     <ClInclude Include="Engine\D3DClass.h" />
+    <ClInclude Include="Engine\FontClass.h" />
+    <ClInclude Include="Engine\FontShaderClass.h" />
+    <ClInclude Include="Engine\FpsClass.h" />
     <ClInclude Include="Engine\GraphicsClass.h" />
     <ClInclude Include="Engine\InputClass.h" />
     <ClInclude Include="Engine\main.h" />
     <ClInclude Include="Engine\MapClass.h" />
     <ClInclude Include="Engine\SystemClass.h" />
+    <ClInclude Include="Engine\TextClass.h" />
     <ClInclude Include="Engine\TextureClass.h" />
     <ClInclude Include="Engine\TextureShaderClass.h" />
     <ClInclude Include="Engine\TileClass.h" />
+    <ClInclude Include="Engine\TimerClass.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{14E97482-4275-4C4D-B55A-F7B0E9800CBF}</ProjectGuid>

@@ -8,6 +8,8 @@ SystemClass::SystemClass()
 {
 	m_Input = 0;
 	m_Graphics = 0;
+	m_Fps = 0;
+	m_Timer = 0;
 }
 
 
@@ -58,6 +60,27 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+	// Create and initialize the fps object.
+	m_Fps = new FpsClass;
+	if(!m_Fps)
+	{
+		return false;
+	}
+	m_Fps->Initialize();
+
+	// Create and initialize the timer object.
+	m_Timer = new TimerClass;
+	if(!m_Timer)
+	{
+		return false;
+	}
+	result = m_Timer->Initialize();
+	if(!result)
+	{
+		MessageBox(m_hwnd, L"Could not initialize the Timer object.", L"Error", MB_OK);
+		return false;
+	}
+
 	return true;
 }
 
@@ -77,6 +100,18 @@ void SystemClass::Shutdown()
 	{
 		delete m_Input;
 		m_Input = 0;
+	}
+
+	if(m_Fps)
+	{
+		delete m_Fps;
+		m_Fps = 0;
+	}
+
+	if(m_Timer)
+	{
+		delete m_Timer;
+		m_Timer = 0;
 	}
 
 	// Shutdown the window.
@@ -131,6 +166,9 @@ bool SystemClass::Frame()
 {
 	bool result;
 
+	// Update system stats
+	m_Timer->Frame();
+	m_Fps->Frame();
 
 	// Check if the user pressed escape and wants to exit the application.
 	if(m_Input->IsKeyDown(VK_ESCAPE))
@@ -139,7 +177,7 @@ bool SystemClass::Frame()
 	}
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame();
+	result = m_Graphics->Frame(m_Fps->GetFps());
 	if(!result)
 	{
 		return false;
