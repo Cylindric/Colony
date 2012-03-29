@@ -30,12 +30,13 @@ class MapClass
 public:
 	MapClass(void);
 	~MapClass(void);
-	bool Initialise(ID3D10Device* device, WCHAR* mapFile);
-	bool Render(ID3D10Device*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, int screenWidth, int screenHeight, TextureShaderClass*);
+	bool Initialise(ID3D10Device* device, WCHAR* mapFile, TextureShaderClass*);
+	bool Render(ID3D10Device*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX);
 	void Shutdown();
+	void Frame(int screenW, int screenH, int mouseX, int mouseY);
 
 private:
-	bool LoadFromFile(ID3D10Device* device, WCHAR* filename);
+	bool LoadFromFile(ID3D10Device* device, WCHAR* filename, TextureShaderClass* textureshader);
 	TileClass* GetTileAt(unsigned int x, unsigned int y);
 	
 	std::wstring m_MapFile; // filename of the file holding the map data
@@ -43,6 +44,8 @@ private:
 	unsigned int m_TileSize; // size of a tile in the texture file, in px
 	unsigned int m_MapWidth; // width of the map, in tiles
 	unsigned int m_MapHeight; // height of the map, in tiles
+	unsigned int m_ScreenWidth; // width of the screen, in px
+	unsigned int m_ScreenHeight; // height of the screen, in px
 
 	TextureClass* m_Texture;
 	std::vector<TileClass*> m_Tiles;

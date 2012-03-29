@@ -12,6 +12,7 @@ TextClass::TextClass()
 	m_Font = 0;
 	m_FontShader = 0;
 
+	m_TopSentence = -1;
 	m_sentence1 = 0;
 	m_sentence2 = 0;
 }
@@ -68,9 +69,11 @@ bool TextClass::Initialise(ID3D10Device* device, HWND hwnd, int screenWidth, int
 		return false;
 	}
 
+
 	// Initialise the first sentence.
-	result = InitialiseSentence(&m_sentence1, 16, device);
-	if(!result)
+	int helloSentenceId = InitialiseSentence(16, device);
+	//result = InitialiseSentence(&m_sentence1, 16, device);
+	if(helloSentenceId < 0)
 	{
 		return false;
 	}
@@ -130,14 +133,24 @@ void TextClass::Shutdown()
 
 void TextClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
 {
+	for(std::map<int, SentenceType*>::iterator s = m_sentences.begin(); s != m_sentences.end(); s++)
+	{
+		RenderSentence(device, s->second, worldMatrix, orthoMatrix);
+	}
 	RenderSentence(device, m_sentence1, worldMatrix, orthoMatrix);
 	RenderSentence(device, m_sentence2, worldMatrix, orthoMatrix);
 	return;
 }
 
 
-bool TextClass::InitialiseSentence(SentenceType** sentence, int maxLength, ID3D10Device* device)
+int TextClass::InitialiseSentence(int maxLength, ID3D10Device* device)
 {
+	// bail out if max sentences already set
+	if(m_TopSentence >= MAX_SENTENCES)
+	{
+		return false;
+	}
+
 	VertexType* vertices;
 	unsigned long* indices;
 	D3D10_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
@@ -147,51 +160,47 @@ bool TextClass::InitialiseSentence(SentenceType** sentence, int maxLength, ID3D1
 
 
 	// Create a new sentence object.
-	*sentence = new SentenceType;
-	if(!*sentence)
-	{
-		return false;
-	}
+	SentenceType* sentence = new SentenceType;
 
 	// Initialise the sentence buffers to null.
-	(*sentence)->vertexBuffer = 0;
-	(*sentence)->indexBuffer = 0;
+	sentence->vertexBuffer = 0;
+	sentence->indexBuffer = 0;
 
 	// Set the maximum length of the sentence.
-	(*sentence)->maxLength = maxLength;
+	sentence->maxLength = maxLength;
 
 	// Set the number of vertices in the vertex array.
-	(*sentence)->vertexCount = 6 * maxLength;
+	sentence->vertexCount = 6 * maxLength;
 
 	// Set the number of indexes in the index array.
-	(*sentence)->indexCount = (*sentence)->vertexCount;
+	sentence->indexCount = sentence->vertexCount;
 
 	// Create the vertex array.
-	vertices = new VertexType[(*sentence)->vertexCount];
+	vertices = new VertexType[sentence->vertexCount];
 	if(!vertices)
 	{
 		return false;
 	}
 
 	// Create the index array.
-	indices = new unsigned long[(*sentence)->indexCount];
+	indices = new unsigned long[sentence->indexCount];
 	if(!indices)
 	{
 		return false;
 	}
 
 	// Initialise vertex array to zeros at first.
-	memset(vertices, 0, (sizeof(VertexType) * (*sentence)->vertexCount));
+	memset(vertices, 0, (sizeof(VertexType) * sentence->vertexCount));
 
 	// Initialise the index array.
-	for(i=0; i<(*sentence)->indexCount; i++)
+	for(i=0; i<sentence->indexCount; i++)
 	{
 		indices[i] = i;
 	}
 
 	// Set up the description of the dynamic vertex buffer.
 	vertexBufferDesc.Usage = D3D10_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType) * (*sentence)->vertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * sentence->vertexCount;
 	vertexBufferDesc.BindFlags = D3D10_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
 	vertexBufferDesc.MiscFlags = 0;
@@ -200,7 +209,7 @@ bool TextClass::InitialiseSentence(SentenceType** sentence, int maxLength, ID3D1
 	vertexData.pSysMem = vertices;
 
 	// Create the vertex buffer.
-	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &(*sentence)->vertexBuffer);
+	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &sentence->vertexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -208,7 +217,7 @@ bool TextClass::InitialiseSentence(SentenceType** sentence, int maxLength, ID3D1
 
 	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D10_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * (*sentence)->indexCount;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * sentence->indexCount;
 	indexBufferDesc.BindFlags = D3D10_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
@@ -217,7 +226,7 @@ bool TextClass::InitialiseSentence(SentenceType** sentence, int maxLength, ID3D1
 	indexData.pSysMem = indices;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &(*sentence)->indexBuffer);
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &sentence->indexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -230,6 +239,8 @@ bool TextClass::InitialiseSentence(SentenceType** sentence, int maxLength, ID3D1
 	// Release the index array as it is no longer needed.
 	delete [] indices;
 	indices = 0;
+
+	m_Sentences.push_back(sentence);
 
 	return true;
 }
@@ -338,7 +349,6 @@ bool TextClass::SetMousePosition(int mouseX, int mouseY)
 }
 
 
-
 bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX, int positionY, float red, float green, float blue)
 {
 	int numLetters;
@@ -401,6 +411,7 @@ bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX
 	return true;
 }
 
+
 void TextClass::ReleaseSentence(SentenceType** sentence)
 {
 	if(*sentence)
@@ -426,6 +437,7 @@ void TextClass::ReleaseSentence(SentenceType** sentence)
 
 	return;
 }
+
 
 void TextClass::RenderSentence(ID3D10Device* device, SentenceType* sentence, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
 {

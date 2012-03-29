@@ -94,7 +94,7 @@ bool GraphicsClass::Initialise(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	result = m_Map->Initialise(m_D3D->GetDevice(), L"./maps/BigMaze.txt");
+	result = m_Map->Initialise(m_D3D->GetDevice(), L"./maps/BigMaze.txt", m_TextureShader);
 	if(!result)
 	{
 		return false;
@@ -152,9 +152,23 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int fps)
 {
 	bool result;
 
+	// Convert screen coords to tile coords
+	// xy goes from 0 to 1
+	float x = (float)mouseX / 800;
+	float y = (float)mouseY / 600;
+
+	float tX = (float)800 / 32; // = 25.00
+	float tY = (float)600 / 32; // = 18.75
+
+	int tileX = x * tX;
+	int tileY = y * tY;
+
 	// Update the stats
 	result = m_Text->SetFps(fps);
-	result = m_Text->SetMousePosition(mouseX, mouseY);
+	//result = m_Text->SetMousePosition(mouseX, mouseY);
+	result = m_Text->SetMousePosition((int)(x*100), tileY);
+
+	m_Map->Frame(m_Camera->GetScreenWidth(), m_Camera->GetScreenHeight(), mouseX, mouseY);
 
 	// Render the graphics scene.
 	result = Render();
@@ -188,7 +202,7 @@ bool GraphicsClass::Render()
 	m_D3D->TurnZBufferOff();
 
 	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	result = m_Map->Render(m_D3D->GetDevice(), worldMatrix, viewMatrix, orthoMatrix, m_Camera->GetScreenWidth(), m_Camera->GetScreenHeight(), m_TextureShader);
+	result = m_Map->Render(m_D3D->GetDevice(), worldMatrix, viewMatrix, orthoMatrix);
 	if(!result)
 	{
 		return false;

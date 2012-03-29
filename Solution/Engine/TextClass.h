@@ -5,6 +5,12 @@
 #define _TEXTCLASS_H_
 
 
+//////////////
+// INCLUDES //
+//////////////
+#include <vector>
+
+
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
@@ -45,16 +51,19 @@ public:
 	bool SetMousePosition(int mouseX, int mouseY);
 
 private:
-	bool InitialiseSentence(SentenceType**, int, ID3D10Device*);
+	int InitialiseSentence(int, ID3D10Device*);
 	bool UpdateSentence(SentenceType*, char*, int, int, float, float, float);
 	void ReleaseSentence(SentenceType**);
 	void RenderSentence(ID3D10Device*, SentenceType*, D3DXMATRIX, D3DXMATRIX);
 
 private:
+	const unsigned int MAX_SENTENCES = 6;
 	FontClass* m_Font;
 	FontShaderClass* m_FontShader;
 	int m_screenWidth, m_screenHeight;
 	D3DXMATRIX m_baseViewMatrix;
+
+	std::vector<SentenceType*> m_Sentences;
 
 	SentenceType* m_sentence1;
 	SentenceType* m_sentence2;

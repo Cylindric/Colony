@@ -21,6 +21,7 @@
     <ClCompile Include="Engine\InputClass.cpp" />
     <ClCompile Include="Engine\main.cpp" />
     <ClCompile Include="Engine\MapClass.cpp" />
+    <ClCompile Include="Engine\SpriteClass.cpp" />
     <ClCompile Include="Engine\SystemClass.cpp" />
     <ClCompile Include="Engine\TextClass.cpp" />
     <ClCompile Include="Engine\TextureClass.cpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="Engine\InputClass.h" />
     <ClInclude Include="Engine\main.h" />
     <ClInclude Include="Engine\MapClass.h" />
+    <ClInclude Include="Engine\SpriteClass.h" />
     <ClInclude Include="Engine\SystemClass.h" />
     <ClInclude Include="Engine\TextClass.h" />
     <ClInclude Include="Engine\TextureClass.h" />

@@ -20,7 +20,7 @@ MapClass::~MapClass(void)
 }
 
 
-bool MapClass::Initialise(ID3D10Device* device, WCHAR* mapFile)
+bool MapClass::Initialise(ID3D10Device* device, WCHAR* mapFile, TextureShaderClass* textureshader)
 {
 	bool result;
 
@@ -30,7 +30,7 @@ bool MapClass::Initialise(ID3D10Device* device, WCHAR* mapFile)
 		return false;
 	}
 
-	result = LoadFromFile(device, mapFile);
+	result = LoadFromFile(device, mapFile, textureshader);
 	if(!result)
 	{
 		cerr << "Error loading map " << mapFile << endl;
@@ -41,28 +41,12 @@ bool MapClass::Initialise(ID3D10Device* device, WCHAR* mapFile)
 }
 
 
-bool MapClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX orthoMatrix, int screenWidth, int screenHeight, TextureShaderClass* textureShader)
+bool MapClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX orthoMatrix)
 {
 	bool result;
 	for(vector<TileClass*>::iterator i = m_Tiles.begin(); i < m_Tiles.end(); i++)
 	{
-		result = (*i)->Render(device, screenWidth, screenHeight);
-
-		// test highlight
-		if(((*i)->GetPositionX() == 5) && ((*i)->GetPositionY() == 5))
-		{
-			(*i)->SetHighlight(true);
-		}
-		else
-		{
-			(*i)->SetHighlight(false);
-		}
-
-		if(!result)
-		{
-			return false;
-		}
-		textureShader->Render(device, (*i)->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Texture->GetTexture());
+		result = (*i)->Render(device, worldMatrix, viewMatrix, orthoMatrix, m_ScreenWidth, m_ScreenHeight);
 	}
 	return true;
 }
@@ -78,7 +62,23 @@ void MapClass::Shutdown(void)
 }
 
 
-bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename)
+void MapClass::Frame(int screenW, int screenH, int mouseX, int mouseY)
+{
+	m_ScreenWidth = screenW;
+	m_ScreenHeight = screenH;
+
+	// convert the mouse coords to map coords
+	//unsigned int tilesAcross = m_ScreenWidth / m_TileSize;
+	//unsigned int tilesDown = m_ScreenHeight / m_TileSize;
+	//unsigned int tileX = tilesAcross * ((float)mouseX / m_ScreenWidth);
+	//unsigned int tileY = tilesDown * ((float)mouseY / m_ScreenHeight);
+
+	//TileClass* t = GetTileAt(tileX, tileY);
+	//t->SetHighlight(true);
+}
+
+
+bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename, TextureShaderClass* textureshader)
 {
 	bool result;
 
@@ -119,17 +119,17 @@ bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename)
 		mapFile >> c;
 
 		TileClass* t = new TileClass();
-		t->Initialise(device, m_Texture);
+		t->Initialise(device, m_Texture, textureshader);
 		t->SetPosition(col, row);
 		switch (c) 
 		{
 		case '.':
 			t->SetTypeId(TILE_TYPE_OPEN);
-			t->SetTextureId(TILE_TEX_GROUND);
+			t->SetTextureId(SPRITE_TEX_GROUND);
 			break;
 		case '#':
 			t->SetTypeId(TILE_TYPE_WALL);
-			t->SetTextureId(TILE_TEX_WALL_POST);
+			t->SetTextureId(SPRITE_TEX_WALL_POST);
 			break;
 		}
 		m_Tiles.push_back(t);
@@ -190,27 +190,27 @@ bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename)
 				if (wallE) walls += DIRECTION_E;
 
 				// work out what sort of wall to draw in the current cell
-				if (walls == DIRECTION_E) tile->SetTextureId(TILE_TEX_WALL_E); // end
-				if (walls == DIRECTION_S) tile->SetTextureId(TILE_TEX_WALL_S); // end
-				if (walls == DIRECTION_N) tile->SetTextureId(TILE_TEX_WALL_N); // end
-				if (walls == DIRECTION_W) tile->SetTextureId(TILE_TEX_WALL_W); // end
+				if (walls == DIRECTION_E) tile->SetTextureId(SPRITE_TEX_WALL_E); // end
+				if (walls == DIRECTION_S) tile->SetTextureId(SPRITE_TEX_WALL_S); // end
+				if (walls == DIRECTION_N) tile->SetTextureId(SPRITE_TEX_WALL_N); // end
+				if (walls == DIRECTION_W) tile->SetTextureId(SPRITE_TEX_WALL_W); // end
 
-				if (walls == (DIRECTION_E + DIRECTION_S)) tile->SetTextureId(TILE_TEX_WALL_ES); // corner
-				if (walls == (DIRECTION_W + DIRECTION_S)) tile->SetTextureId(TILE_TEX_WALL_SW); // corner
-				if (walls == (DIRECTION_N + DIRECTION_E)) tile->SetTextureId(TILE_TEX_WALL_NE); // corner
-				if (walls == (DIRECTION_N + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_NW); // corner
+				if (walls == (DIRECTION_E + DIRECTION_S)) tile->SetTextureId(SPRITE_TEX_WALL_ES); // corner
+				if (walls == (DIRECTION_W + DIRECTION_S)) tile->SetTextureId(SPRITE_TEX_WALL_SW); // corner
+				if (walls == (DIRECTION_N + DIRECTION_E)) tile->SetTextureId(SPRITE_TEX_WALL_NE); // corner
+				if (walls == (DIRECTION_N + DIRECTION_W)) tile->SetTextureId(SPRITE_TEX_WALL_NW); // corner
 
-				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_E)) tile->SetTextureId(TILE_TEX_WALL_NES); // tee
-				if (walls == (DIRECTION_E + DIRECTION_S + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_ESW); // tee
-				if (walls == (DIRECTION_E + DIRECTION_N + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_NEW); // tee
-				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_NSW); // tee
+				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_E)) tile->SetTextureId(SPRITE_TEX_WALL_NES); // tee
+				if (walls == (DIRECTION_E + DIRECTION_S + DIRECTION_W)) tile->SetTextureId(SPRITE_TEX_WALL_ESW); // tee
+				if (walls == (DIRECTION_E + DIRECTION_N + DIRECTION_W)) tile->SetTextureId(SPRITE_TEX_WALL_NEW); // tee
+				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W)) tile->SetTextureId(SPRITE_TEX_WALL_NSW); // tee
 
-				if (walls == (DIRECTION_N + DIRECTION_S)) tile->SetTextureId(TILE_TEX_WALL_NS); // straight
-				if (walls == (DIRECTION_E + DIRECTION_W)) tile->SetTextureId(TILE_TEX_WALL_EW); // straight
+				if (walls == (DIRECTION_N + DIRECTION_S)) tile->SetTextureId(SPRITE_TEX_WALL_NS); // straight
+				if (walls == (DIRECTION_E + DIRECTION_W)) tile->SetTextureId(SPRITE_TEX_WALL_EW); // straight
 
-				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W + DIRECTION_E)) tile->SetTextureId(TILE_TEX_WALL_NESW); // cross
+				if (walls == (DIRECTION_N + DIRECTION_S + DIRECTION_W + DIRECTION_E)) tile->SetTextureId(SPRITE_TEX_WALL_NESW); // cross
 
-				if (walls == 0) tile->SetTextureId(TILE_TEX_WALL_POST); // single
+				if (walls == 0) tile->SetTextureId(SPRITE_TEX_WALL_POST); // single
 
 			}
 		}
@@ -225,3 +225,5 @@ TileClass* MapClass::GetTileAt(unsigned int x, unsigned int y)
 {
 	return m_Tiles[(y*m_MapWidth) + x];
 }
+
+
