@@ -94,7 +94,7 @@ bool GraphicsClass::Initialise(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	result = m_Map->Initialise(m_D3D->GetDevice(), m_Camera, L"./maps/BigMaze.txt");
+	result = m_Map->Initialise(m_D3D->GetDevice(), L"./maps/BigMaze.txt");
 	if(!result)
 	{
 		return false;
@@ -188,7 +188,7 @@ bool GraphicsClass::Render()
 	m_D3D->TurnZBufferOff();
 
 	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	result = m_Map->Render(m_D3D->GetDevice(), worldMatrix, viewMatrix, orthoMatrix, m_TextureShader);
+	result = m_Map->Render(m_D3D->GetDevice(), worldMatrix, viewMatrix, orthoMatrix, m_Camera->GetScreenWidth(), m_Camera->GetScreenHeight(), m_TextureShader);
 	if(!result)
 	{
 		return false;

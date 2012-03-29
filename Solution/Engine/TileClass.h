@@ -90,14 +90,19 @@ public:
 	TileClass(const TileClass&);
 	~TileClass();
 
+	// Methods
 	bool Initialise(ID3D10Device* device, TextureClass* texture);
 	void Shutdown();
 	bool Render(ID3D10Device* device, unsigned int screenWidth, unsigned int screenHeight);
-	int GetTypeId();
-	void SetTypeId(int);
-	void SetTextureId(TileTexId);
-	void SetPosition(int x, int y);
 
+	// Properties
+	int GetTypeId();
+	void SetTypeId(int id);
+	void SetHighlight(bool state);
+	void SetTextureId(TileTexId id);
+	void SetPosition(int x, int y);
+	int GetPositionX();
+	int GetPositionY();
 	int GetIndexCount();
 	ID3D10ShaderResourceView* GetTexture();
 
@@ -116,6 +121,7 @@ private:
 	TileTexId m_TextureId; // the texture tile id
 	int m_PosX;
 	int m_PosY;
+	bool m_Highlight;
 };
 
 #endif

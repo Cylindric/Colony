@@ -20,11 +20,9 @@ MapClass::~MapClass(void)
 }
 
 
-bool MapClass::Initialise(ID3D10Device* device, CameraClass* camera, WCHAR* mapFile)
+bool MapClass::Initialise(ID3D10Device* device, WCHAR* mapFile)
 {
 	bool result;
-
-	m_Camera = camera;
 
 	m_Texture = new TextureClass;
 	if(!m_Texture)
@@ -43,20 +41,29 @@ bool MapClass::Initialise(ID3D10Device* device, CameraClass* camera, WCHAR* mapF
 }
 
 
-bool MapClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX orthoMatrix, TextureShaderClass* textureShader)
+bool MapClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX orthoMatrix, int screenWidth, int screenHeight, TextureShaderClass* textureShader)
 {
 	bool result;
-
 	for(vector<TileClass*>::iterator i = m_Tiles.begin(); i < m_Tiles.end(); i++)
 	{
-		result = (*i)->Render(device, m_Camera->GetScreenWidth(), m_Camera->GetScreenHeight());
+		result = (*i)->Render(device, screenWidth, screenHeight);
+
+		// test highlight
+		if(((*i)->GetPositionX() == 5) && ((*i)->GetPositionY() == 5))
+		{
+			(*i)->SetHighlight(true);
+		}
+		else
+		{
+			(*i)->SetHighlight(false);
+		}
+
 		if(!result)
 		{
 			return false;
 		}
 		textureShader->Render(device, (*i)->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Texture->GetTexture());
 	}
-
 	return true;
 }
 

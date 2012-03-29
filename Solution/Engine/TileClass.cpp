@@ -16,6 +16,7 @@ TileClass::TileClass()
 	m_PosY = 0;
 	m_PreviousPosX = -1;
 	m_PreviousPosY = -1;
+	m_Highlight = false;
 }
 
 
@@ -106,10 +107,28 @@ void TileClass::SetTextureId(TileTexId id)
 }
 
 
+void TileClass::SetHighlight(bool state)
+{
+	m_Highlight = state;
+}
+
+
 void TileClass::SetPosition(int x, int y)
 {
 	m_PosX = x;
 	m_PosY = y;
+}
+
+
+int TileClass::GetPositionX()
+{
+	return m_PosX;
+}
+
+
+int TileClass::GetPositionY()
+{
+	return m_PosY;
 }
 
 

@@ -20,7 +20,6 @@
 #include "TextureClass.h"
 #include "TileClass.h"
 #include "TextureShaderClass.h"
-#include "CameraClass.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,8 +30,8 @@ class MapClass
 public:
 	MapClass(void);
 	~MapClass(void);
-	bool Initialise(ID3D10Device* device, CameraClass* camera, WCHAR* mapFile);
-	bool Render(ID3D10Device*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, TextureShaderClass*);
+	bool Initialise(ID3D10Device* device, WCHAR* mapFile);
+	bool Render(ID3D10Device*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, int screenWidth, int screenHeight, TextureShaderClass*);
 	void Shutdown();
 
 private:
@@ -45,7 +44,6 @@ private:
 	unsigned int m_MapWidth; // width of the map, in tiles
 	unsigned int m_MapHeight; // height of the map, in tiles
 
-	CameraClass* m_Camera;
 	TextureClass* m_Texture;
 	std::vector<TileClass*> m_Tiles;
 };
