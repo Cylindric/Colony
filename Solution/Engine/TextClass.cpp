@@ -11,10 +11,9 @@ TextClass::TextClass()
 {
 	m_Font = 0;
 	m_FontShader = 0;
-
-	m_TopSentence = -1;
-	m_sentence1 = 0;
-	m_sentence2 = 0;
+	m_MouseSentence = 0;
+	m_FpsSentence = 0;
+	m_Shutdown = false;
 }
 
 
@@ -25,6 +24,11 @@ TextClass::TextClass(const TextClass& other)
 
 TextClass::~TextClass()
 {
+	if(!m_Shutdown)
+	{
+		std::cerr << "Text not shut down before destruction" << std::endl;
+	}
+	assert(m_Shutdown);
 }
 
 
@@ -70,34 +74,12 @@ bool TextClass::Initialise(ID3D10Device* device, HWND hwnd, int screenWidth, int
 	}
 
 
-	// Initialise the first sentence.
-	int helloSentenceId = InitialiseSentence(16, device);
-	//result = InitialiseSentence(&m_sentence1, 16, device);
-	if(helloSentenceId < 0)
-	{
-		return false;
-	}
+	// Initialise the sentences.
+	m_FpsSentence = InitialiseSentence(16, device);
+	m_MouseSentence = InitialiseSentence(16, device);
 
-	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, "Hello", 100, 100, 1.0f, 1.0f, 1.0f);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Initialise the second sentence.
-	result = InitialiseSentence(&m_sentence2, 16, device);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, "Goodbye", 100, 200, 1.0f, 1.0f, 0.0f);
-	if(!result)
-	{
-		return false;
-	}
+	result = UpdateSentence(m_FpsSentence, "Hello", 100, 100, 1.0f, 1.0f, 1.0f);
+	result = UpdateSentence(m_MouseSentence, "Goodbye", 100, 200, 1.0f, 1.0f, 0.0f);
 
 	return true;
 }
@@ -105,11 +87,26 @@ bool TextClass::Initialise(ID3D10Device* device, HWND hwnd, int screenWidth, int
 
 void TextClass::Shutdown()
 {
-	// Release the first sentence.
-	ReleaseSentence(&m_sentence1);
+	// Release the sentences.
+	for(std::map<int, SentenceType*>::iterator it = m_Sentences.begin(); it != m_Sentences.end();)
+	{
+		// Release the sentence vertex buffer.
+		if(it->second->vertexBuffer)
+		{
+			it->second->vertexBuffer->Release();
+			it->second->vertexBuffer = 0;
+		}
 
-	// Release the second sentence.
-	ReleaseSentence(&m_sentence2);
+		// Release the sentence index buffer.
+		if(it->second->indexBuffer)
+		{
+			it->second->indexBuffer->Release();
+			it->second->indexBuffer = 0;
+		}
+
+		// Release the sentence.
+		it = m_Sentences.erase(it);
+	}
 
 	// Release the font shader object.
 	if(m_FontShader)
@@ -127,37 +124,27 @@ void TextClass::Shutdown()
 		m_Font = 0;
 	}
 
-	return;
+	m_Shutdown = true;
 }
 
 
 void TextClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
 {
-	for(std::map<int, SentenceType*>::iterator s = m_sentences.begin(); s != m_sentences.end(); s++)
+	for(std::map<int, SentenceType*>::iterator s = m_Sentences.begin(); s != m_Sentences.end(); s++)
 	{
-		RenderSentence(device, s->second, worldMatrix, orthoMatrix);
+		RenderSentence(device, s->first, worldMatrix, orthoMatrix);
 	}
-	RenderSentence(device, m_sentence1, worldMatrix, orthoMatrix);
-	RenderSentence(device, m_sentence2, worldMatrix, orthoMatrix);
-	return;
 }
 
 
 int TextClass::InitialiseSentence(int maxLength, ID3D10Device* device)
 {
-	// bail out if max sentences already set
-	if(m_TopSentence >= MAX_SENTENCES)
-	{
-		return false;
-	}
-
 	VertexType* vertices;
 	unsigned long* indices;
 	D3D10_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D10_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 	int i;
-
 
 	// Create a new sentence object.
 	SentenceType* sentence = new SentenceType;
@@ -240,9 +227,10 @@ int TextClass::InitialiseSentence(int maxLength, ID3D10Device* device)
 	delete [] indices;
 	indices = 0;
 
-	m_Sentences.push_back(sentence);
+	int key = m_Sentences.size();
+	m_Sentences.insert(std::pair<int, SentenceType*>(key, sentence));
 
-	return true;
+	return key;
 }
 
 
@@ -287,33 +275,7 @@ bool TextClass::SetFps(int fps)
 	}
 
 	// Update the sentence buffer
-	result = UpdateSentence(m_sentence1, fpsString, 10, 10, red, green, blue);
-	if(!result)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-
-bool TextClass::SetCpu(int cpu)
-{
-	char tempString[16];
-	char cpuString[16];
-	bool result;
-
-
-	// Convert the cpu integer to string format.
-	_itoa_s(cpu, tempString, 10);
-
-	// Setup the cpu string.
-	strcpy_s(cpuString, "Cpu: ");
-	strcat_s(cpuString, tempString);
-	strcat_s(cpuString, "%");
-
-	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, cpuString, 10, 26, 0.0f, 1.0f, 0.0f);
+	result = UpdateSentence(m_FpsSentence, fpsString, 10, 10, red, green, blue);
 	if(!result)
 	{
 		return false;
@@ -339,7 +301,7 @@ bool TextClass::SetMousePosition(int mouseX, int mouseY)
 	strcat_s(mouseString, tempString);
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, mouseString, 10, 26, 1.0f, 1.0f, 1.0f);
+	result = UpdateSentence(m_MouseSentence, mouseString, 10, 26, 1.0f, 1.0f, 1.0f);
 	if(!result)
 	{
 		return false;
@@ -349,7 +311,7 @@ bool TextClass::SetMousePosition(int mouseX, int mouseY)
 }
 
 
-bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX, int positionY, float red, float green, float blue)
+bool TextClass::UpdateSentence(int sentenceId, char* text, int positionX, int positionY, float red, float green, float blue)
 {
 	int numLetters;
 	VertexType* vertices;
@@ -357,7 +319,10 @@ bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX
 	void* verticesPtr;
 	HRESULT result;
 
-	// Store the color of the sentence.
+	std::map<int, SentenceType*>::iterator it = m_Sentences.find(sentenceId);
+	SentenceType* sentence = it->second;
+
+	// the color of the sentence.
 	sentence->red = red;
 	sentence->green = green;
 	sentence->blue = blue;
@@ -412,38 +377,13 @@ bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX
 }
 
 
-void TextClass::ReleaseSentence(SentenceType** sentence)
-{
-	if(*sentence)
-	{
-		// Release the sentence vertex buffer.
-		if((*sentence)->vertexBuffer)
-		{
-			(*sentence)->vertexBuffer->Release();
-			(*sentence)->vertexBuffer = 0;
-		}
-
-		// Release the sentence index buffer.
-		if((*sentence)->indexBuffer)
-		{
-			(*sentence)->indexBuffer->Release();
-			(*sentence)->indexBuffer = 0;
-		}
-
-		// Release the sentence.
-		delete *sentence;
-		*sentence = 0;
-	}
-
-	return;
-}
-
-
-void TextClass::RenderSentence(ID3D10Device* device, SentenceType* sentence, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
+void TextClass::RenderSentence(ID3D10Device* device, int sentenceId, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix)
 {
 	unsigned int stride, offset;
 	D3DXVECTOR4 pixelColor;
 
+	std::map<int, SentenceType*>::iterator it = m_Sentences.find(sentenceId);
+	SentenceType* sentence = it->second;
 
 	// Set vertex buffer stride and offset.
 	stride = sizeof(VertexType); 

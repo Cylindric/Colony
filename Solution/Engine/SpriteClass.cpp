@@ -16,6 +16,7 @@ SpriteClass::SpriteClass()
 	m_PosY = 0;
 	m_PreviousPosX = -1;
 	m_PreviousPosY = -1;
+	m_Shutdown = false;
 }
 
 
@@ -26,6 +27,11 @@ SpriteClass::SpriteClass(const SpriteClass& other)
 
 SpriteClass::~SpriteClass()
 {
+	if(!m_Shutdown)
+	{
+		std::cerr << "Sprite not shut down before destruction" << std::endl;
+	}
+	assert(m_Shutdown);
 }
 
 
@@ -63,10 +69,8 @@ bool SpriteClass::Initialise(ID3D10Device* device, TextureClass* texture, Textur
 
 void SpriteClass::Shutdown()
 {
-	// Release the vertex and index buffers.
 	ShutdownBuffers();
-
-	return;
+	m_Shutdown = true;
 }
 
 

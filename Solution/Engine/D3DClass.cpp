@@ -199,7 +199,16 @@ bool D3DClass::Initialise(int screenWidth, int screenHeight, bool vsync, HWND hw
 	swapChainDesc.Flags = 0;
 
 	// Create the swap chain and the Direct3D device.
-	result = D3D10CreateDeviceAndSwapChain(NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, 0, D3D10_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device);
+	result = D3D10CreateDeviceAndSwapChain(
+		NULL, 
+		D3D10_DRIVER_TYPE_REFERENCE,
+		NULL, 
+		D3D10_CREATE_DEVICE_SINGLETHREADED | D3D10_CREATE_DEVICE_DEBUG,
+		D3D10_SDK_VERSION,
+		&swapChainDesc, 
+		&m_swapChain,
+		&m_device
+	);
 	if(FAILED(result))
 	{
 		return false;

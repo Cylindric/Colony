@@ -8,7 +8,9 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <vector>
+#include <iostream>
+#include <map>
+#include <assert.h>
 
 
 ///////////////////////
@@ -47,26 +49,25 @@ public:
 	void Shutdown();
 	void Render(ID3D10Device*, D3DXMATRIX, D3DXMATRIX);
 	bool SetFps(int fps);
-	bool SetCpu(int cpu);
 	bool SetMousePosition(int mouseX, int mouseY);
 
 private:
-	int InitialiseSentence(int, ID3D10Device*);
-	bool UpdateSentence(SentenceType*, char*, int, int, float, float, float);
-	void ReleaseSentence(SentenceType**);
-	void RenderSentence(ID3D10Device*, SentenceType*, D3DXMATRIX, D3DXMATRIX);
+	int InitialiseSentence(int sentenceId, ID3D10Device*);
+	bool UpdateSentence(int sentenceId, char*, int, int, float, float, float);
+	void RenderSentence(ID3D10Device*, int sentenceId, D3DXMATRIX, D3DXMATRIX);
 
 private:
-	const unsigned int MAX_SENTENCES = 6;
+	bool m_Shutdown;
 	FontClass* m_Font;
 	FontShaderClass* m_FontShader;
 	int m_screenWidth, m_screenHeight;
 	D3DXMATRIX m_baseViewMatrix;
 
-	std::vector<SentenceType*> m_Sentences;
+	// sentences
+	std::map<int, SentenceType*> m_Sentences;
+	int m_FpsSentence;
+	int m_MouseSentence;
 
-	SentenceType* m_sentence1;
-	SentenceType* m_sentence2;
 };
 
 #endif

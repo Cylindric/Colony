@@ -160,8 +160,8 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int fps)
 	float tX = (float)800 / 32; // = 25.00
 	float tY = (float)600 / 32; // = 18.75
 
-	int tileX = x * tX;
-	int tileY = y * tY;
+	int tileX = (int)(x * tX);
+	int tileY = (int)(y * tY);
 
 	// Update the stats
 	result = m_Text->SetFps(fps);

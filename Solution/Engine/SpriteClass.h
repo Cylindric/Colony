@@ -8,6 +8,8 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <assert.h>
+#include <iostream>
 #include <D3DX10.h>
 
 
@@ -22,6 +24,7 @@
 // GLOBALS //
 /////////////
 static const int SPRITE_SIZE = 32;
+
 
 enum SpriteTexId
 {
@@ -44,6 +47,7 @@ enum SpriteTexId
 	SPRITE_TEX_WALL_POST = 31,
 	SPRITE_TEX_HIGHLIGHT = 32
 };
+
 
 enum Directions
 {
@@ -92,6 +96,7 @@ private:
 	void RenderBuffers(ID3D10Device*);
 
 private:
+	bool m_Shutdown;
 	ID3D10Buffer *m_VertexBuffer, *m_IndexBuffer;
 	int m_VertexCount, m_IndexCount;
 	TextureClass* m_Texture;

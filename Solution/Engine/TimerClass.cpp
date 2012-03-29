@@ -43,7 +43,6 @@ void TimerClass::Frame()
 	INT64 currentTime;
 	float timeDifference;
 
-
 	QueryPerformanceCounter((LARGE_INTEGER*)& currentTime);
 
 	timeDifference = (float)(currentTime - m_startTime);
