@@ -8,7 +8,7 @@
 /////////////
 // LINKING //
 /////////////
-#pragma comment(lib, "d3d10.lib")
+#pragma comment(lib, "d3d10_1.lib")
 #pragma comment(lib, "d3dx10.lib")
 #pragma comment(lib, "dxgi.lib")
 
@@ -16,7 +16,7 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <D3D10.h>
+#include <D3D10_1.h>
 #include <D3DX10.h>
 
 
@@ -52,7 +52,7 @@ private:
 	int m_videoCardMemory;
 	char m_videoCardDescription[128];
 	IDXGISwapChain* m_swapChain;
-	ID3D10Device* m_device;
+	ID3D10Device1* m_device;
 	ID3D10RenderTargetView* m_renderTargetView;
 	ID3D10Texture2D* m_depthStencilBuffer;
 	ID3D10DepthStencilState* m_depthStencilState;
