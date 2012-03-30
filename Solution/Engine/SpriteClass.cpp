@@ -87,7 +87,6 @@ bool SpriteClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRI
 
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(device);
-
 	m_TextureShader->Render(device, m_IndexCount, worldMatrix, viewMatrix, orthoMatrix, m_Texture->GetTexture());
 
 	return true;

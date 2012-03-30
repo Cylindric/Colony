@@ -43,22 +43,43 @@ bool MapClass::Initialise(ID3D10Device* device, WCHAR* mapFile, TextureShaderCla
 
 bool MapClass::Render(ID3D10Device* device, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX orthoMatrix)
 {
-	bool result;
+	bool result = true;
+
+#if TILES_IN_VECTOR
 	for(vector<TileClass*>::iterator i = m_Tiles.begin(); i < m_Tiles.end(); i++)
 	{
 		result = (*i)->Render(device, worldMatrix, viewMatrix, orthoMatrix, m_ScreenWidth, m_ScreenHeight);
 	}
+#else
+	for(unsigned int i = 0; i < m_NumTiles; i++)
+	{
+		result = m_Tiles[i]->Render(device, worldMatrix, viewMatrix, orthoMatrix, m_ScreenWidth, m_ScreenHeight);
+		if(!result)
+		{
+			return false;
+		}
+	}
+#endif
 	return true;
 }
 
 
 void MapClass::Shutdown(void)
 {
+#if TILES_IN_VECTOR
 	for(vector<TileClass*>::iterator i = m_Tiles.begin(); i < m_Tiles.end(); i++)
 	{
 		(*i)->Shutdown();
 	}
 	m_Tiles.clear();
+#else
+	for(unsigned int i = 0; i < m_NumTiles; i++)
+	{
+		m_Tiles[i]->Shutdown();
+		delete m_Tiles[i];
+	}
+	delete[] m_Tiles;
+#endif
 }
 
 
@@ -84,8 +105,6 @@ bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename, TextureShader
 
 	m_MapFile = filename;
 
-	m_Tiles.clear();
-
 	// open the map file
 	wifstream mapFile(m_MapFile, ifstream::in);
 
@@ -108,12 +127,18 @@ bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename, TextureShader
 	mapFile >> m_MapWidth >> m_MapHeight;
 	cout << "Dimensions: " << m_MapWidth << "x" << m_MapHeight << endl;
 
+#if TILES_IN_VECTOR
+	m_Tiles.clear();
+#else
+	m_Tiles = new TileClass*[m_MapWidth*m_MapHeight];
+#endif
+
 	// Next should be lines of tiles
-	unsigned int tileCount = 0;
-	while (tileCount < (m_MapWidth * m_MapHeight)) {
+	m_NumTiles = 0;
+	while (m_NumTiles < (m_MapWidth * m_MapHeight)) {
 		WCHAR c = ' ';
-		int row = (tileCount / m_MapWidth);
-		int col = (tileCount % m_MapWidth);
+		int row = (m_NumTiles / m_MapWidth);
+		int col = (m_NumTiles % m_MapWidth);
 
 		// read the next map character into c
 		mapFile >> c;
@@ -132,8 +157,14 @@ bool MapClass::LoadFromFile(ID3D10Device* device, WCHAR* filename, TextureShader
 			t->SetTextureId(SPRITE_TEX_WALL_POST);
 			break;
 		}
+
+#if TILES_IN_VECTOR
 		m_Tiles.push_back(t);
-		tileCount++;
+#else
+		m_Tiles[m_NumTiles] = t;
+#endif
+
+		m_NumTiles++;
 	}
 
 	mapFile.close();

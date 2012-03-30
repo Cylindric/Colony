@@ -165,8 +165,8 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int fps)
 
 	// Update the stats
 	result = m_Text->SetFps(fps);
-	//result = m_Text->SetMousePosition(mouseX, mouseY);
-	result = m_Text->SetMousePosition((int)(x*100), tileY);
+	result = m_Text->SetMousePosition(mouseX, mouseY);
+	//result = m_Text->SetMousePosition((int)(x*100), tileY);
 
 	m_Map->Frame(m_Camera->GetScreenWidth(), m_Camera->GetScreenHeight(), mouseX, mouseY);
 

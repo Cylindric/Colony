@@ -4,6 +4,7 @@
 #ifndef _MAPCLASS_H_
 #define _MAPCLASS_H_
 
+#define TILES_IN_VECTOR 0
 
 //////////////
 // INCLUDES //
@@ -46,9 +47,15 @@ private:
 	unsigned int m_MapHeight; // height of the map, in tiles
 	unsigned int m_ScreenWidth; // width of the screen, in px
 	unsigned int m_ScreenHeight; // height of the screen, in px
+	unsigned int m_NumTiles;
 
 	TextureClass* m_Texture;
+	
+#if TILES_IN_VECTOR
 	std::vector<TileClass*> m_Tiles;
+#else
+	TileClass** m_Tiles;
+#endif
 };
 
 #endif
