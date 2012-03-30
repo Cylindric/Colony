@@ -204,7 +204,7 @@ bool D3DClass::Initialise(int screenWidth, int screenHeight, bool vsync, HWND hw
 		D3D10_DRIVER_TYPE_HARDWARE,
 		NULL, 
 		D3D10_CREATE_DEVICE_SINGLETHREADED | D3D10_CREATE_DEVICE_DEBUG,
-		D3D10_FEATURE_LEVEL_10_1,
+		D3D10_FEATURE_LEVEL_9_1,
 		D3D10_1_SDK_VERSION,
 		&swapChainDesc, 
 		&m_swapChain,
