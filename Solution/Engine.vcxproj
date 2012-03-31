@@ -14,6 +14,7 @@
     <ClCompile Include="Engine\BitmapClass.cpp" />
     <ClCompile Include="Engine\CameraClass.cpp" />
     <ClCompile Include="Engine\D3DClass.cpp" />
+    <ClCompile Include="Engine\DxManager.cpp" />
     <ClCompile Include="Engine\FontClass.cpp" />
     <ClCompile Include="Engine\FontShaderClass.cpp" />
     <ClCompile Include="Engine\FpsClass.cpp" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Engine\BitmapClass.h" />
     <ClInclude Include="Engine\CameraClass.h" />
     <ClInclude Include="Engine\D3DClass.h" />
+    <ClInclude Include="Engine\DxManager.h" />
     <ClInclude Include="Engine\FontClass.h" />
     <ClInclude Include="Engine\FontShaderClass.h" />
     <ClInclude Include="Engine\FpsClass.h" />
