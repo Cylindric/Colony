@@ -4,7 +4,7 @@
 // LINKING //
 /////////////
 #pragma comment(lib, "d3d10_1.lib")
-#pragma comment(lib, "d3dx10.lib")
+#pragma comment(lib, "d3dx10d.lib")
 
 //////////////
 // INCLUDES //

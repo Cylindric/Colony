@@ -54,17 +54,21 @@ namespace Core
 
 		//Create the D3D device
 		//--------------------------------------------------------------
-		if(FAILED(D3D10CreateDeviceAndSwapChain1(
+		HRESULT result = D3D10CreateDeviceAndSwapChain1(
 			NULL, 
 			D3D10_DRIVER_TYPE_HARDWARE,
 			NULL, 
-			D3D10_CREATE_DEVICE_SINGLETHREADED | D3D10_CREATE_DEVICE_DEBUG,
+			0,
 			D3D10_FEATURE_LEVEL_9_1,
 			D3D10_1_SDK_VERSION,
 			&swapChainDesc, 
 			&pSwapChain,
 			&pD3DDevice
-		))) return FatalError("D3D device creation failed");
+		);
+		if(FAILED(result))
+		{
+			return FatalError("D3D device creation failed");
+		}
 
 		//Create render target view
 		//--------------------------------------------------------------

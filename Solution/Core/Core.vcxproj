@@ -64,11 +64,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DirectX10Renderer.h" />
     <ClInclude Include="DirectX9Renderer.h" />
     <ClInclude Include="CoreManager.h" />
     <ClInclude Include="StandardRenderer.h" />
+    <ClInclude Include="VertexTypes.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DirectX10Renderer.cpp" />
     <ClCompile Include="DirectX9Renderer.cpp" />
     <ClCompile Include="CoreManager.cpp" />
     <ClCompile Include="StandardRenderer.cpp" />

@@ -10,6 +10,10 @@ namespace Core
 		{
 			m_Renderer = new DirectX9Renderer;
 		}
+		else if(type=="dx10")
+		{
+			m_Renderer = new DirectX10Renderer;
+		}
 	}
 
 

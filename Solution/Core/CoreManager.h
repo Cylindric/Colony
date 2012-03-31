@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include "StandardRenderer.h"
 #include "DirectX9Renderer.h"
+#include "DirectX10Renderer.h"
 
 namespace Core
 {

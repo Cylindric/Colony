@@ -65,7 +65,7 @@ bool initWindow(HWND &hWnd, HINSTANCE hInstance, int width, int height)
 	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszMenuName	= NULL;
-	wcex.lpszClassName	= TEXT("DXTutorial1");
+	wcex.lpszClassName	= TEXT("Colony");
 	wcex.hIconSm		= 0;
 	RegisterClassEx(&wcex);
 
@@ -74,9 +74,8 @@ bool initWindow(HWND &hWnd, HINSTANCE hInstance, int width, int height)
     AdjustWindowRect(&rect, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, FALSE);
 
 	//create the window from the class above
-	//disable resizing and correct for extra width and height
-	hWnd = CreateWindow( "DXTutorial1", 
-						 "Bobby Anguelov's DirectX 10 Tutorial 1 - Initializing the Device", 
+	hWnd = CreateWindow( "Colony", 
+						 "Colony - Tile Test", 
 						 WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 						 CW_USEDEFAULT, 
 						 CW_USEDEFAULT, 
@@ -112,7 +111,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	if ( !initWindow(hWnd, hInstance, windowWidth, windowHeight)) return 0;
 	
 	//set up the renderer
-	renderer = new Core::CoreManager("dx9");
+	renderer = new Core::CoreManager("dx10");
 	if(!renderer->Initialise(&hWnd))
 	{
 		std::cerr << "Failed to initialise a renderer" << std::endl;
