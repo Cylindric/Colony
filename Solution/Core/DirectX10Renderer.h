@@ -9,6 +9,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <vector>
 #include <Windows.h>
 #include <d3d10.h>
 #include <D3DX10.h>
@@ -18,6 +19,7 @@
 ///////////////////////
 #include "StandardRenderer.h"
 #include "VertexTypes.h"
+#include "VertexLayouts.h"
 
 namespace Core
 {
@@ -66,8 +68,7 @@ namespace Core
 		bool LoadShadersAndCreateInputLayouts(void);
 		void CreateViewports(UINT width, UINT height);
 		bool CreateRenderTargetsAndDepthBuffer(UINT width, UINT height);
-
-		bool SetupSprites(void);
+		bool RenderSprites(void);
 	};
 
 }

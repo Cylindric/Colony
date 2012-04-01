@@ -10,62 +10,21 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="BitmapClass.cpp" />
-    <ClCompile Include="CameraClass.cpp" />
-    <ClCompile Include="D3DClass.cpp" />
-    <ClCompile Include="DxManager.cpp" />
-    <ClCompile Include="FontClass.cpp" />
-    <ClCompile Include="FontShaderClass.cpp" />
-    <ClCompile Include="FpsClass.cpp" />
-    <ClCompile Include="GraphicsClass.cpp" />
-    <ClCompile Include="InputClass.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MapClass.cpp" />
-    <ClCompile Include="SpriteClass.cpp" />
-    <ClCompile Include="SystemClass.cpp" />
-    <ClCompile Include="TextClass.cpp" />
-    <ClCompile Include="TextureClass.cpp" />
-    <ClCompile Include="TextureShaderClass.cpp" />
-    <ClCompile Include="TileClass.cpp" />
-    <ClCompile Include="TimerClass.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="BitmapClass.h" />
-    <ClInclude Include="CameraClass.h" />
-    <ClInclude Include="D3DClass.h" />
-    <ClInclude Include="DxManager.h" />
-    <ClInclude Include="FontClass.h" />
-    <ClInclude Include="FontShaderClass.h" />
-    <ClInclude Include="FpsClass.h" />
-    <ClInclude Include="GraphicsClass.h" />
-    <ClInclude Include="InputClass.h" />
-    <ClInclude Include="main.h" />
-    <ClInclude Include="MapClass.h" />
-    <ClInclude Include="SpriteClass.h" />
-    <ClInclude Include="SystemClass.h" />
-    <ClInclude Include="TextClass.h" />
-    <ClInclude Include="TextureClass.h" />
-    <ClInclude Include="TextureShaderClass.h" />
-    <ClInclude Include="TileClass.h" />
-    <ClInclude Include="TimerClass.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{14E97482-4275-4C4D-B55A-F7B0E9800CBF}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Engine</RootNamespace>
+    <ProjectGuid>{0347C641-FAD5-4AD5-84C5-6D62E26A3FC8}</ProjectGuid>
+    <RootNamespace>VectorTest</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -77,45 +36,31 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProgramFiles)\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProgramFiles)\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -4,6 +4,7 @@
 #include "StandardRenderer.h"
 #include "DirectX9Renderer.h"
 #include "DirectX10Renderer.h"
+#include "Map.h"
 
 namespace Core
 {
@@ -20,6 +21,7 @@ namespace Core
 
 	private:
 		StandardRenderer* m_Renderer;
+		Map* m_Map;
 	};
 
 }

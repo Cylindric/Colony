@@ -10,6 +10,9 @@ namespace Core
 		pSwapChain = NULL;
 		pRenderTargetView = NULL;
 		pBasicEffect = NULL;
+		m_SpriteList = NULL;
+		pTexture1 = NULL;
+		pVertexBuffer = NULL;
 	}
 
 
@@ -52,7 +55,10 @@ namespace Core
 		if(pD3DDevice) pD3DDevice->Release();
 		if(pBasicEffect) pBasicEffect->Release();
 		if(pDepthStencil) pDepthStencil->Release();
-		if(pTexture1) pTexture1->Release();
+		if(pTexture1) 
+		{
+			pTexture1->Release();
+		}
 		if(pVertexBuffer) pVertexBuffer->Release();
 	}
 
@@ -69,91 +75,16 @@ namespace Core
 		pD3DDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 		//setup sprites
-		result = SetupSprites();
+		result = RenderSprites();
 		if(!result)
 		{
 			return false;
 		}
 
-		//draw sprites
-		pColorMap->SetResource(pTexture1);
-		for(UINT p = 0; p < techDesc.Passes; p++)
-		{
-			//apply technique
-			pTechnique->GetPassByIndex(p)->Apply(0);
-
-			//draw
-			pD3DDevice->Draw(numSprites, 0);
-		}
-
-
 		//flip buffers
 		pSwapChain->Present(0, 0);
 
 		return result;
-	}
-
-
-	inline float convertPixelsToClipSpace( const int pixelDimension, const int pixels )
-	{
-		return (float)pixels/pixelDimension*2 -1;
-	}
-
-	inline float convertPixelsToClipSpaceDistance( const int pixelDimension, const int pixels )
-	{
-		return (float)pixels/pixelDimension*2;
-	}
-
-
-	bool DirectX10Renderer::SetupSprites(void)
-	{
-		HRESULT result;
-
-		// Draw a test sprite
-		numSprites = 3;
-		SpriteVertex sprites[3];
-
-		int spriteSize = 32;
-		sprites[0].topLeft[0] = convertPixelsToClipSpace(800, 400);
-		sprites[0].topLeft[1] = -convertPixelsToClipSpace(600, 300);
-		sprites[0].dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize);
-		sprites[0].dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize);
-		sprites[0].opacity = 1;
-
-		sprites[1].topLeft[0] = convertPixelsToClipSpace(800, 400+spriteSize);
-		sprites[1].topLeft[1] = -convertPixelsToClipSpace(600, 300);
-		sprites[1].dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize);
-		sprites[1].dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize);
-		sprites[1].opacity = 1;
-
-		sprites[2].topLeft[0] = convertPixelsToClipSpace(800, 400+spriteSize+spriteSize);
-		sprites[2].topLeft[1] = -convertPixelsToClipSpace(600, 300);
-		sprites[2].dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize);
-		sprites[2].dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize);
-		sprites[2].opacity = 1;
-
-		D3D10_SUBRESOURCE_DATA initData;
-		initData.pSysMem = &sprites;
-
-		D3D10_BUFFER_DESC bd;
-		bd.Usage = D3D10_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(SpriteVertex)*(numSprites);
-		bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-		bd.MiscFlags = 0;
-
-		result = pD3DDevice->CreateBuffer(&bd, &initData, &pVertexBuffer);
-		if(FAILED(result))
-		{
-			return FatalError("Could not create sprite vertex buffer!");
-		}
-
-		// Set vertex buffer
-		UINT stride = sizeof(SpriteVertex);
-		UINT offset = 0;
-		pD3DDevice->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
-
-		return true;
 	}
 
 
@@ -319,4 +250,70 @@ namespace Core
 		return true;
 	}
 
+
+	bool DirectX10Renderer::RenderSprites()
+	{
+		if(!m_SpriteList)
+		{
+			return true;
+		}
+		numSprites = m_SpriteList->size();
+		if(numSprites == 0)
+		{
+			return true;
+		}
+
+		D3D10_SUBRESOURCE_DATA initData;
+		initData.pSysMem = &m_SpriteList[0];
+		
+		//SpriteVertex verts[3];
+		//verts[0].topLeft[0] = 0.0f;
+		//verts[0].topLeft[1] = 0.0f;
+		//verts[0].dimensions[0] = 0.04f;
+		//verts[0].dimensions[1] = 0.053333f;
+		//verts[0].opacity = 1;
+
+		//verts[1].topLeft[0] = 0.08f;
+		//verts[1].topLeft[1] = 0.0f;
+		//verts[1].dimensions[0] = 0.04f;
+		//verts[1].dimensions[1] = 0.053333f;
+		//verts[1].opacity = 1;
+
+		//verts[2].topLeft[0] = 0.16f;
+		//verts[2].topLeft[1] = 0.0f;
+		//verts[2].dimensions[0] = 0.04f;
+		//verts[2].dimensions[1] = 0.053333f;
+		//verts[2].opacity = 0.3f;	
+		//initData.pSysMem = &verts;
+
+		D3D10_BUFFER_DESC bd;
+		bd.Usage = D3D10_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(SpriteVertex)*(numSprites);
+		bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = 0;
+		bd.MiscFlags = 0;
+
+		if(FAILED(pD3DDevice->CreateBuffer(&bd, &initData, &pVertexBuffer)))
+		{
+			return FatalError("Could not create sprite vertex buffer!");
+		}
+
+		// Set vertex buffer
+		UINT stride = sizeof(SpriteVertex);
+		UINT offset = 0;
+		pD3DDevice->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
+
+		//draw sprites
+		pColorMap->SetResource(pTexture1);
+		for(UINT p = 0; p < techDesc.Passes; p++)
+		{
+			//apply technique
+			pTechnique->GetPassByIndex(p)->Apply(0);
+
+			//draw
+			pD3DDevice->Draw(numSprites, 0);
+		}
+		
+		return true;
+	}
 }
