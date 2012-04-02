@@ -38,7 +38,7 @@ namespace Core
 		if(!CreateRenderTargetsAndDepthBuffer(width, height)) return false;
 
 		// Load texture
-		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./textures/tile.png", NULL, NULL, &pTexture1, NULL)))
+		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./textures/tiles.png", NULL, NULL, &pTexture1, NULL)))
 		{
 			return FatalError("Could not load sprite texture");
 		}

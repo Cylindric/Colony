@@ -33,6 +33,7 @@ struct SPRITE_INPUT
 {
 	float2 topLeft : ANCHOR;
 	float2 dimensions : DIMENSIONS;
+	int spritenum : SPRITENUM;
 	float opacity: OPACITY;
 };
 
@@ -59,29 +60,38 @@ SPRITE_INPUT VS( SPRITE_INPUT input )
 void GS( point SPRITE_INPUT sprite[1], inout TriangleStream<PS_INPUT> triStream )
 {
 	PS_INPUT v;
-	v.opacity = sprite[0].opacity;			
-	
+	float twidth = 0.0625; // width of a single sprite texture (16/256)
+	float j = 0.001953125; // width of half a pixel (0.5/256)
+	uint columns = 16;
+
+	// set the opacity
+	v.opacity = sprite[0].opacity;
+
+	// calculate the row and column for the sprite
+	uint col = sprite[0].spritenum % columns;
+	uint row = sprite[0].spritenum / columns;
+
 	//create sprite quad
 	//--------------------------------------------
 
 	//bottom left
 	v.p = float4(sprite[0].topLeft[0],sprite[0].topLeft[1]-sprite[0].dimensions[1],0,1);	
-	v.t = float2(0,1);	
+	v.t = float2((col * twidth) + j + 0.0f, (row * twidth) - j + twidth);
 	triStream.Append(v);
 	
 	//top left
 	v.p = float4(sprite[0].topLeft[0],sprite[0].topLeft[1],0,1);	
-	v.t = float2(0,0);
+	v.t = float2((col * twidth) + j + 0.0f, (row * twidth) + j + 0.0f);
 	triStream.Append(v);
 
 	//bottom right
 	v.p = float4(sprite[0].topLeft[0]+sprite[0].dimensions[0],sprite[0].topLeft[1]-sprite[0].dimensions[1],0,1);	
-	v.t = float2(1,1);
+	v.t = float2((col * twidth) - j + twidth, (row * twidth) - j + twidth);
 	triStream.Append(v);
 
 	//top right
 	v.p = float4(sprite[0].topLeft[0]+sprite[0].dimensions[0],sprite[0].topLeft[1],0,1);	
-	v.t = float2(1,0);
+	v.t = float2((col * twidth) - j + twidth, (row * twidth) + j + 0.0f);
 	triStream.Append(v);
 }
 //--------------------------------------------------------------------------------------

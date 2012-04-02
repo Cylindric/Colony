@@ -1,4 +1,5 @@
 #include "Map.h"
+#include <random>
 
 namespace Core
 {
@@ -39,8 +40,8 @@ namespace Core
 		SpriteVertex v;
 
 		// try creating a bunch of tiles
-		int rows = 5;
-		int cols = 5;
+		int rows = 50;
+		int cols = 50;
 		int left = 400 - (int)(spriteSize * cols * 0.5f);
 		int top  = 300 - (int)(spriteSize * rows * 0.5f);
 		for(int row = 0; row < rows; row++)
@@ -51,6 +52,7 @@ namespace Core
 				v.topLeft[1] = -convertPixelsToClipSpace(600, top + (row * spriteSize));
 				v.dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize);
 				v.dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize);
+				v.spritenum = (std::rand() % 16)+16;
 				v.opacity = 1;
 				m_Tiles.push_back(v);
 			}

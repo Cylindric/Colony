@@ -4,6 +4,8 @@ Deploy/
 # Log files
 *.log
 
+# Compiled shaders
+*.fxo
 
 # Windows image file caches
 Thumbs.db 
