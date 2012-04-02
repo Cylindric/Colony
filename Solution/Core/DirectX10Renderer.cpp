@@ -253,33 +253,12 @@ namespace Core
 
 	bool DirectX10Renderer::RenderSprites()
 	{
-#ifdef TEST_WITH_ARRAY
-		numSprites = 3;
-		SpriteVertex verts[3];
-		verts[0].topLeft[0] = 0.0f;
-		verts[0].topLeft[1] = 0.0f;
-		verts[0].dimensions[0] = 0.08f;
-		verts[0].dimensions[1] = 0.106667f;
-		verts[0].opacity = 1;
-
-		verts[1].topLeft[0] = 0.08f;
-		verts[1].topLeft[1] = 0.0f;
-		verts[1].dimensions[0] = 0.08f;
-		verts[1].dimensions[1] = 0.106667f;
-		verts[1].opacity = 1;
-
-		verts[2].topLeft[0] = 0.16f;
-		verts[2].topLeft[1] = 0.0f;
-		verts[2].dimensions[0] = 0.08f;
-		verts[2].dimensions[1] = 0.106667f;
-		verts[2].opacity = 1;	
-#else
 		if(!m_SpriteList)
 		{
 			return true;
 		}
+
 		numSprites = m_SpriteList->size();
-#endif
 		if(numSprites == 0)
 		{
 			return true;
@@ -287,11 +266,7 @@ namespace Core
 
 
 		D3D10_SUBRESOURCE_DATA initData;
-#ifdef TEST_WITH_ARRAY
-		initData.pSysMem = &verts;
-#else
-		initData.pSysMem = &(m_SpriteList[0]);
-#endif
+		initData.pSysMem = &((*m_SpriteList)[0]); // thank you, Eddie Edwards on SO - this caught me out
 
 		D3D10_BUFFER_DESC bd;
 		bd.Usage = D3D10_USAGE_DEFAULT;
@@ -321,15 +296,6 @@ namespace Core
 			pD3DDevice->Draw(numSprites, 0);
 		}
 		
-#ifdef TEST_WITH_ARRAY
-#else
-		for(auto it = m_SpriteList->begin(); it != m_SpriteList->end(); ++it)
-		{
-			std::cout << (*it).topLeft[0] << ":" << (*it).topLeft[1] << "  ";
-			std::cout << (*it).dimensions[0] << ":" << (*it).dimensions[1] << "  ";
-			std::cout << (*it).opacity << std::endl;
-		}
-#endif
 		return true;
 	}
 }

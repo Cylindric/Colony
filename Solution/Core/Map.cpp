@@ -38,52 +38,23 @@ namespace Core
 
 		SpriteVertex v;
 
-		v.topLeft[0] = convertPixelsToClipSpace(800, 400); // 0
-		v.topLeft[1] = -convertPixelsToClipSpace(600, 300); // 0
-		v.dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize); //0.0400
-		v.dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize); //0.0533
-		v.opacity = 1;
-		m_Tiles.push_back(v);
-
-		v.topLeft[0] = convertPixelsToClipSpace(800, 400+spriteSize); // 0.08
-		v.topLeft[1] = -convertPixelsToClipSpace(600, 300); // 0
-		v.dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize); //0.0400
-		v.dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize); //0.0533
-		v.opacity = 1;
-		m_Tiles.push_back(v);
-
-		v.topLeft[0] = convertPixelsToClipSpace(800, 400+spriteSize+spriteSize); // 0.16
-		v.topLeft[1] = -convertPixelsToClipSpace(600, 300); // 0
-		v.dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize); //0.0400
-		v.dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize); //0.0533
-		v.opacity = 1;
-		m_Tiles.push_back(v);
-
-
-		//SpriteVertex* v;
-		//v = new SpriteVertex();
-		//v->topLeft[0] = convertPixelsToClipSpace(800, 400); // 0
-		//v->topLeft[1] = -convertPixelsToClipSpace(600, 300); // 0
-		//v->dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize); //0.0400
-		//v->dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize); //0.0533
-		//v->opacity = 1;
-		//m_Tiles.push_back(v);
-
-		//v = new SpriteVertex();
-		//v->topLeft[0] = convertPixelsToClipSpace(800, 400+spriteSize); // 0.08
-		//v->topLeft[1] = -convertPixelsToClipSpace(600, 300); // 0
-		//v->dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize); //0.0400
-		//v->dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize); //0.0533
-		//v->opacity = 1;
-		//m_Tiles.push_back(v);
-
-		//v = new SpriteVertex();
-		//v->topLeft[0] = convertPixelsToClipSpace(800, 400+spriteSize+spriteSize); // 0.16
-		//v->topLeft[1] = -convertPixelsToClipSpace(600, 300); // 0
-		//v->dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize); //0.0400
-		//v->dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize); //0.0533
-		//v->opacity = 1;
-		//m_Tiles.push_back(v);
+		// try creating a bunch of tiles
+		int rows = 5;
+		int cols = 5;
+		int left = 400 - (int)(spriteSize * cols * 0.5f);
+		int top  = 300 - (int)(spriteSize * rows * 0.5f);
+		for(int row = 0; row < rows; row++)
+		{
+			for(int col = 0; col < cols; col++)
+			{
+				v.topLeft[0] = convertPixelsToClipSpace(800, left + (col * spriteSize));
+				v.topLeft[1] = -convertPixelsToClipSpace(600, top + (row * spriteSize));
+				v.dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize);
+				v.dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize);
+				v.opacity = 1;
+				m_Tiles.push_back(v);
+			}
+		}
 
 		return true;
 	}

@@ -22,8 +22,6 @@
 #include "VertexTypes.h"
 #include "VertexLayouts.h"
 
-//#define TEST_WITH_ARRAY
-
 namespace Core
 {
 
