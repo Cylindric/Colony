@@ -48,21 +48,16 @@ namespace Core
 		ID3D10InputLayout*			pVertexLayout;
 
 		//effects and techniques
-		ID3D10Effect*				pBasicEffect;
-		ID3D10EffectTechnique*		pTechnique;
+		ID3D10Effect*				m_SpriteEffect;
+		ID3D10EffectTechnique*		m_SpriteTechnique;
+		ID3D10ShaderResourceView*	m_SpriteTexture;
+		ID3D10Buffer*				m_SpriteBuffer;
 
 		//effect variable pointers
 		ID3D10EffectShaderResourceVariable* pColorMap;
 
 		//technique
 		D3D10_TECHNIQUE_DESC		techDesc;
-
-		//vertex buffer for sprites
-		ID3D10Buffer*				pVertexBuffer;
-		int							numSprites;
-
-		//textures
-		ID3D10ShaderResourceView*	pTexture1;
 
 		//pipeline
 		bool CreateSwapChainAndDevice(UINT width, UINT height);

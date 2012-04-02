@@ -6,3 +6,4 @@ XCOPY Solution\Debug\TileTest.exe Deploy
 
 XCOPY Solution\shaders Deploy\shaders\
 XCOPY Solution\textures Deploy\textures\
+XCOPY Solutionfonts Deploy\fonts\

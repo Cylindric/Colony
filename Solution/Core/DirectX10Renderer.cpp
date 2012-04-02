@@ -9,10 +9,10 @@ namespace Core
 		pD3DDevice = NULL;
 		pSwapChain = NULL;
 		pRenderTargetView = NULL;
-		pBasicEffect = NULL;
+		m_SpriteEffect = NULL;
 		m_SpriteList = NULL;
-		pTexture1 = NULL;
-		pVertexBuffer = NULL;
+		m_SpriteTexture = NULL;
+		m_SpriteBuffer = NULL;
 	}
 
 
@@ -38,7 +38,7 @@ namespace Core
 		if(!CreateRenderTargetsAndDepthBuffer(width, height)) return false;
 
 		// Load texture
-		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./textures/tiles.png", NULL, NULL, &pTexture1, NULL)))
+		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./textures/tiles.png", NULL, NULL, &m_SpriteTexture, NULL)))
 		{
 			return FatalError("Could not load sprite texture");
 		}
@@ -53,13 +53,13 @@ namespace Core
 		if(pRenderTargetView) pRenderTargetView->Release();
 		if(pSwapChain) pSwapChain->Release();
 		if(pD3DDevice) pD3DDevice->Release();
-		if(pBasicEffect) pBasicEffect->Release();
+		if(m_SpriteEffect) m_SpriteEffect->Release();
 		if(pDepthStencil) pDepthStencil->Release();
-		if(pTexture1) 
+		if(m_SpriteTexture) 
 		{
-			pTexture1->Release();
+			m_SpriteTexture->Release();
 		}
-		if(pVertexBuffer) pVertexBuffer->Release();
+		if(m_SpriteBuffer) m_SpriteBuffer->Release();
 	}
 
 
@@ -146,7 +146,7 @@ namespace Core
 			pD3DDevice,
 			NULL,
 			NULL,
-			&pBasicEffect,
+			&m_SpriteEffect,
 			NULL,
 			NULL);
 		if(FAILED(result))
@@ -155,19 +155,19 @@ namespace Core
 		}
 
 		//get technique and desc
-		pTechnique = pBasicEffect->GetTechniqueByName("RENDER");
-		if(pTechnique == NULL)
+		m_SpriteTechnique = m_SpriteEffect->GetTechniqueByName("RENDER");
+		if(m_SpriteTechnique == NULL)
 		{
 			return FatalError("Could not find technique!");
 		}
-		pTechnique->GetDesc(&techDesc);
+		m_SpriteTechnique->GetDesc(&techDesc);
 
 		//create texture effect variable
-		pColorMap = pBasicEffect->GetVariableByName("colorMap")->AsShaderResource();
+		pColorMap = m_SpriteEffect->GetVariableByName("colorMap")->AsShaderResource();
 
 		//create input layout
 		D3D10_PASS_DESC PassDesc;
-		pTechnique->GetPassByIndex(0)->GetDesc(&PassDesc);
+		m_SpriteTechnique->GetPassByIndex(0)->GetDesc(&PassDesc);
 		if(FAILED(pD3DDevice->CreateInputLayout(
 			vertexInputLayout,
 			vertexInputLayoutNumElements,
@@ -258,7 +258,7 @@ namespace Core
 			return true;
 		}
 
-		numSprites = m_SpriteList->size();
+		int numSprites = m_SpriteList->size();
 		if(numSprites == 0)
 		{
 			return true;
@@ -275,7 +275,7 @@ namespace Core
 		bd.CPUAccessFlags = 0;
 		bd.MiscFlags = 0;
 
-		if(FAILED(pD3DDevice->CreateBuffer(&bd, &initData, &pVertexBuffer)))
+		if(FAILED(pD3DDevice->CreateBuffer(&bd, &initData, &m_SpriteBuffer)))
 		{
 			return FatalError("Could not create sprite vertex buffer!");
 		}
@@ -283,14 +283,14 @@ namespace Core
 		// Set vertex buffer
 		UINT stride = sizeof(SpriteVertex);
 		UINT offset = 0;
-		pD3DDevice->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
+		pD3DDevice->IASetVertexBuffers(0, 1, &m_SpriteBuffer, &stride, &offset);
 
 		//draw sprites
-		pColorMap->SetResource(pTexture1);
+		pColorMap->SetResource(m_SpriteTexture);
 		for(UINT p = 0; p < techDesc.Passes; p++)
 		{
 			//apply technique
-			pTechnique->GetPassByIndex(p)->Apply(0);
+			m_SpriteTechnique->GetPassByIndex(p)->Apply(0);
 
 			//draw
 			pD3DDevice->Draw(numSprites, 0);
