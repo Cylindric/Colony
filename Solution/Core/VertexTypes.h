@@ -4,7 +4,10 @@ struct SpriteVertex
 {
 	float topLeft[2];
 	float dimensions[2];
-	unsigned int spritenum;
+	float uvLeft;
+	float uvTop;
+	float uvRight;
+	float uvBottom;
 	float opacity;
 };
 
