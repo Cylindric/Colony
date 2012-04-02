@@ -10,6 +10,7 @@
 // INCLUDES //
 //////////////
 #include <vector>
+#include <iostream>
 #include <Windows.h>
 #include <d3d10.h>
 #include <D3DX10.h>
@@ -20,6 +21,8 @@
 #include "StandardRenderer.h"
 #include "VertexTypes.h"
 #include "VertexLayouts.h"
+
+//#define TEST_WITH_ARRAY
 
 namespace Core
 {
