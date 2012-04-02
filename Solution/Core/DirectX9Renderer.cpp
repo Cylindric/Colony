@@ -129,16 +129,22 @@ namespace Core
 	}
 
 
-	bool DirectX9Renderer::Render(void)
+	bool DirectX9Renderer::BeginRender(void)
 	{
-		//clear scene
 		pD3DDevice->ClearRenderTargetView( pRenderTargetView, D3DXCOLOR(0,0,0,0) );
+		return true;
+	}
 
-		//SCENE RENDERING GOES HERE!!!	
 
-		//flip buffers
+	bool DirectX9Renderer::EndRender(void)
+	{
 		pSwapChain->Present(0,0);
+		return true;
+	}
 
+
+	bool DirectX9Renderer::RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites)
+	{
 		return true;
 	}
 

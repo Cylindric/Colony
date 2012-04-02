@@ -1,8 +1,6 @@
 #include "Font.h"
 
 using std::ifstream;
-using std::cerr;
-using std::endl;
 
 namespace Core
 {
@@ -21,7 +19,7 @@ namespace Core
 
 	bool Font::Initialise(char* fontFilename, StandardRenderer::TEXTURE_ID textureId)
 	{
-		bool result = true;
+		if(!LoadFontData(fontFilename)) return false;
 		return true;
 	}
 
@@ -30,6 +28,12 @@ namespace Core
 	{
 		delete [] m_Font;
 		m_Font = NULL;
+	}
+
+
+	Font::FontType Font::GetCharDetails(int c)
+	{
+		return m_Font[c];
 	}
 
 

@@ -1,7 +1,8 @@
 #pragma once
 
+#include <vector>
 #include <fstream>
-#include <iostream>
+#include "global.h"
 #include "StandardRenderer.h"
 #include "VertexTypes.h"
 
@@ -10,7 +11,7 @@ namespace Core
 {
 	class Font
 	{
-	private:
+	public:
 
 		struct FontType
 		{
@@ -25,6 +26,7 @@ namespace Core
 
 		bool Initialise(char* fontFilename, StandardRenderer::TEXTURE_ID textureId);
 		void Release(void);
+		FontType GetCharDetails(int c);
 
 	private:
 		int m_TextureId;

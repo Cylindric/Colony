@@ -102,10 +102,15 @@ bool initWindow(HWND &hWnd, HINSTANCE hInstance, int width, int height)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
 	// redirect std output to files
-	std::ofstream file;
-	file.open("cout.log");
-	std::streambuf* sbuf = std::cout.rdbuf();
-	std::cout.rdbuf(file.rdbuf());
+	std::ofstream coutfile;
+	coutfile.open("cout.log");
+	std::streambuf* coutbuf = std::cout.rdbuf();
+	std::cout.rdbuf(coutfile.rdbuf());
+
+	std::ofstream cerrfile;
+	cerrfile.open("cerr.log");
+	std::streambuf* cerrbuff = std::cerr.rdbuf();
+	std::cerr.rdbuf(cerrfile.rdbuf());
 
 	// Set up the application window
 	if ( !initWindow(hWnd, hInstance, windowWidth, windowHeight)) return 0;

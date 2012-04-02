@@ -11,12 +11,6 @@ namespace Core
 	{
 	}
 
-	
-	void StandardRenderer::SetSprites(std::vector<SpriteVertex>* sprites)
-	{
-		m_SpriteList = sprites;
-	}
-
 
 	bool StandardRenderer::FatalError(LPCSTR msg)
 	{

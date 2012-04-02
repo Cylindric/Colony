@@ -14,21 +14,15 @@ namespace Core
 	}
 
 
-	std::vector<SpriteVertex>* Map::GetSprites()
+	std::vector<SpriteVertex>* Map::GetSprites(SpriteType type)
 	{
-		return &m_Tiles;
+		if(type == SPRITE_TYPE_TILE)
+		{
+			return &m_Tiles;
+		}
+		return NULL;
 	}
 
-
-	inline float convertPixelsToClipSpace( const int pixelDimension, const int pixels )
-	{
-		return (float)pixels/pixelDimension*2 -1;
-	}
-
-	inline float convertPixelsToClipSpaceDistance( const int pixelDimension, const int pixels )
-	{
-		return (float)pixels/pixelDimension*2;
-	}
 
 	bool Map::Initialise()
 	{
@@ -38,6 +32,7 @@ namespace Core
 		m_Tiles.clear();
 
 		SpriteVertex v;
+		v.spriteType = SPRITE_TYPE_TILE;
 
 		// try creating a bunch of tiles
 		int rows = 50;

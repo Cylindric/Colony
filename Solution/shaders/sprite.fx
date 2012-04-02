@@ -31,6 +31,7 @@ BlendState SrcAlphaBlendingAdd
 //--------------------------------------------------------------------------------------
 struct SPRITE_INPUT
 {
+	uint spriteType   : SPRITETYPE;
 	float2 topLeft    : ANCHOR;
 	float2 dimensions : DIMENSIONS;
 	float uvLeft      : UVLEFT;

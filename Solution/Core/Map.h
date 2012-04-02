@@ -15,7 +15,7 @@ namespace Core
 		void Release(void);
 		bool Update(void);
 
-		std::vector<SpriteVertex>* GetSprites(void);
+		std::vector<SpriteVertex>* GetSprites(SpriteType type);
 
 	private:
 		std::vector<SpriteVertex> m_Tiles;

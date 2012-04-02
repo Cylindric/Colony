@@ -17,7 +17,10 @@ namespace Core
 		}
 
 		// Set up the other objects
+		m_TestText = 0;
 		m_Map = NULL;
+		m_Text = NULL;
+		m_Font = NULL;
 	}
 
 
@@ -29,6 +32,16 @@ namespace Core
 	bool CoreManager::Initialise(HWND* handle)
 	{
 		if(!m_Renderer->Initialise(handle)) return false;
+
+		m_Font = new Font;
+		if(!m_Font->Initialise("./fonts/default.txt", StandardRenderer::TEXTURE_FONT)) return false;
+
+		m_Text = new Text;
+		if(!m_Text->Initialise(m_Font)) return false;
+
+		// add a test text item
+		m_TestText = m_Text->InitialiseSentence();
+
 
 		m_Map = new Map;
 		if(!m_Map->Initialise()) return false;
@@ -45,6 +58,13 @@ namespace Core
 			m_Map = NULL;
 		}
 
+		if(m_Text)
+		{
+			m_Text->Release();
+			delete m_Text;
+			m_Text = NULL;
+		}
+
 		if(m_Renderer)
 		{
 			m_Renderer->Release();
@@ -58,10 +78,16 @@ namespace Core
 	{
 		// Update all child objects
 		m_Map->Update();
+		m_Text->Update();
 
 		// Render
-		m_Renderer->SetSprites(m_Map->GetSprites());
-		return m_Renderer->Render();
+		if(!m_Renderer->BeginRender()) return false;
+
+		//if(!m_Renderer->RenderSprites(SPRITE_TYPE_TILE, m_Map->GetSprites(SPRITE_TYPE_TILE))) return false;
+		if(!m_Renderer->RenderSprites(SPRITE_TYPE_TEXT, m_Text->GetSprites())) return false;
+
+		if(!m_Renderer->EndRender()) return false;
+		return true;
 	}
 
 }

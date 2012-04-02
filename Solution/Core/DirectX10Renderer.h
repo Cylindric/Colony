@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 
 /////////////
 // LINKING //
@@ -34,7 +34,9 @@ namespace Core
 
 		bool Initialise(HWND* handle);
 		void Release(void);
-		bool Render(void);
+		bool BeginRender(void);
+		bool RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites);
+		bool EndRender(void);
 
 	private:
 		//device vars
@@ -65,7 +67,6 @@ namespace Core
 		bool LoadShadersAndCreateInputLayouts(void);
 		void CreateViewports(UINT width, UINT height);
 		bool CreateRenderTargetsAndDepthBuffer(UINT width, UINT height);
-		bool RenderSprites(void);
 	};
 
 }

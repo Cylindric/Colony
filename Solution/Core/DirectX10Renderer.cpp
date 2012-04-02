@@ -10,7 +10,6 @@ namespace Core
 		pSwapChain = NULL;
 		pRenderTargetView = NULL;
 		m_SpriteEffect = NULL;
-		m_SpriteList = NULL;
 		m_SpriteBuffer = NULL;
 	}
 
@@ -75,10 +74,8 @@ namespace Core
 	}
 
 
-	bool DirectX10Renderer::Render(void)
+	bool DirectX10Renderer::BeginRender(void)
 	{
-		bool result = true;
-
 		//clear scene
 		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0,0,0,0));
 		pD3DDevice->ClearDepthStencilView(pDepthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
@@ -86,17 +83,18 @@ namespace Core
 		//set topology
 		pD3DDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
 
-		//setup sprites
-		result = RenderSprites();
-		if(!result)
-		{
-			return false;
-		}
+		//return
+		return true;
+	}
 
+
+	bool DirectX10Renderer::EndRender()
+	{
 		//flip buffers
 		pSwapChain->Present(0, 0);
 
-		return result;
+		//return
+		return true;
 	}
 
 
@@ -263,14 +261,14 @@ namespace Core
 	}
 
 
-	bool DirectX10Renderer::RenderSprites()
+	bool DirectX10Renderer::RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites)
 	{
-		if(!m_SpriteList)
+		if(!sprites)
 		{
 			return true;
 		}
 
-		int numSprites = m_SpriteList->size();
+		int numSprites = sprites->size();
 		if(numSprites == 0)
 		{
 			return true;
@@ -278,7 +276,7 @@ namespace Core
 
 
 		D3D10_SUBRESOURCE_DATA initData;
-		initData.pSysMem = &((*m_SpriteList)[0]); // thank you, Eddie Edwards on SO - this caught me out
+		initData.pSysMem = &((*sprites)[0]); // thank you, Eddie Edwards on SO - this caught me out
 
 		D3D10_BUFFER_DESC bd;
 		bd.Usage = D3D10_USAGE_DEFAULT;
@@ -298,8 +296,22 @@ namespace Core
 		pD3DDevice->IASetVertexBuffers(0, 1, &m_SpriteBuffer, &stride, &offset);
 
 		//draw sprites
-		//pColorMap->SetResource(m_SpriteTexture);
-		pColorMap->SetResource(m_Textures[TEXTURE_SPRITE]);
+		switch(type)
+		{
+		case SPRITE_TYPE_TILE:
+			pColorMap->SetResource(m_Textures[TEXTURE_SPRITE]);
+			break;
+
+		case SPRITE_TYPE_TEXT:
+			pColorMap->SetResource(m_Textures[TEXTURE_FONT]);
+			break;
+
+		default:
+			pColorMap->SetResource(m_Textures[TEXTURE_SPRITE]);
+			break;
+
+		}
+
 		for(UINT p = 0; p < m_SpriteTechDesc.Passes; p++)
 		{
 			//apply technique

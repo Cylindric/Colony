@@ -68,8 +68,10 @@
     <ClInclude Include="DirectX9Renderer.h" />
     <ClInclude Include="CoreManager.h" />
     <ClInclude Include="Font.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="StandardRenderer.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="VertexLayouts.h" />
     <ClInclude Include="VertexTypes.h" />
   </ItemGroup>
@@ -80,6 +82,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="StandardRenderer.cpp" />
+    <ClCompile Include="Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\shaders\sprite.fx">
