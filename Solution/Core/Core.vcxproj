@@ -67,6 +67,7 @@
     <ClInclude Include="DirectX10Renderer.h" />
     <ClInclude Include="DirectX9Renderer.h" />
     <ClInclude Include="CoreManager.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="StandardRenderer.h" />
     <ClInclude Include="VertexLayouts.h" />
@@ -76,6 +77,7 @@
     <ClCompile Include="DirectX10Renderer.cpp" />
     <ClCompile Include="DirectX9Renderer.cpp" />
     <ClCompile Include="CoreManager.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="StandardRenderer.cpp" />
   </ItemGroup>

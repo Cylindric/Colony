@@ -11,7 +11,6 @@ namespace Core
 		pRenderTargetView = NULL;
 		m_SpriteEffect = NULL;
 		m_SpriteList = NULL;
-		m_SpriteTexture = NULL;
 		m_SpriteBuffer = NULL;
 	}
 
@@ -37,10 +36,19 @@ namespace Core
 		CreateViewports(width, height);
 		if(!CreateRenderTargetsAndDepthBuffer(width, height)) return false;
 
-		// Load texture
-		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./textures/tiles.png", NULL, NULL, &m_SpriteTexture, NULL)))
+		// Load textures
+		ID3D10ShaderResourceView* spriteT;
+		m_Textures.insert(std::pair<TEXTURE_ID, ID3D10ShaderResourceView*>(TEXTURE_SPRITE, spriteT));
+		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./textures/tiles.png", NULL, NULL,  &m_Textures[TEXTURE_SPRITE], NULL)))
 		{
 			return FatalError("Could not load sprite texture");
+		}
+
+		ID3D10ShaderResourceView* fontT;
+		m_Textures.insert(std::pair<TEXTURE_ID, ID3D10ShaderResourceView*>(TEXTURE_FONT, fontT));
+		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./fonts/default.png", NULL, NULL,  &m_Textures[TEXTURE_FONT], NULL)))
+		{
+			return FatalError("Could not load font texture");
 		}
 
 		//everything completed successfully
@@ -55,10 +63,14 @@ namespace Core
 		if(pD3DDevice) pD3DDevice->Release();
 		if(m_SpriteEffect) m_SpriteEffect->Release();
 		if(pDepthStencil) pDepthStencil->Release();
-		if(m_SpriteTexture) 
+		
+		// release all textures
+		for(auto it = m_Textures.begin(); it != m_Textures.end(); ++it)
 		{
-			m_SpriteTexture->Release();
+			(*it).second->Release();
 		}
+		m_Textures.clear();
+
 		if(m_SpriteBuffer) m_SpriteBuffer->Release();
 	}
 
@@ -160,7 +172,7 @@ namespace Core
 		{
 			return FatalError("Could not find technique!");
 		}
-		m_SpriteTechnique->GetDesc(&techDesc);
+		m_SpriteTechnique->GetDesc(&m_SpriteTechDesc);
 
 		//create texture effect variable
 		pColorMap = m_SpriteEffect->GetVariableByName("colorMap")->AsShaderResource();
@@ -286,8 +298,9 @@ namespace Core
 		pD3DDevice->IASetVertexBuffers(0, 1, &m_SpriteBuffer, &stride, &offset);
 
 		//draw sprites
-		pColorMap->SetResource(m_SpriteTexture);
-		for(UINT p = 0; p < techDesc.Passes; p++)
+		//pColorMap->SetResource(m_SpriteTexture);
+		pColorMap->SetResource(m_Textures[TEXTURE_SPRITE]);
+		for(UINT p = 0; p < m_SpriteTechDesc.Passes; p++)
 		{
 			//apply technique
 			m_SpriteTechnique->GetPassByIndex(p)->Apply(0);

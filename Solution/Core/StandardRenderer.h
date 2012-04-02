@@ -9,6 +9,16 @@ namespace Core
 	class StandardRenderer
 	{
 	public:
+		enum TEXTURE_ID
+		{
+			TEXTURE_NONE = -1,
+			TEXTURE_SPRITE = 0,
+			TEXTURE_FONT = 1
+		};
+
+
+
+	public:
 		StandardRenderer(void);
 		~StandardRenderer(void);
 
