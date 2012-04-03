@@ -32,6 +32,12 @@ namespace Core
 	class DirectX9Renderer : public StandardRenderer
 	{
 	public:
+		struct SimpleVertex
+		{
+			D3DXVECTOR3 Pos;        // Position
+			DWORD       Color;      // Color
+		};
+ 
 		DirectX9Renderer(void);
 		~DirectX9Renderer(void);
 

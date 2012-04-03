@@ -28,21 +28,49 @@ Core::CoreManager* renderer;
 *******************************************************************/
 LRESULT CALLBACK wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	int xPosRelative = 0;
+	int yPosRelative = 0;
+
 	switch (message) 
 	{
-		// Allow the user to press the escape key to end the application
-        case WM_KEYDOWN	:	switch(wParam)
-							{
-								// Check if the user hit the escape key
-								case VK_ESCAPE : PostQuitMessage(0);
-								break;
-							}
-		
-        break;		
-	
-		// The user hit the close button, close the application
-		case WM_DESTROY	:	PostQuitMessage(0);
+	case WM_INPUT:
+		{
+			UINT dwSize = 40;
+			static BYTE lpb[40];
+    
+			GetRawInputData(
+				(HRAWINPUT)lParam, 
+				RID_INPUT, 
+				lpb,
+				&dwSize,
+				sizeof(RAWINPUTHEADER)
+			);
+    
+			RAWINPUT* raw = (RAWINPUT*)lpb;
+    
+			if (raw->header.dwType == RIM_TYPEMOUSE) 
+			{
+				xPosRelative = raw->data.mouse.lLastX;
+				yPosRelative = raw->data.mouse.lLastY;
+			} 
+		}
+		return 0;
 		break;
+
+    case WM_KEYDOWN:
+		switch(wParam)
+		{
+			// Check if the user hit the escape key
+			case VK_ESCAPE : PostQuitMessage(0);
+			break;
+		}
+		
+    break;		
+	
+	// The user hit the close button, close the application
+	case WM_DESTROY:
+		PostQuitMessage(0);
+	break;
 	}
 	
 	return DefWindowProc(hWnd, message, wParam, lParam);
@@ -116,8 +144,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	// Set up the application window
 	if ( !initWindow(hWnd, hInstance, windowWidth, windowHeight)) return 0;
 	
+	// Capture HID mouse
+	RAWINPUTDEVICE m_InputDevice[2];
+	m_InputDevice[0].usUsagePage = 0x01;
+	m_InputDevice[0].usUsage = 0x02;
+	m_InputDevice[0].dwFlags = 0;
+	m_InputDevice[0].hwndTarget = 0;
+
+	// Capture HID keyboard
+	m_InputDevice[1].usUsagePage = 0x01;
+	m_InputDevice[1].usUsage = 0x06;
+	m_InputDevice[1].dwFlags = 0;
+	m_InputDevice[1].hwndTarget = 0;
+
+	// Register the devices
+	if(RegisterRawInputDevices(m_InputDevice, 2, sizeof(m_InputDevice[0])) == false)
+	{
+		DWORD err = GetLastError();
+	}
+
+
+
 	//set up the renderer
-	renderer = new Core::CoreManager("dx10");
+	renderer = new Core::CoreManager("dx9");
 	if(!renderer->Initialise(&hWnd, 2))
 	{
 		std::cerr << "Failed to initialise a renderer" << std::endl;

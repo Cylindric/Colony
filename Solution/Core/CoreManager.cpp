@@ -7,13 +7,13 @@ namespace Core
 	{
 		// Set up the renderer
 		m_Renderer = NULL;
-		if(type=="dx9")
+		if(type == "dx9")
 		{
 			m_Renderer = new DirectX9Renderer;
 		}
-		else if(type=="dx10")
+		else
 		{
-			m_Renderer = new DirectX10Renderer;
+			new DirectX10Renderer;
 		}
 
 		// Set up the other objects
@@ -21,6 +21,7 @@ namespace Core
 		m_Map = NULL;
 		m_Text = NULL;
 		m_Font = NULL;
+		m_Input = NULL;
 	}
 
 
@@ -32,6 +33,9 @@ namespace Core
 	bool CoreManager::Initialise(HWND* handle, int mode)
 	{
 		if(!m_Renderer->Initialise(handle)) return false;
+
+		m_Input = new Input;
+		if(!m_Input->Initialise()) return false;
 
 		m_Font = new Font;
 		if(!m_Font->Initialise("./fonts/default.txt", StandardRenderer::TEXTURE_FONT)) return false;
@@ -72,6 +76,20 @@ namespace Core
 			m_Text->Release();
 			delete m_Text;
 			m_Text = NULL;
+		}
+
+		if(m_Font)
+		{
+			m_Font->Release();
+			delete m_Font;
+			m_Font = NULL;
+		}
+
+		if(m_Input)
+		{
+			m_Input->Release();
+			delete m_Input;
+			m_Input = NULL;
 		}
 
 		if(m_Renderer)
