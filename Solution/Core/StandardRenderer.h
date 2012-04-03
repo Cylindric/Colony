@@ -1,8 +1,18 @@
 #pragma once
 
-#include <Windows.h>
+
+//////////////
+// INCLUDES //
+//////////////
 #include <vector>
+#include <Windows.h>
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
 #include "VertexTypes.h"
+
 
 namespace Core
 {

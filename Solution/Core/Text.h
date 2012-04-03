@@ -1,8 +1,17 @@
 #pragma once
 
+
+//////////////
+// INCLUDES //
+//////////////
 #include <map>
 #include <string>
 #include <vector>
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
 #include "global.h"
 #include "Font.h"
 #include "VertexTypes.h"
@@ -18,6 +27,7 @@ namespace Core
 		{
 			std::string text;
 			int position[2];
+			float size;
 		};
 
 		Text(void);
@@ -31,7 +41,7 @@ namespace Core
 
 		// class methods
 		int InitialiseSentence(void);
-		bool UpdateSentence(int id, std::string text, int posX, int posY);
+		bool UpdateSentence(int id, std::string text, int posX, int posY, float size);
 		//void ReleaseSentence(int id);
 
 	private:

@@ -1,7 +1,16 @@
 #pragma once
 
-#include <vector>
+
+//////////////
+// INCLUDES //
+//////////////
 #include <fstream>
+#include <vector>
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
 #include "global.h"
 #include "StandardRenderer.h"
 #include "VertexTypes.h"

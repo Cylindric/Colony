@@ -29,7 +29,7 @@ namespace Core
 	}
 
 
-	bool CoreManager::Initialise(HWND* handle)
+	bool CoreManager::Initialise(HWND* handle, int mode)
 	{
 		if(!m_Renderer->Initialise(handle)) return false;
 
@@ -39,12 +39,21 @@ namespace Core
 		m_Text = new Text;
 		if(!m_Text->Initialise(m_Font)) return false;
 
-		// add a test text item
-		m_TestText = m_Text->InitialiseSentence();
-
-
 		m_Map = new Map;
 		if(!m_Map->Initialise()) return false;
+
+		switch(mode)
+		{
+		case 1: // text-test mode
+			m_Text->UpdateSentence(m_Text->InitialiseSentence(), "This is a test sentence", 100, 300, 1.0f);
+
+			m_Text->UpdateSentence(m_Text->InitialiseSentence(), "This is a bigger sentence", 100, 100, 3.0f);
+			break;
+		case 2: // map-test mode
+			m_Map->CreateRandomTiles(10, 10);
+			break;
+		}
+
 		return true;
 	}
 
@@ -83,7 +92,7 @@ namespace Core
 		// Render
 		if(!m_Renderer->BeginRender()) return false;
 
-		//if(!m_Renderer->RenderSprites(SPRITE_TYPE_TILE, m_Map->GetSprites(SPRITE_TYPE_TILE))) return false;
+		if(!m_Renderer->RenderSprites(SPRITE_TYPE_TILE, m_Map->GetSprites(SPRITE_TYPE_TILE))) return false;
 		if(!m_Renderer->RenderSprites(SPRITE_TYPE_TEXT, m_Text->GetSprites())) return false;
 
 		if(!m_Renderer->EndRender()) return false;

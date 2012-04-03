@@ -26,17 +26,20 @@ namespace Core
 
 	bool Map::Initialise()
 	{
-		int spriteSize = 32;
-		int numSprites = 3;
-		
 		m_Tiles.clear();
+		return true;
+	}
 
+
+	bool Map::CreateRandomTiles(int w, int h)
+	{
 		SpriteVertex v;
 		v.spriteType = SPRITE_TYPE_TILE;
 
 		// try creating a bunch of tiles
-		int rows = 50;
-		int cols = 50;
+		int spriteSize = 32;
+		int rows = h;
+		int cols = w;
 		int left = 400 - (int)(spriteSize * cols * 0.5f);
 		int top  = 300 - (int)(spriteSize * rows * 0.5f);
 
@@ -71,7 +74,6 @@ namespace Core
 				m_Tiles.push_back(v);
 			}
 		}
-
 		return true;
 	}
 

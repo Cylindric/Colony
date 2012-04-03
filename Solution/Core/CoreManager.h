@@ -1,6 +1,15 @@
 #pragma once
 
+
+//////////////
+// INCLUDES //
+//////////////
 #include <Windows.h>
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
 #include "StandardRenderer.h"
 #include "DirectX9Renderer.h"
 #include "DirectX10Renderer.h"
@@ -8,6 +17,7 @@
 #include "Font.h"
 #include "Text.h"
 #include "VertexTypes.h"
+
 
 namespace Core
 {
@@ -18,7 +28,7 @@ namespace Core
 		CoreManager(char* type);
 		~CoreManager(void);
 		
-		bool Initialise(HWND* handle);
+		bool Initialise(HWND* handle, int mode = 0);
 		void Release(void);
 		bool Render(void);
 

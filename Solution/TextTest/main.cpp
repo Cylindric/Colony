@@ -118,7 +118,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	
 	//set up the renderer
 	renderer = new Core::CoreManager("dx10");
-	if(!renderer->Initialise(&hWnd, 2))
+	if(!renderer->Initialise(&hWnd, 1))
 	{
 		std::cerr << "Failed to initialise a renderer" << std::endl;
 		return 0;

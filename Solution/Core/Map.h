@@ -1,7 +1,17 @@
 #pragma once
 
+
+//////////////
+// INCLUDES //
+//////////////
 #include <vector>
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
 #include "VertexTypes.h"
+
 
 namespace Core
 {
@@ -14,6 +24,7 @@ namespace Core
 		bool Initialise(void);
 		void Release(void);
 		bool Update(void);
+		bool CreateRandomTiles(int w, int h);
 
 		std::vector<SpriteVertex>* GetSprites(SpriteType type);
 

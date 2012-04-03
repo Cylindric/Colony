@@ -77,7 +77,11 @@ namespace Core
 	bool DirectX10Renderer::BeginRender(void)
 	{
 		//clear scene
+#ifdef DEBUG
+		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.0f));
+#else
 		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0,0,0,0));
+#endif
 		pD3DDevice->ClearDepthStencilView(pDepthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
 
 		//set topology
@@ -171,6 +175,8 @@ namespace Core
 			return FatalError("Could not find technique!");
 		}
 		m_SpriteTechnique->GetDesc(&m_SpriteTechDesc);
+
+		
 
 		//create texture effect variable
 		pColorMap = m_SpriteEffect->GetVariableByName("colorMap")->AsShaderResource();
@@ -273,6 +279,16 @@ namespace Core
 		{
 			return true;
 		}
+
+
+		//ID3D10RasterizerState* WireFrame;
+		//D3D10_RASTERIZER_DESC wfdesc;
+		//ZeroMemory(&wfdesc, sizeof(D3D10_RASTERIZER_DESC));
+		//wfdesc.FillMode = D3D10_FILL_WIREFRAME;
+		//wfdesc.CullMode = D3D10_CULL_BACK;
+		//wfdesc.FrontCounterClockwise = false;
+		//HRESULT hr = pD3DDevice->CreateRasterizerState(&wfdesc, &WireFrame);
+		//pD3DDevice->RSSetState(WireFrame);
 
 
 		D3D10_SUBRESOURCE_DATA initData;

@@ -1,9 +1,11 @@
 #pragma once
 
+
 /////////////
 // LINKING //
 /////////////
 #pragma comment(lib, "d3d10.lib")
+
 
 //////////////
 // INCLUDES //

@@ -76,8 +76,5 @@
     <CustomBuild Include="..\shaders\sprite.fx">
       <Filter>HLSL</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\shaders\font.fx">
-      <Filter>HLSL</Filter>
-    </CustomBuild>
   </ItemGroup>
 </Project>

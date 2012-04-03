@@ -1,17 +1,24 @@
 #pragma once
 
+
 /////////////
 // LINKING //
 /////////////
 #pragma comment(lib, "d3d10_1.lib")
+#ifdef DEBUG
 #pragma comment(lib, "d3dx10d.lib")
+#else
+#pragma comment(lib, "d3dx10.lib")
+#endif
+
 
 //////////////
 // INCLUDES //
 //////////////
 #include <Windows.h>
-#include <d3d10_1.h>
+#include <D3D10_1.h>
 #include <D3DX10.h>
+
 
 ///////////////////////
 // MY CLASS INCLUDES //

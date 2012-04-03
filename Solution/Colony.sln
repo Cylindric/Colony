@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TileTest", "TileTest\TileTest.vcxproj", "{E6F66AA5-9D7E-4346-B85E-8C97709AC1C1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextTest", "TextTest\TextTest.vcxproj", "{14556001-9A9F-43C6-99EE-670F7E707DB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{E6F66AA5-9D7E-4346-B85E-8C97709AC1C1}.Debug|Win32.Build.0 = Debug|Win32
 		{E6F66AA5-9D7E-4346-B85E-8C97709AC1C1}.Release|Win32.ActiveCfg = Release|Win32
 		{E6F66AA5-9D7E-4346-B85E-8C97709AC1C1}.Release|Win32.Build.0 = Release|Win32
+		{14556001-9A9F-43C6-99EE-670F7E707DB3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{14556001-9A9F-43C6-99EE-670F7E707DB3}.Debug|Win32.Build.0 = Debug|Win32
+		{14556001-9A9F-43C6-99EE-670F7E707DB3}.Release|Win32.ActiveCfg = Release|Win32
+		{14556001-9A9F-43C6-99EE-670F7E707DB3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
