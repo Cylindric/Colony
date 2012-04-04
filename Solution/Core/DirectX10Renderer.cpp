@@ -27,13 +27,12 @@ namespace Core
 		//get window dimensions
 		RECT rc;
 		GetClientRect( *hWnd, &rc );
-		UINT width = rc.right - rc.left;
-		UINT height = rc.bottom - rc.top;
+		m_ScreenWidth = rc.right - rc.left;
+		m_ScreenHeight = rc.bottom - rc.top;
 
-		if(!CreateSwapChainAndDevice(width, height)) return false;
+		if(!CreateSwapChainAndDevice()) return false;
+		if(!ResizeScreen()) return false;
 		if(!LoadShadersAndCreateInputLayouts()) return false;
-		CreateViewports(width, height);
-		if(!CreateRenderTargetsAndDepthBuffer(width, height)) return false;
 
 		// Load textures
 		ID3D10ShaderResourceView* spriteT;
@@ -74,7 +73,122 @@ namespace Core
 	}
 
 
-	bool DirectX10Renderer::BeginRender(void)
+	bool DirectX10Renderer::Update()
+	{
+		RECT rc;
+		GetClientRect(*hWnd, &rc);
+		UINT width = rc.right - rc.left;
+		UINT height = rc.bottom - rc.top;
+		
+		if(width != m_ScreenWidth || height != m_ScreenHeight)
+		{
+			if(!ResizeScreen())
+			{
+				FatalError("Could not resize screen!");
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	bool DirectX10Renderer::ResizeScreen()
+	{
+		//If there is a valid render target
+		if(pRenderTargetView)
+		{
+			pRenderTargetView->Release();
+		}
+    
+		//Resize the swap chain's buffer to the given dimensions
+		pSwapChain->ResizeBuffers(
+			2, 
+			m_ScreenWidth, m_ScreenHeight, 
+			DXGI_FORMAT_R8G8B8A8_UNORM, 
+			DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH
+		);
+        
+		ID3D10Texture2D *pBufferTexture(NULL);
+
+		//Get the swap chain's primary backbuffer (index 0)
+		HRESULT hr(pSwapChain->GetBuffer(
+			0,
+			__uuidof(ID3D10Texture2D),
+			(LPVOID*) &pBufferTexture
+		));
+
+		//If no buffer was retrieved
+		if(FAILED(hr))
+		{
+			return FatalError("Failed to retrieve buffer");
+		}
+
+		//Create a new render target view using this backbuffer
+		hr = pD3DDevice->CreateRenderTargetView(
+			pBufferTexture, 
+			NULL,
+			&pRenderTargetView
+		);
+
+		//Release the reference to the backbuffer
+		pBufferTexture->Release();
+
+		//If you failed to create a render target view
+		if(FAILED(hr))
+		{
+			return FatalError("Failed to create Render Target View!");
+		}
+  
+		//Create a definition of the viewport
+		D3D10_VIEWPORT viewPort;
+		viewPort.Width = m_ScreenWidth;
+		viewPort.Height = m_ScreenHeight;
+		viewPort.MinDepth = 0.0f;
+		viewPort.MaxDepth = 1.0f;
+		viewPort.TopLeftX = 0;
+		viewPort.TopLeftY = 0;
+
+		//Set the device's viewport
+		pD3DDevice->RSSetViewports(1, &viewPort);
+  
+		//create a depth stencil texture
+		D3D10_TEXTURE2D_DESC descDepth;
+		descDepth.Width = m_ScreenWidth;
+		descDepth.Height = m_ScreenHeight;
+		descDepth.MipLevels = 1;
+		descDepth.ArraySize = 1;
+		descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+		descDepth.SampleDesc.Count = 1;
+		descDepth.SampleDesc.Quality = 0;
+		descDepth.Usage = D3D10_USAGE_DEFAULT;
+		descDepth.BindFlags = D3D10_BIND_DEPTH_STENCIL;
+		descDepth.CPUAccessFlags = 0;
+		descDepth.MiscFlags = 0;
+
+		if(FAILED(pD3DDevice->CreateTexture2D(&descDepth, NULL, &pDepthStencil)))
+		{
+			return FatalError("Could not create depth stencil texture");
+		}
+
+		//create the depth stencil view
+		D3D10_DEPTH_STENCIL_VIEW_DESC descDSV;
+		descDSV.Format = descDepth.Format;
+		descDSV.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
+		descDSV.Texture2D.MipSlice = 0;
+
+		if(FAILED(pD3DDevice->CreateDepthStencilView(pDepthStencil, &descDSV, &pDepthStencilView)))
+		{
+			return FatalError("Could not create depth stencil view");
+		}
+
+		//Set the device's render target to the one just created
+		pD3DDevice->OMSetRenderTargets(1, &pRenderTargetView, NULL);
+
+		return true;
+	}
+
+
+	bool DirectX10Renderer::BeginRender()
 	{
 		//clear scene
 #ifdef DEBUG
@@ -102,15 +216,15 @@ namespace Core
 	}
 
 
-	bool DirectX10Renderer::CreateSwapChainAndDevice(UINT width, UINT height)
+	bool DirectX10Renderer::CreateSwapChainAndDevice()
 	{
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;
 		ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 	
 		//set buffer dimensions and format
 		swapChainDesc.BufferCount = 2;
-		swapChainDesc.BufferDesc.Width = width;
-		swapChainDesc.BufferDesc.Height = height;
+		swapChainDesc.BufferDesc.Width = m_ScreenWidth;
+		swapChainDesc.BufferDesc.Height = m_ScreenHeight;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	
@@ -196,72 +310,6 @@ namespace Core
 
 		//Set the input layout
 		pD3DDevice->IASetInputLayout(pVertexLayout);
-
-		return true;
-	}
-
-
-	void DirectX10Renderer::CreateViewports(UINT width, UINT height)
-	{
-		viewPort.Width = width;
-		viewPort.Height = height;
-		viewPort.MinDepth = 0.0f;
-		viewPort.MaxDepth = 1.0f;
-		viewPort.TopLeftX = 0;
-		viewPort.TopLeftY = 0;
-
-		//set the viewport
-		pD3DDevice->RSSetViewports(1, &viewPort);
-	}
-
-
-	bool DirectX10Renderer::CreateRenderTargetsAndDepthBuffer(UINT width, UINT height)
-	{
-		//try to get the back buffer
-		ID3D10Texture2D* pBackBuffer;	
-		if ( FAILED( pSwapChain->GetBuffer(0, __uuidof(ID3D10Texture2D), (LPVOID*) &pBackBuffer) ) ) 
-		{
-			return FatalError("Could not get back buffer");
-		}
-
-		//try to create render target view
-		if ( FAILED( pD3DDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView) ) ) 
-		{
-			return FatalError("Could not create render target view");
-		}
-
-		//create a depth stencil texture
-		D3D10_TEXTURE2D_DESC descDepth;
-		descDepth.Width = width;
-		descDepth.Height = height;
-		descDepth.MipLevels = 1;
-		descDepth.ArraySize = 1;
-		descDepth.Format = DXGI_FORMAT_D32_FLOAT;
-		descDepth.SampleDesc.Count = 1;
-		descDepth.SampleDesc.Quality = 0;
-		descDepth.Usage = D3D10_USAGE_DEFAULT;
-		descDepth.BindFlags = D3D10_BIND_DEPTH_STENCIL;
-		descDepth.CPUAccessFlags = 0;
-		descDepth.MiscFlags = 0;
-
-		if(FAILED(pD3DDevice->CreateTexture2D(&descDepth, NULL, &pDepthStencil)))
-		{
-			return FatalError("Could not create depth stencil texture");
-		}
-
-		//create the depth stencil view
-		D3D10_DEPTH_STENCIL_VIEW_DESC descDSV;
-		descDSV.Format = descDepth.Format;
-		descDSV.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
-		descDSV.Texture2D.MipSlice = 0;
-
-		if(FAILED(pD3DDevice->CreateDepthStencilView(pDepthStencil, &descDSV, &pDepthStencilView)))
-		{
-			return FatalError("Could not create depth stencil view");
-		}
-
-		//set render targets
-		pD3DDevice->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 
 		return true;
 	}

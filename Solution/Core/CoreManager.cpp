@@ -13,7 +13,7 @@ namespace Core
 		}
 		else
 		{
-			new DirectX10Renderer;
+			m_Renderer = new DirectX10Renderer;
 		}
 
 		// Set up the other objects
@@ -44,7 +44,7 @@ namespace Core
 		if(!m_Text->Initialise(m_Font)) return false;
 
 		m_Map = new Map;
-		if(!m_Map->Initialise()) return false;
+		if(!m_Map->Initialise(m_Renderer->GetScreenWidth(), m_Renderer->GetScreenHeight())) return false;
 
 		switch(mode)
 		{
@@ -104,7 +104,8 @@ namespace Core
 	bool CoreManager::Render()
 	{
 		// Update all child objects
-		m_Map->Update();
+		m_Renderer->Update();
+		m_Map->Update(m_Renderer->GetScreenWidth(), m_Renderer->GetScreenHeight());
 		m_Text->Update();
 
 		// Render

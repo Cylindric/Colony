@@ -33,6 +33,15 @@ LRESULT CALLBACK wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message) 
 	{
+	case WM_SIZING:
+		{
+			RECT rcWindow;
+			GetClientRect(hWnd, &rcWindow);
+			windowWidth = rcWindow.right - rcWindow.left;
+			windowHeight = rcWindow.bottom - rcWindow.top;
+		}
+		break;
+
 	case WM_INPUT:
 		{
 			UINT dwSize = 40;
@@ -53,8 +62,8 @@ LRESULT CALLBACK wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				xPosRelative = raw->data.mouse.lLastX;
 				yPosRelative = raw->data.mouse.lLastY;
 			} 
+			return 0;
 		}
-		return 0;
 		break;
 
     case WM_KEYDOWN:
@@ -98,14 +107,16 @@ bool initWindow(HWND &hWnd, HINSTANCE hInstance, int width, int height)
 	wcex.hIconSm		= 0;
 	RegisterClassEx(&wcex);
 
+	DWORD WindowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX;
+
 	//Resize the window
 	RECT rect = { 0, 0, width, height };
-    AdjustWindowRect(&rect, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, FALSE);
+    AdjustWindowRect(&rect, WindowStyle, FALSE);
 
 	//create the window from the class above
-	hWnd = CreateWindow( "Colony", 
+	hWnd = CreateWindow( "Colony",
 						 "Colony - Tile Test", 
-						 WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+						 WindowStyle,
 						 CW_USEDEFAULT, 
 						 CW_USEDEFAULT, 
 						 rect.right - rect.left, 
@@ -166,7 +177,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 
 	//set up the renderer
-	renderer = new Core::CoreManager("dx9");
+	renderer = new Core::CoreManager("dx10");
 	if(!renderer->Initialise(&hWnd, 2))
 	{
 		std::cerr << "Failed to initialise a renderer" << std::endl;

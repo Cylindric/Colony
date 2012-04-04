@@ -28,12 +28,12 @@ struct FontVertex
 };
 
 
-inline float convertPixelsToClipSpace( const int pixelDimension, const int pixels )
+inline float convertPixelsToClipSpace(const int pixelDimension, const int pixels)
 {
 	return (float)pixels/pixelDimension*2 -1;
 }
 
-inline float convertPixelsToClipSpaceDistance( const int pixelDimension, const int pixels )
+inline float convertPixelsToClipSpaceDistance(const int pixelDimension, const int pixels)
 {
 	return (float)pixels/pixelDimension*2;
 }

@@ -33,12 +33,17 @@ namespace Core
 
 		virtual bool Initialise(HWND* handle) = 0;
 		virtual void Release(void) = 0;
+		virtual bool Update(void) = 0;
 		virtual bool BeginRender(void) = 0;
 		virtual bool RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites) = 0;
 		virtual bool EndRender(void) = 0;
+		int GetScreenWidth(void);
+		int GetScreenHeight(void);
 		
 	protected:
 		HWND* hWnd;
+		UINT m_ScreenWidth;
+		UINT m_ScreenHeight;
 
 		//fatal error handler
 		bool FatalError(LPCSTR msg); 

@@ -116,7 +116,7 @@ namespace Core
 	}
 
 
-	void DirectX9Renderer::Release(void)
+	void DirectX9Renderer::Release()
 	{
 		if(pRenderTargetView) pRenderTargetView->Release();
 		pRenderTargetView = NULL;
@@ -129,14 +129,20 @@ namespace Core
 	}
 
 
-	bool DirectX9Renderer::BeginRender(void)
+	bool DirectX9Renderer::Update()
+	{
+		return true;
+	}
+
+
+	bool DirectX9Renderer::BeginRender()
 	{
 		pD3DDevice->ClearRenderTargetView( pRenderTargetView, D3DXCOLOR(0,0,0,0) );
 		return true;
 	}
 
 
-	bool DirectX9Renderer::EndRender(void)
+	bool DirectX9Renderer::EndRender()
 	{
 		pSwapChain->Present(0,0);
 		return true;

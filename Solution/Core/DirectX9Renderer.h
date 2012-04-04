@@ -43,6 +43,7 @@ namespace Core
 
 		bool Initialise(HWND* handle);
 		void Release(void);
+		bool Update(void);
 		bool BeginRender(void);
 		bool RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites);
 		bool EndRender(void);

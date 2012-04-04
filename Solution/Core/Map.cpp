@@ -24,8 +24,10 @@ namespace Core
 	}
 
 
-	bool Map::Initialise()
+	bool Map::Initialise(int screenWidth, int screenHeight)
 	{
+		m_ScreenWidth = screenWidth;
+		m_ScreenHeight = screenHeight;
 		m_Tiles.clear();
 		return true;
 	}
@@ -40,12 +42,12 @@ namespace Core
 		int spriteSize = 32;
 		int rows = h;
 		int cols = w;
-		int left = 400 - (int)(spriteSize * cols * 0.5f);
-		int top  = 300 - (int)(spriteSize * rows * 0.5f);
+		int left = (m_ScreenWidth / 2) - (int)(spriteSize * cols * 0.5f);
+		int top  = (m_ScreenHeight / 2) - (int)(spriteSize * rows * 0.5f);
 
 		// calculate the row and column for the sprite
 		float twidth = 0.0625; // width of a single sprite texture (16/256)
-		float j = 0.001953125; // width of half a pixel (0.5/256)
+		float j = 0.001953125; // width of half a texture pixel (0.5/256)
 		unsigned int columns = 16;
 
 		unsigned int spriteCol;
@@ -60,10 +62,10 @@ namespace Core
 				spriteCol = spritenum % columns;
 				spriteRow = spritenum / columns;
 
-				v.topLeft[0] = convertPixelsToClipSpace(800, left + (col * spriteSize));
-				v.topLeft[1] = -convertPixelsToClipSpace(600, top + (row * spriteSize));
-				v.dimensions[0] = convertPixelsToClipSpaceDistance(800, spriteSize);
-				v.dimensions[1] = convertPixelsToClipSpaceDistance(600, spriteSize);
+				v.topLeft[0] = convertPixelsToClipSpace(m_ScreenWidth, left + (col * spriteSize));
+				v.topLeft[1] = -convertPixelsToClipSpace(m_ScreenHeight, top + (row * spriteSize));
+				v.dimensions[0] = convertPixelsToClipSpaceDistance(m_ScreenWidth, spriteSize);
+				v.dimensions[1] = convertPixelsToClipSpaceDistance(m_ScreenHeight, spriteSize);
 
 				v.uvLeft = (spriteCol * twidth) + j + 0.0f;
 				v.uvRight = (spriteCol * twidth) - j + twidth;
@@ -78,9 +80,20 @@ namespace Core
 	}
 
 
-	bool Map::Update()
+	bool Map::Update(int screenWidth, int screenHeight)
 	{
+		if(screenWidth != m_ScreenWidth || screenHeight != m_ScreenHeight)
+		{
+			m_ScreenWidth = screenWidth;
+			m_ScreenHeight = screenHeight;
+			UpdateTiles();
+		}
 		return true;
+	}
+
+
+	void Map::UpdateTiles()
+	{
 	}
 
 

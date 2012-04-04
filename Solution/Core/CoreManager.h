@@ -31,7 +31,7 @@ namespace Core
 		
 		bool Initialise(HWND* handle, int mode = 0);
 		void Release(void);
-		bool Render(void);
+		bool Render();
 
 	private:
 		StandardRenderer* m_Renderer;

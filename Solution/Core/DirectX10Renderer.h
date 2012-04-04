@@ -40,6 +40,7 @@ namespace Core
 
 		bool Initialise(HWND* handle);
 		void Release(void);
+		bool Update(void);
 		bool BeginRender(void);
 		bool RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites);
 		bool EndRender(void);
@@ -69,10 +70,9 @@ namespace Core
 		ID3D10EffectShaderResourceVariable* pColorMap;
 
 		// Pipeline
-		bool CreateSwapChainAndDevice(UINT width, UINT height);
+		bool ResizeScreen(void);
+		bool CreateSwapChainAndDevice(void);
 		bool LoadShadersAndCreateInputLayouts(void);
-		void CreateViewports(UINT width, UINT height);
-		bool CreateRenderTargetsAndDepthBuffer(UINT width, UINT height);
 	};
 
 }
