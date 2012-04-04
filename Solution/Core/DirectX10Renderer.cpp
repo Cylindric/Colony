@@ -376,6 +376,13 @@ namespace Core
 
 		}
 
+		// make sure the shader knows the screen-size so it can scale the sprites correctly
+		ID3D10EffectVariable* em = m_SpriteEffect->GetVariableByName("screenDimensions");
+		int dims[2];
+		dims[0] = m_ScreenWidth;
+		dims[1] = m_ScreenHeight;
+		em->SetRawValue(&dims, 0, sizeof(dims));
+
 		for(UINT p = 0; p < m_SpriteTechDesc.Passes; p++)
 		{
 			//apply technique

@@ -11,8 +11,8 @@ enum SpriteType
 struct SpriteVertex
 {
 	unsigned int spriteType;
-	float topLeft[2];
-	float dimensions[2];
+	int topLeft[2];
+	int dimensions[2];
 	float uvLeft;
 	float uvTop;
 	float uvRight;
@@ -27,13 +27,3 @@ struct FontVertex
 	float texture[2];
 };
 
-
-inline float convertPixelsToClipSpace(const int pixelDimension, const int pixels)
-{
-	return (float)pixels/pixelDimension*2 -1;
-}
-
-inline float convertPixelsToClipSpaceDistance(const int pixelDimension, const int pixels)
-{
-	return (float)pixels/pixelDimension*2;
-}

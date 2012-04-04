@@ -105,7 +105,7 @@ namespace Core
 	{
 		// Update all child objects
 		m_Renderer->Update();
-		m_Map->Update(m_Renderer->GetScreenWidth(), m_Renderer->GetScreenHeight());
+		m_Map->Update();
 		m_Text->Update();
 
 		// Render

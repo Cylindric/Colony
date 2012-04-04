@@ -23,7 +23,7 @@ namespace Core
 
 		bool Initialise(int screenWidth, int screenHeight);
 		void Release(void);
-		bool Update(int screenWidth, int screenHeight);
+		bool Update();
 		bool CreateRandomTiles(int w, int h);
 
 		std::vector<SpriteVertex>* GetSprites(SpriteType type);

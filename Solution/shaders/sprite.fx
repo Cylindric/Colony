@@ -4,6 +4,7 @@
 
 //color map texture
 Texture2D colorMap;
+int2 screenDimensions;
 
 //texture sampler state
 SamplerState linearSampler
@@ -32,8 +33,8 @@ BlendState SrcAlphaBlendingAdd
 struct SPRITE_INPUT
 {
 	uint spriteType   : SPRITETYPE;
-	float2 topLeft    : ANCHOR;
-	float2 dimensions : DIMENSIONS;
+	int2 topLeft      : ANCHOR;
+	int2 dimensions   : DIMENSIONS;
 	float uvLeft      : UVLEFT;
 	float uvTop       : UVTOP;
 	float uvRight     : UVRIGHT;
@@ -57,6 +58,11 @@ SPRITE_INPUT VS( SPRITE_INPUT input )
 	return input;  
 }
 
+float4 toClip(int x, int y)
+{
+	return float4((float)x/screenDimensions[0]*2 -1, (float)y/screenDimensions[1]*2 -1, 0, 1);
+}
+
 //--------------------------------------------------------------------------------------
 // GEOMETRY SHADER
 //--------------------------------------------------------------------------------------
@@ -71,22 +77,22 @@ void GS( point SPRITE_INPUT sprite[1], inout TriangleStream<PS_INPUT> triStream 
 	//--------------------------------------------
 
 	//bottom left
-	v.p = float4(sprite[0].topLeft[0],sprite[0].topLeft[1]-sprite[0].dimensions[1],0,1);	
+	v.p = toClip(sprite[0].topLeft[0], sprite[0].topLeft[1]-sprite[0].dimensions[1]);
 	v.t = float2(sprite[0].uvLeft, sprite[0].uvBottom);
 	triStream.Append(v);
 	
 	//top left
-	v.p = float4(sprite[0].topLeft[0],sprite[0].topLeft[1],0,1);	
+	v.p = toClip(sprite[0].topLeft[0],sprite[0].topLeft[1]);
 	v.t = float2(sprite[0].uvLeft, sprite[0].uvTop);
 	triStream.Append(v);
 
 	//bottom right
-	v.p = float4(sprite[0].topLeft[0]+sprite[0].dimensions[0],sprite[0].topLeft[1]-sprite[0].dimensions[1],0,1);	
+	v.p = toClip(sprite[0].topLeft[0]+sprite[0].dimensions[0],sprite[0].topLeft[1]-sprite[0].dimensions[1]);
 	v.t = float2(sprite[0].uvRight, sprite[0].uvBottom);
 	triStream.Append(v);
 
 	//top right
-	v.p = float4(sprite[0].topLeft[0]+sprite[0].dimensions[0],sprite[0].topLeft[1],0,1);	
+	v.p = toClip(sprite[0].topLeft[0]+sprite[0].dimensions[0],sprite[0].topLeft[1]);
 	v.t = float2(sprite[0].uvRight, sprite[0].uvTop);
 	triStream.Append(v);
 }

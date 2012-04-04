@@ -62,10 +62,10 @@ namespace Core
 				spriteCol = spritenum % columns;
 				spriteRow = spritenum / columns;
 
-				v.topLeft[0] = convertPixelsToClipSpace(m_ScreenWidth, left + (col * spriteSize));
-				v.topLeft[1] = -convertPixelsToClipSpace(m_ScreenHeight, top + (row * spriteSize));
-				v.dimensions[0] = convertPixelsToClipSpaceDistance(m_ScreenWidth, spriteSize);
-				v.dimensions[1] = convertPixelsToClipSpaceDistance(m_ScreenHeight, spriteSize);
+				v.topLeft[0] = left + (col * spriteSize);
+				v.topLeft[1] = top + (row * spriteSize);
+				v.dimensions[0] = spriteSize;
+				v.dimensions[1] = spriteSize;
 
 				v.uvLeft = (spriteCol * twidth) + j + 0.0f;
 				v.uvRight = (spriteCol * twidth) - j + twidth;
@@ -80,14 +80,8 @@ namespace Core
 	}
 
 
-	bool Map::Update(int screenWidth, int screenHeight)
+	bool Map::Update()
 	{
-		if(screenWidth != m_ScreenWidth || screenHeight != m_ScreenHeight)
-		{
-			m_ScreenWidth = screenWidth;
-			m_ScreenHeight = screenHeight;
-			UpdateTiles();
-		}
 		return true;
 	}
 

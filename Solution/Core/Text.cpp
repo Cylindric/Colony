@@ -64,22 +64,16 @@ namespace Core
 		SpriteVertex v;
 		Font::FontType f;
 
-		float pxToClipWidth = convertPixelsToClipSpaceDistance(800, 1);
-		float pxToClipHeight = convertPixelsToClipSpaceDistance(600, 1);
-		float wordSpace = 5 * pxToClipWidth;
-		float charSpace = 1 * pxToClipWidth;
-		float letterClipWidth = 0.0f;
-		float letterClipHeight = 0.0f;
+		float wordSpace = 5;
+		float charSpace = 1;
 
 		m_Chars.clear();
 
 		for(auto it = m_Strings.begin(); it != m_Strings.end(); ++it)
 		{
-			letterClipHeight = 16 * pxToClipHeight * ((*it).second.size);
-
 			v.spriteType = SPRITE_TYPE_TEXT;
-			v.topLeft[0] = convertPixelsToClipSpace(800, (*it).second.position[0]);
-			v.topLeft[1] = convertPixelsToClipSpace(600, (*it).second.position[1]);
+			v.topLeft[0] = (*it).second.position[0];
+			v.topLeft[1] = (*it).second.position[1];
 			v.opacity = 1.0f;
 			v.uvTop = 0;
 			v.uvBottom = 1;
@@ -91,23 +85,22 @@ namespace Core
 
 				if(letter == 0)
 				{
-					v.topLeft[0] += wordSpace * ((*it).second.size);
+					v.topLeft[0] += (int)(((*it).second.size) * wordSpace);
 				} 
 				else
 				{
 					f = m_Font->GetCharDetails(letter);
-					letterClipWidth = pxToClipWidth * f.size * ((*it).second.size);
 
 					v.uvLeft = f.left;
 					v.uvRight = f.right;
-					v.dimensions[0] = letterClipWidth;
-					v.dimensions[1] = letterClipHeight;
+					v.dimensions[0] = (int)(((*it).second.size) * f.size);
+					v.dimensions[1] = 16;
 
 					// add the character to the list
 					m_Chars.push_back(v);
 
 					// increment horizontal position
-					v.topLeft[0] += (v.dimensions[0] + charSpace);
+					v.topLeft[0] += (int)(v.dimensions[0] + charSpace);
 				}
 
 			}
