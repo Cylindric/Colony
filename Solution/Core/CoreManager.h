@@ -4,8 +4,8 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <map>
 #include <Windows.h>
-
 
 ///////////////////////
 // MY CLASS INCLUDES //
@@ -26,10 +26,17 @@ namespace Core
 	class CoreManager
 	{
 	public:
+		enum TEST_MODE
+		{
+			TEST_MODE_NONE,
+			TEST_MODE_TEXT,
+			TEST_MODE_TILES
+		};
+
 		CoreManager(char* type);
 		~CoreManager(void);
 		
-		bool Initialise(HWND* handle, int mode = 0);
+		bool Initialise(HWND* handle, TEST_MODE mode = TEST_MODE_NONE);
 		void Release(void);
 		bool Render();
 
@@ -39,8 +46,15 @@ namespace Core
 		Font* m_Font;
 		Text* m_Text;
 		Input* m_Input;
+		int m_FrameCounter;
+		int m_FrameCounterText;
 
-		int m_TestText;
+		// testing
+		TEST_MODE m_TestMode;
+		float m_TestMove[4];
+
+		std::map<std::string, int> m_TextHandles;
+
 	};
 
 }

@@ -47,12 +47,12 @@ namespace Core
 	}
 
 
-	bool Text::UpdateSentence(int id, std::string text, int posX, int posY, float size)
+	bool Text::UpdateSentence(int id, std::string text, int posX, int posY, float fontSize)
 	{
-		m_Strings[id].position[0] = posX;
-		m_Strings[id].position[1] = posY;
+		if(posX != -1) m_Strings[id].position[0] = posX;
+		if(posY != -1) m_Strings[id].position[1] = posY;
+		if(fontSize != -1) m_Strings[id].fontSize = fontSize;
 		m_Strings[id].text = text;
-		m_Strings[id].size = size;
 		return true;
 	}
 
@@ -85,7 +85,7 @@ namespace Core
 
 				if(letter == 0)
 				{
-					v.topLeft[0] += (int)(((*it).second.size) * wordSpace);
+					v.topLeft[0] += (int)(((*it).second.fontSize) * wordSpace);
 				} 
 				else
 				{
@@ -93,7 +93,7 @@ namespace Core
 
 					v.uvLeft = f.left;
 					v.uvRight = f.right;
-					v.dimensions[0] = (int)(((*it).second.size) * f.size);
+					v.dimensions[0] = (int)(((*it).second.fontSize) * f.size);
 					v.dimensions[1] = 16;
 
 					// add the character to the list

@@ -27,7 +27,7 @@ namespace Core
 		{
 			std::string text;
 			int position[2];
-			float size;
+			float fontSize;
 		};
 
 		Text(void);
@@ -41,7 +41,7 @@ namespace Core
 
 		// class methods
 		int InitialiseSentence(void);
-		bool UpdateSentence(int id, std::string text, int posX, int posY, float size);
+		bool UpdateSentence(int id, std::string text, int posX = -1, int posY = -1, float fontSize = -1);
 		//void ReleaseSentence(int id);
 
 	private:
