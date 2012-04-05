@@ -85,16 +85,21 @@ namespace Core
 
             // Load the Sprite tile texture
             m_SpriteTex = ShaderResourceView.FromFile(m_Device, "./textures/tiles.png");
-            
-
 
             // Layout
-            m_InputLayout = new InputLayout(m_Device, ShaderSignature.GetInputSignature(vertexShaderByteCode), new[]
-            {
-                new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
+            m_InputLayout = new InputLayout(m_Device, ShaderSignature.GetInputSignature(geometryShaderByteCode), new[]
+            {	
+	             new InputElement("SPRITETYPE", 0, Format.R32_Float, 0, 0,                          InputClassification.PerVertexData, 0),
+	             new InputElement("TOP",        0, Format.R32_Float, 0, InputElement.AppendAligned, InputClassification.PerVertexData, 0),
+	             new InputElement("LEFT",       0, Format.R32_Float, 0, InputElement.AppendAligned, InputClassification.PerVertexData, 0),
+	             new InputElement("WIDTH",      0, Format.R32_Float, 0, InputElement.AppendAligned, InputClassification.PerVertexData, 0),
+	             new InputElement("HEIGHT",     0, Format.R32_Float, 0, InputElement.AppendAligned, InputClassification.PerVertexData, 0),
+	             new InputElement("UVLEFT",     0, Format.R32_Float, 0, InputElement.AppendAligned, InputClassification.PerVertexData, 0),
+	             new InputElement("UVTOP",      0, Format.R32_Float, 0, InputElement.AppendAligned, InputClassification.PerVertexData, 0),
+	             new InputElement("UVRIGHT",    0, Format.R32_Float, 0, InputElement.AppendAligned, InputClassification.PerVertexData, 0),
+	             new InputElement("UVBOTTOM",   0, Format.R32_Float, 0, InputElement.AppendAligned, InputClassification.PerVertexData, 0),
+	             new InputElement("OPACITY",    0, Format.R32_Float, 0, InputElement.AppendAligned, InputClassification.PerVertexData, 0)
             });
-
 
             m_ConstantBuffer = new Buffer(
                 m_Device, 
@@ -203,59 +208,24 @@ namespace Core
 
                 // Draw the cube
                 // Instantiate a new buffer of verts
-                var vertices = Buffer.Create(m_Device, BindFlags.VertexBuffer, new[]
-                                      {
-                                          new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f), // Front
-                                          new Vector4(-1.0f,  1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-                                          new Vector4( 1.0f,  1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-                                          new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-                                          new Vector4( 1.0f,  1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-                                          new Vector4( 1.0f, -1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+                Buffer sprite1 = Buffer.Create(m_Device, BindFlags.VertexBuffer, new[] 
+                        {
+                            0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+                        }
+                    );
 
-                                          new Vector4(-1.0f, -1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 0.0f, 1.0f), // BACK
-                                          new Vector4( 1.0f,  1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
-                                          new Vector4(-1.0f,  1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
-                                          new Vector4(-1.0f, -1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
-                                          new Vector4( 1.0f, -1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
-                                          new Vector4( 1.0f,  1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
 
-                                          new Vector4(-1.0f, 1.0f, -1.0f,  1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f), // Top
-                                          new Vector4(-1.0f, 1.0f,  1.0f,  1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-                                          new Vector4( 1.0f, 1.0f,  1.0f,  1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-                                          new Vector4(-1.0f, 1.0f, -1.0f,  1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-                                          new Vector4( 1.0f, 1.0f,  1.0f,  1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-                                          new Vector4( 1.0f, 1.0f, -1.0f,  1.0f), new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
 
-                                          new Vector4(-1.0f,-1.0f, -1.0f,  1.0f), new Vector4(1.0f, 1.0f, 0.0f, 1.0f), // Bottom
-                                          new Vector4( 1.0f,-1.0f,  1.0f,  1.0f), new Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-                                          new Vector4(-1.0f,-1.0f,  1.0f,  1.0f), new Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-                                          new Vector4(-1.0f,-1.0f, -1.0f,  1.0f), new Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-                                          new Vector4( 1.0f,-1.0f, -1.0f,  1.0f), new Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-                                          new Vector4( 1.0f,-1.0f,  1.0f,  1.0f), new Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-
-                                          new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 1.0f, 1.0f), // Left
-                                          new Vector4(-1.0f, -1.0f,  1.0f, 1.0f), new Vector4(1.0f, 0.0f, 1.0f, 1.0f),
-                                          new Vector4(-1.0f,  1.0f,  1.0f, 1.0f), new Vector4(1.0f, 0.0f, 1.0f, 1.0f),
-                                          new Vector4(-1.0f, -1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 1.0f, 1.0f),
-                                          new Vector4(-1.0f,  1.0f,  1.0f, 1.0f), new Vector4(1.0f, 0.0f, 1.0f, 1.0f),
-                                          new Vector4(-1.0f,  1.0f, -1.0f, 1.0f), new Vector4(1.0f, 0.0f, 1.0f, 1.0f),
-
-                                          new Vector4( 1.0f, -1.0f, -1.0f, 1.0f), new Vector4(0.0f, 1.0f, 1.0f, 1.0f), // Right
-                                          new Vector4( 1.0f,  1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 1.0f, 1.0f),
-                                          new Vector4( 1.0f, -1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 1.0f, 1.0f),
-                                          new Vector4( 1.0f, -1.0f, -1.0f, 1.0f), new Vector4(0.0f, 1.0f, 1.0f, 1.0f),
-                                          new Vector4( 1.0f,  1.0f, -1.0f, 1.0f), new Vector4(0.0f, 1.0f, 1.0f, 1.0f),
-                                          new Vector4( 1.0f,  1.0f,  1.0f, 1.0f), new Vector4(0.0f, 1.0f, 1.0f, 1.0f),
-                                });
                 m_Context.InputAssembler.InputLayout = m_InputLayout;
                 m_Context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-                m_Context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertices, Utilities.SizeOf<Vector4>() * 2, 0));
+                m_Context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(sprite1, Utilities.SizeOf<float>() * 10, 0));
                 m_Context.VertexShader.SetConstantBuffer(0, m_ConstantBuffer);
-                m_Context.VertexShader.Set(m_VertexShader);
-                m_Context.PixelShader.Set(m_PixelShader);
+                //m_Context.VertexShader.Set(m_VertexShader);
+                //m_Context.PixelShader.Set(m_PixelShader);
                 m_Context.PixelShader.SetShaderResource(0, m_SpriteTex);
+                m_Context.GeometryShader.Set(m_SpriteShader);
 
-                m_Context.Draw(36, 0);
+                m_Context.Draw(1, 0);
 
                 m_Game.Update();
                 m_Game.Render();

@@ -59,6 +59,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="HLSL\MiniCube.fx" />
+    <None Include="HLSL\sprite.fx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
