@@ -6,8 +6,9 @@ namespace Main
         [STAThread]
         private static void Main()
         {
-            Core.CoreManager core = new Core.CoreManager();
-            core.Initialise();
+            Core.Game game = new Core.Game();
+            game.Initialise();
+            game.Run();
         }
     }
 }

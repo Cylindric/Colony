@@ -1,32 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
 namespace Core
 {
-    class CoreManager : IDisposable
+    public class Map : IDisposable
     {
-        private Map m_Map;
-
+        
         public void Initialise()
         {
-            m_Map = new Map();
-            m_Map.Initialise();
         }
 
         
         public void Update()
         {
-            m_Map.Update();
         }
 
 
         public void Render()
         {
-            m_Map.Render();
         }
 
 
         public void Dispose()
         {
-            m_Map.Dispose();
         }
+
     }
 }
