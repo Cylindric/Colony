@@ -38,7 +38,5 @@ double Timer::GetElapsedTimeSeconds()
 		QueryPerformanceCounter(&m_EndCount);
 	}
 
-	double d = (m_EndCount.QuadPart - m_StartCount.QuadPart);
-	double t = d / m_Frequency.QuadPart;
-	return t;
+	return (double)(m_EndCount.QuadPart - m_StartCount.QuadPart) / m_Frequency.QuadPart;
 }

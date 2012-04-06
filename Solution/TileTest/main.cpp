@@ -1,17 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: main.cpp
 ////////////////////////////////////////////////////////////////////////////////
+#ifdef DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#include <vld.h>
+#endif
 
 
 //////////////
 // INCLUDES //
 //////////////
+#include <Windows.h>
 #include <fstream>
 #include <iostream>
-#include <Windows.h>
-#ifdef DEBUG
-#include <vld.h>
-#endif
 
 ///////////////////////
 // MY CLASS INCLUDES //
@@ -143,6 +145,14 @@ bool initWindow(HWND &hWnd, HINSTANCE hInstance, int width, int height)
 *******************************************************************/
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
+#ifdef DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetBreakAlloc(151);
+	//_CrtSetBreakAlloc(152); // Core Manager
+	//_CrtSetBreakAlloc(153); // CoreManager
+	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+#endif
+
 	// redirect std output to files
 	std::ofstream coutfile;
 	coutfile.open("cout.log");
@@ -186,6 +196,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		return 0;
 	}
 	
+
 	// Main message loop
     MSG msg = {0};
     while (WM_QUIT != msg.message)
@@ -204,7 +215,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 	renderer->Release();
 	delete renderer;
-	renderer = 0;
+	renderer = NULL;
+
+	_CrtDumpMemoryLeaks();
+	
 
 	return (int) msg.wParam;
 }

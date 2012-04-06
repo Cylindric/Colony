@@ -39,16 +39,12 @@ namespace Core
 		if(!LoadShadersAndCreateInputLayouts()) return false;
 
 		// Load textures
-		ID3D10ShaderResourceView* spriteT;
-		m_Textures.insert(std::pair<TEXTURE_ID, ID3D10ShaderResourceView*>(TEXTURE_SPRITE, spriteT));
-		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./textures/tiles.png", NULL, NULL,  &m_Textures[TEXTURE_SPRITE], NULL)))
+		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./textures/tiles.png", NULL, NULL,  &m_SpriteTexture, NULL)))
 		{
 			return FatalError("Could not load sprite texture");
 		}
 
-		ID3D10ShaderResourceView* fontT;
-		m_Textures.insert(std::pair<TEXTURE_ID, ID3D10ShaderResourceView*>(TEXTURE_FONT, fontT));
-		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./fonts/default.png", NULL, NULL,  &m_Textures[TEXTURE_FONT], NULL)))
+		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./fonts/default.png", NULL, NULL,  &m_FontTexture, NULL)))
 		{
 			return FatalError("Could not load font texture");
 		}
@@ -69,11 +65,8 @@ namespace Core
 		if(pDepthStencil) pDepthStencil->Release();
 		
 		// release all textures
-		for(auto it = m_Textures.begin(); it != m_Textures.end(); ++it)
-		{
-			(*it).second->Release();
-		}
-		m_Textures.clear();
+		if(m_SpriteTexture) m_SpriteTexture->Release();
+		if(m_FontTexture) m_FontTexture->Release();
 
 		if(m_SpriteBuffer) m_SpriteBuffer->Release();
 	}
@@ -375,15 +368,15 @@ namespace Core
 		switch(type)
 		{
 		case SPRITE_TYPE_TILE:
-			pColorMap->SetResource(m_Textures[TEXTURE_SPRITE]);
+			pColorMap->SetResource(m_SpriteTexture);
 			break;
 
 		case SPRITE_TYPE_TEXT:
-			pColorMap->SetResource(m_Textures[TEXTURE_FONT]);
+			pColorMap->SetResource(m_FontTexture);
 			break;
 
 		default:
-			pColorMap->SetResource(m_Textures[TEXTURE_SPRITE]);
+			pColorMap->SetResource(m_SpriteTexture);
 			break;
 
 		}

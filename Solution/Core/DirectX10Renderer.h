@@ -65,7 +65,8 @@ namespace Core
 		D3D10_TECHNIQUE_DESC		m_SpriteTechDesc;
 
 		// Font textures, effects and techniques
-		std::map<TEXTURE_ID, ID3D10ShaderResourceView*>	m_Textures;
+		ID3D10ShaderResourceView*	m_SpriteTexture;
+		ID3D10ShaderResourceView*	m_FontTexture;
 
 		// Effect variable pointers
 		ID3D10EffectShaderResourceVariable* pColorMap;

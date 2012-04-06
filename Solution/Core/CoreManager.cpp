@@ -33,6 +33,7 @@ namespace Core
 	CoreManager::~CoreManager()
 	{
 		DEBUG_OUT("CoreManager::Destructor");
+		_CrtDumpMemoryLeaks();
 	}
 
 
@@ -61,7 +62,7 @@ namespace Core
 
 		// Create a frame-counter text object
 		m_TextHandles.insert(std::pair<std::string, int>("framecounter", m_Text->InitialiseSentence()));
-		m_Text->UpdateSentence(m_TextHandles["framecounter"], "No Frames", 2, 12, 1.0f);
+		m_Text->UpdateSentence(m_TextHandles["framecounter"], "no frames", 2, 12, 1.0f);
 		m_TextHandles.insert(std::pair<std::string, int>("fps", m_Text->InitialiseSentence()));
 		m_Text->UpdateSentence(m_TextHandles["fps"], "FPS: 0", 2, 23, 1.0f);
 
@@ -101,6 +102,9 @@ namespace Core
 			m_Map = NULL;
 		}
 
+		// Text handles
+		m_TextHandles.clear();
+
 		if(m_Text)
 		{
 			m_Text->Release();
@@ -135,25 +139,13 @@ namespace Core
 	bool CoreManager::Render()
 	{
 		// update the frame counter
-		char finalString[16];
-		char tmpString[16];
 		m_FrameCounter++;
-		LARGE_INTEGER frameTime;
-		LARGE_INTEGER clockFreq;
-		QueryPerformanceFrequency(&clockFreq);
-		QueryPerformanceCounter(&frameTime);
-		
 		double thisFrameTime = m_Timer.GetElapsedTimeSeconds();
 		double delta = thisFrameTime - m_LastFrameTime;
-
 		int fps = (int)(1.0f / (delta));
-		m_Text->UpdateSentence(m_TextHandles["fps"], "FPS: ", fps);
-		//Sleep(100);
 
-		_itoa_s(m_FrameCounter, tmpString, 10);
-		strcpy_s(finalString, "Frames: ");
-		strcat_s(finalString, tmpString);
-		m_Text->UpdateSentence(m_TextHandles["framecounter"], finalString);
+		m_Text->UpdateSentence(m_TextHandles["fps"], "FPS: ", fps);
+		m_Text->UpdateSentence(m_TextHandles["framecounter"], "Frames: ", m_FrameCounter);
 
 		if(m_TestMode == TEST_MODE_TEXT)
 		{
