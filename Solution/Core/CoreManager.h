@@ -1,4 +1,5 @@
 #pragma once
+#include "global.h"
 
 
 //////////////
@@ -17,6 +18,7 @@
 #include "Input.h"
 #include "Map.h"
 #include "Text.h"
+#include "Timer.h"
 #include "VertexTypes.h"
 
 
@@ -46,14 +48,17 @@ namespace Core
 		Font* m_Font;
 		Text* m_Text;
 		Input* m_Input;
+		Timer m_Timer;
+
+		double m_LastFrameTime;
 		int m_FrameCounter;
 		int m_FrameCounterText;
+		std::map<std::string, int> m_TextHandles;
 
 		// testing
 		TEST_MODE m_TestMode;
 		float m_TestMove[4];
 
-		std::map<std::string, int> m_TextHandles;
 
 	};
 

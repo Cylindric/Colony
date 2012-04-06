@@ -9,7 +9,9 @@
 #include <fstream>
 #include <iostream>
 #include <Windows.h>
-
+#ifdef DEBUG
+#include <vld.h>
+#endif
 
 ///////////////////////
 // MY CLASS INCLUDES //

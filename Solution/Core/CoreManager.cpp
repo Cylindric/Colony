@@ -5,6 +5,8 @@ namespace Core
 
 	CoreManager::CoreManager(char* type)
 	{
+		DEBUG_OUT("CoreManager::Constructor");
+
 		// Set up the renderer
 		m_Renderer = NULL;
 		if(type == "dx9")
@@ -24,18 +26,23 @@ namespace Core
 		m_Text = NULL;
 		m_Font = NULL;
 		m_Input = NULL;
+		m_LastFrameTime = 0;
 	}
 
 
 	CoreManager::~CoreManager()
 	{
+		DEBUG_OUT("CoreManager::Destructor");
 	}
 
 
 	bool CoreManager::Initialise(HWND* handle, TEST_MODE mode)
 	{
+		DEBUG_OUT("CoreManager::Initialise");
+
 		m_TestMode = mode;
 
+		m_Timer.Start();
 
 		if(!m_Renderer->Initialise(handle)) return false;
 
@@ -54,7 +61,9 @@ namespace Core
 
 		// Create a frame-counter text object
 		m_TextHandles.insert(std::pair<std::string, int>("framecounter", m_Text->InitialiseSentence()));
-		m_Text->UpdateSentence(m_TextHandles["framecounter"], "No Frames", 10, 400, 1.0f);
+		m_Text->UpdateSentence(m_TextHandles["framecounter"], "No Frames", 2, 12, 1.0f);
+		m_TextHandles.insert(std::pair<std::string, int>("fps", m_Text->InitialiseSentence()));
+		m_Text->UpdateSentence(m_TextHandles["fps"], "FPS: 0", 2, 23, 1.0f);
 
 		switch(m_TestMode)
 		{
@@ -83,6 +92,8 @@ namespace Core
 
 	void CoreManager::Release()
 	{
+		DEBUG_OUT("CoreManager::Release");
+
 		if(m_Map)
 		{
 			m_Map->Release();
@@ -117,19 +128,32 @@ namespace Core
 			delete m_Renderer;
 			m_Renderer = NULL;
 		}
+
 	}
 
 
 	bool CoreManager::Render()
 	{
 		// update the frame counter
-		m_FrameCounter++;
-		char framesString[16];
+		char finalString[16];
 		char tmpString[16];
+		m_FrameCounter++;
+		LARGE_INTEGER frameTime;
+		LARGE_INTEGER clockFreq;
+		QueryPerformanceFrequency(&clockFreq);
+		QueryPerformanceCounter(&frameTime);
+		
+		double thisFrameTime = m_Timer.GetElapsedTimeSeconds();
+		double delta = thisFrameTime - m_LastFrameTime;
+
+		int fps = (int)(1.0f / (delta));
+		m_Text->UpdateSentence(m_TextHandles["fps"], "FPS: ", fps);
+		//Sleep(100);
+
 		_itoa_s(m_FrameCounter, tmpString, 10);
-		strcpy_s(framesString, "Frames: ");
-		strcat_s(framesString, tmpString);
-		m_Text->UpdateSentence(m_TextHandles["framecounter"], framesString);
+		strcpy_s(finalString, "Frames: ");
+		strcat_s(finalString, tmpString);
+		m_Text->UpdateSentence(m_TextHandles["framecounter"], finalString);
 
 		if(m_TestMode == TEST_MODE_TEXT)
 		{
@@ -155,6 +179,9 @@ namespace Core
 		if(!m_Renderer->RenderSprites(SPRITE_TYPE_TEXT, m_Text->GetSprites())) return false;
 
 		if(!m_Renderer->EndRender()) return false;
+
+		m_LastFrameTime = thisFrameTime;
+
 		return true;
 	}
 

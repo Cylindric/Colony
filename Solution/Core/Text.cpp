@@ -57,6 +57,17 @@ namespace Core
 	}
 
 
+	bool Text::UpdateSentence(int id, char* text, int value)
+	{
+		char finalString[32];
+		char tmpString[32];
+		_itoa_s(value, tmpString, 10);
+		strcpy_s(finalString, text);
+		strcat_s(finalString, tmpString);
+		return UpdateSentence(id, finalString);
+	}
+
+
 	bool Text::Update()
 	{
 		int chars;

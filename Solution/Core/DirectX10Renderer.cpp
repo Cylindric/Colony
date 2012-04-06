@@ -6,6 +6,7 @@ namespace Core
 
 	DirectX10Renderer::DirectX10Renderer(void)
 	{
+		DEBUG_OUT("DirectX10Renderer::Constructor");
 		pD3DDevice = NULL;
 		pSwapChain = NULL;
 		pRenderTargetView = NULL;
@@ -16,11 +17,14 @@ namespace Core
 
 	DirectX10Renderer::~DirectX10Renderer(void)
 	{
+		DEBUG_OUT("DirectX10Renderer::Destructor");
 	}
 
 
 	bool DirectX10Renderer::Initialise(HWND* handle)
 	{
+		DEBUG_OUT("DirectX10Renderer::Initialise");
+
 		//window handle
 		hWnd = handle;
 	
@@ -56,6 +60,8 @@ namespace Core
 
 	void DirectX10Renderer::Release(void)
 	{
+		DEBUG_OUT("DirectX10Renderer::Release");
+
 		if(pRenderTargetView) pRenderTargetView->Release();
 		if(pSwapChain) pSwapChain->Release();
 		if(pD3DDevice) pD3DDevice->Release();
@@ -94,6 +100,8 @@ namespace Core
 
 	bool DirectX10Renderer::ResizeScreen()
 	{
+		DEBUG_OUT("DirectX10Renderer::ResizeScreen");
+
 		//If there is a valid render target
 		if(pRenderTargetView)
 		{
@@ -218,6 +226,8 @@ namespace Core
 
 	bool DirectX10Renderer::CreateSwapChainAndDevice()
 	{
+		DEBUG_OUT("DirectX10Renderer::CreateSwapChainAndDevice");
+
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;
 		ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 	
@@ -263,6 +273,8 @@ namespace Core
 
 	bool DirectX10Renderer::LoadShadersAndCreateInputLayouts()
 	{
+		DEBUG_OUT("DirectX10Renderer::LoadShadersAndCreateInputLayouts");
+
 		HRESULT result;
 		result = D3DX10CreateEffectFromFile(
 			"./shaders/sprite.fx",

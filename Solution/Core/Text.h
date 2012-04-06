@@ -42,6 +42,7 @@ namespace Core
 		// class methods
 		int InitialiseSentence(void);
 		bool UpdateSentence(int id, std::string text, int posX = -1, int posY = -1, float fontSize = -1);
+		bool UpdateSentence(int id, char* text, int value);
 		//void ReleaseSentence(int id);
 
 	private:
