@@ -31,17 +31,31 @@ LRESULT CALLBACK wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message) 
 	{
 		// Allow the user to press the escape key to end the application
-        case WM_KEYDOWN	:	switch(wParam)
-							{
-								// Check if the user hit the escape key
-								case VK_ESCAPE : PostQuitMessage(0);
-								break;
-							}
-		
-        break;		
+	case WM_KEYDOWN:
+		switch(wParam)
+		{
+			// Check if the user hit the escape key
+			case VK_ESCAPE:
+				PostQuitMessage(0);
+				break;
+			}
+		break;		
 	
-		// The user hit the close button, close the application
-		case WM_DESTROY	:	PostQuitMessage(0);
+	case WM_MOUSEMOVE:
+		renderer->SetMouseXY(LOWORD(lParam), HIWORD(lParam));
+		break;
+
+	case WM_LBUTTONDOWN:
+		renderer->SetMouseLButtonState(true);
+		break;
+
+	case WM_LBUTTONUP:
+		renderer->SetMouseLButtonState(false);
+		break;
+
+	// The user hit the close button, close the application
+	case WM_DESTROY:
+		PostQuitMessage(0);
 		break;
 	}
 	
@@ -76,7 +90,7 @@ bool initWindow(HWND &hWnd, HINSTANCE hInstance, int width, int height)
 
 	//create the window from the class above
 	hWnd = CreateWindow( "Colony", 
-						 "Colony - Tile Test", 
+						 "Colony - Mouse Test", 
 						 WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 						 CW_USEDEFAULT, 
 						 CW_USEDEFAULT, 
@@ -118,7 +132,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	
 	//set up the renderer
 	renderer = new Core::CoreManager("dx10");
-	if(!renderer->Initialise(&hWnd, Core::CoreManager::TEST_MODE_TEXT))
+	if(!renderer->Initialise(&hWnd, Core::CoreManager::TEST_MODE_MOUSE))
 	{
 		std::cerr << "Failed to initialise a renderer" << std::endl;
 		return 0;

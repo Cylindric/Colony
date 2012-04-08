@@ -46,29 +46,8 @@ LRESULT CALLBACK wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	case WM_INPUT:
-		{
-			UINT dwSize = 40;
-			static BYTE lpb[40];
-    
-			GetRawInputData(
-				(HRAWINPUT)lParam, 
-				RID_INPUT, 
-				lpb,
-				&dwSize,
-				sizeof(RAWINPUTHEADER)
-			);
-    
-			RAWINPUT* raw = (RAWINPUT*)lpb;
-    
-			if (raw->header.dwType == RIM_TYPEMOUSE) 
-			{
-				renderer->SetMouseXY(0, 0);
-				xPosRelative = raw->data.mouse.lLastX;
-				yPosRelative = raw->data.mouse.lLastY;
-			} 
-			return 0;
-		}
+	case WM_MOUSEMOVE:
+		renderer->SetMouseXY(LOWORD(lParam), HIWORD(lParam));
 		break;
 
     case WM_KEYDOWN:
@@ -166,26 +145,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	// Set up the application window
 	if ( !initWindow(hWnd, hInstance, windowWidth, windowHeight)) return 0;
 	
-	// Capture HID mouse
-	RAWINPUTDEVICE m_InputDevice[2];
-	m_InputDevice[0].usUsagePage = 0x01;
-	m_InputDevice[0].usUsage = 0x02;
-	m_InputDevice[0].dwFlags = 0;
-	m_InputDevice[0].hwndTarget = 0;
-
-	// Capture HID keyboard
-	m_InputDevice[1].usUsagePage = 0x01;
-	m_InputDevice[1].usUsage = 0x06;
-	m_InputDevice[1].dwFlags = 0;
-	m_InputDevice[1].hwndTarget = 0;
-
-	// Register the devices
-	if(RegisterRawInputDevices(m_InputDevice, 2, sizeof(m_InputDevice[0])) == false)
-	{
-		DWORD err = GetLastError();
-	}
-
-
 	//set up the renderer
 	renderer = new Core::CoreManager("dx10");
 	if(!renderer->Initialise(&hWnd, Core::CoreManager::TEST_MODE_TILES))

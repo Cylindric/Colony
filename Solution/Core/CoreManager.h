@@ -32,7 +32,8 @@ namespace Core
 		{
 			TEST_MODE_NONE,
 			TEST_MODE_TEXT,
-			TEST_MODE_TILES
+			TEST_MODE_TILES,
+			TEST_MODE_MOUSE
 		};
 
 		CoreManager(char* type);
@@ -41,7 +42,9 @@ namespace Core
 		bool Initialise(HWND* handle, TEST_MODE mode = TEST_MODE_NONE);
 		void Release(void);
 		bool Render();
+
 		void SetMouseXY(int x, int y);
+		void SetMouseLButtonState(bool down);
 
 	private:
 		StandardRenderer* m_Renderer;
@@ -51,10 +54,13 @@ namespace Core
 		Input* m_Input;
 		Timer m_Timer;
 
-		double m_LastFrameTime;
+		float m_FrameStep;
 		int m_FrameCounter;
-		int m_FrameCounterText;
 		std::map<std::string, int> m_TextHandles;
+
+		int m_MouseX;
+		int m_MouseY;
+		bool m_MouseL;
 
 		// testing
 		TEST_MODE m_TestMode;

@@ -22,6 +22,7 @@ namespace Core
 	class Text
 	{
 	public:
+		static const unsigned int MAX_SENTENCE_LENGTH = 128;
 
 		struct Sentence
 		{
@@ -32,6 +33,7 @@ namespace Core
 
 		Text(void);
 		~Text(void);
+		void SetSentencePosition(int id, int x, int y);
 
 		// pipeline methods
 		bool Initialise(Font* font);
@@ -40,9 +42,8 @@ namespace Core
 		std::vector<SpriteVertex>* GetSprites(void);
 
 		// class methods
-		int InitialiseSentence(void);
-		bool UpdateSentence(int id, std::string text, int posX = -1, int posY = -1, float fontSize = -1);
-		bool UpdateSentence(int id, char* text, int value);
+		int InitialiseSentence(char* text = "", int posX = 0, int posY = 0, float fontSize = 1.0f);
+		bool UpdateSentence(int id, char* format, ...);
 		//void ReleaseSentence(int id);
 
 	private:

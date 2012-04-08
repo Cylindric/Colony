@@ -1,5 +1,6 @@
 #include "Text.h"
 
+
 using std::ifstream;
 using std::string;
 using std::pair;
@@ -38,33 +39,35 @@ namespace Core
 	}
 
 
-	int Text::InitialiseSentence()
+	int Text::InitialiseSentence(char* text, int posX, int posY, float fontSize)
 	{
 		int id = m_Strings.size();
-		Sentence s = {"", 0, 0, 1.0f};
+		Sentence s;
+		s.text = text;
+		s.position[0] = posX;
+		s.position[1] = posY;
+		s.fontSize = fontSize;
 		m_Strings.insert(std::pair<int, Sentence>(id, s));
 		return id;
 	}
 
 
-	bool Text::UpdateSentence(int id, std::string text, int posX, int posY, float fontSize)
+	void Text::SetSentencePosition(int id, int x, int y)
 	{
-		if(posX != -1) m_Strings[id].position[0] = posX;
-		if(posY != -1) m_Strings[id].position[1] = posY;
-		if(fontSize != -1) m_Strings[id].fontSize = fontSize;
-		m_Strings[id].text = text;
-		return true;
+		m_Strings[id].position[0] = x;
+		m_Strings[id].position[1] = y;
 	}
 
 
-	bool Text::UpdateSentence(int id, char* text, int value)
+	bool Text::UpdateSentence(int id, char* format, ...)
 	{
-		char finalString[32];
-		char tmpString[32];
-		_itoa_s(value, tmpString, 10);
-		strcpy_s(finalString, text);
-		strcat_s(finalString, tmpString);
-		return UpdateSentence(id, finalString);
+		va_list args;
+		va_start(args, format);
+		char finalString[MAX_SENTENCE_LENGTH];
+		vsprintf(finalString, format, args);
+		m_Strings[id].text = finalString;
+		va_end(args);
+		return true;
 	}
 
 
