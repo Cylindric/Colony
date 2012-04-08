@@ -16,6 +16,7 @@
 // INCLUDES //
 //////////////
 #include <vector>
+#include <iterator>
 #include <map>
 #include <iostream>
 #include <Windows.h>
@@ -47,6 +48,8 @@ namespace Core
 		bool EndRender(void);
 
 	private:
+		static const int SPRITE_BUFFER_SIZE = 1024;
+
 		//device vars
 		ID3D10Device*				pD3DDevice;
 		IDXGISwapChain*				pSwapChain;
@@ -58,7 +61,9 @@ namespace Core
 		//input layout
 		ID3D10InputLayout*			pVertexLayout;
 
-		// Sprite textures, effects and techniques
+		// Sprite buffers textures, effects and techniques
+		std::vector<SpriteVertex>	m_SpriteVertices;
+		int							m_SpriteBufferSize;
 		ID3D10Effect*				m_SpriteEffect;
 		ID3D10EffectTechnique*		m_SpriteTechnique;
 		ID3D10Buffer*				m_SpriteBuffer;
@@ -75,6 +80,9 @@ namespace Core
 		bool ResizeScreen(void);
 		bool CreateSwapChainAndDevice(void);
 		bool LoadShadersAndCreateInputLayouts(void);
+		bool InitialiseBuffers(void);
+		bool UpdateBuffers(SpriteVector* sprites);
+		bool DirectX10Renderer::RenderSpriteRange(SpriteVector* sprites);
 	};
 
 }

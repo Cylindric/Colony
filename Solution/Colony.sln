@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextTest", "TestText\TextTe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TileTest", "TestTiles\TileTest.vcxproj", "{E6F66AA5-9D7E-4346-B85E-8C97709AC1C1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestVector", "TestVector\TestVector.vcxproj", "{F9A7CE7C-11D9-4325-8F3B-E8760534CD5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{E6F66AA5-9D7E-4346-B85E-8C97709AC1C1}.Debug|Win32.Build.0 = Debug|Win32
 		{E6F66AA5-9D7E-4346-B85E-8C97709AC1C1}.Release|Win32.ActiveCfg = Release|Win32
 		{E6F66AA5-9D7E-4346-B85E-8C97709AC1C1}.Release|Win32.Build.0 = Release|Win32
+		{F9A7CE7C-11D9-4325-8F3B-E8760534CD5D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9A7CE7C-11D9-4325-8F3B-E8760534CD5D}.Debug|Win32.Build.0 = Debug|Win32
+		{F9A7CE7C-11D9-4325-8F3B-E8760534CD5D}.Release|Win32.ActiveCfg = Release|Win32
+		{F9A7CE7C-11D9-4325-8F3B-E8760534CD5D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

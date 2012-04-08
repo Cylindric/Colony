@@ -1,5 +1,12 @@
 #pragma once
 
+
+//////////////
+// INCLUDES //
+//////////////
+#include <vector>
+
+
 enum SpriteType
 {
 	SPRITE_TYPE_NONE,
@@ -19,6 +26,8 @@ struct SpriteVertex
 	float uvBottom;
 	float opacity;
 };
+typedef std::vector<SpriteVertex> SpriteVector;
+typedef std::vector<SpriteVertex>::iterator SpriteIterator;
 
 
 struct FontVertex

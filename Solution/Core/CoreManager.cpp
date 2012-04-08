@@ -83,7 +83,7 @@ namespace Core
 			m_Text->UpdateSentence(m_TextHandles["test2"], "This is a moving sentence", (int)m_TestMove[0], (int)m_TestMove[1], 1.0f);
 			break;
 		case TEST_MODE_TILES:
-			m_Map->CreateRandomTiles(10, 10);
+			m_Map->CreateRandomTiles(3, 3);
 			break;
 		}
 

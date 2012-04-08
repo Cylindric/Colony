@@ -37,6 +37,7 @@ namespace Core
 		if(!CreateSwapChainAndDevice()) return false;
 		if(!ResizeScreen()) return false;
 		if(!LoadShadersAndCreateInputLayouts()) return false;
+		if(!InitialiseBuffers()) return false;
 
 		// Load textures
 		if(FAILED(D3DX10CreateShaderResourceViewFromFile(pD3DDevice, "./textures/tiles.png", NULL, NULL,  &m_SpriteTexture, NULL)))
@@ -54,7 +55,57 @@ namespace Core
 	}
 
 
-	void DirectX10Renderer::Release(void)
+	bool DirectX10Renderer::InitialiseBuffers()
+	{
+		m_SpriteVertices.reserve(SPRITE_BUFFER_SIZE);
+
+		SpriteVertex* vertices = new SpriteVertex[SPRITE_BUFFER_SIZE];
+		memset(vertices, 0, (sizeof(SpriteVertex)*SPRITE_BUFFER_SIZE));
+
+		D3D10_SUBRESOURCE_DATA initData;
+		initData.pSysMem = vertices;
+
+		D3D10_BUFFER_DESC bd;
+		bd.Usage = D3D10_USAGE_DYNAMIC;
+		bd.ByteWidth = sizeof(SpriteVertex)*(SPRITE_BUFFER_SIZE);
+		bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
+		bd.MiscFlags = 0;
+
+		if(FAILED(pD3DDevice->CreateBuffer(&bd, &initData, &m_SpriteBuffer)))
+		{
+			return false;
+		}
+
+		delete [] vertices;
+		vertices = 0;
+
+		return true;
+	}
+
+
+	bool DirectX10Renderer::UpdateBuffers(SpriteVector* sprites)
+	{
+		if(sprites->size() <= SPRITE_BUFFER_SIZE)
+		{
+			m_SpriteVertices = *sprites;
+		}
+		else
+		{
+			return false;
+		}
+
+		void* verticesPtr;
+		verticesPtr = 0;
+		m_SpriteBuffer->Map(D3D10_MAP_WRITE_DISCARD, 0, (void**)&verticesPtr);
+		memcpy(verticesPtr, (void*)&((*sprites)[0]), sizeof(SpriteVertex) * sprites->size());
+		m_SpriteBuffer->Unmap();
+
+		return true;
+	}
+
+
+	void DirectX10Renderer::Release()
 	{
 		DEBUG_OUT("DirectX10Renderer::Release");
 
@@ -69,6 +120,7 @@ namespace Core
 		if(m_FontTexture) m_FontTexture->Release();
 
 		if(m_SpriteBuffer) m_SpriteBuffer->Release();
+		m_SpriteVertices.clear();
 	}
 
 
@@ -320,7 +372,7 @@ namespace Core
 	}
 
 
-	bool DirectX10Renderer::RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites)
+	bool DirectX10Renderer::RenderSprites(SpriteType type, SpriteVector* sprites)
 	{
 		if(!sprites)
 		{
@@ -333,36 +385,6 @@ namespace Core
 			return true;
 		}
 
-
-		//ID3D10RasterizerState* WireFrame;
-		//D3D10_RASTERIZER_DESC wfdesc;
-		//ZeroMemory(&wfdesc, sizeof(D3D10_RASTERIZER_DESC));
-		//wfdesc.FillMode = D3D10_FILL_WIREFRAME;
-		//wfdesc.CullMode = D3D10_CULL_BACK;
-		//wfdesc.FrontCounterClockwise = false;
-		//HRESULT hr = pD3DDevice->CreateRasterizerState(&wfdesc, &WireFrame);
-		//pD3DDevice->RSSetState(WireFrame);
-
-
-		D3D10_SUBRESOURCE_DATA initData;
-		initData.pSysMem = &((*sprites)[0]); // thank you, Eddie Edwards on SO - this caught me out
-
-		D3D10_BUFFER_DESC bd;
-		bd.Usage = D3D10_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(SpriteVertex)*(numSprites);
-		bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-		bd.MiscFlags = 0;
-
-		if(FAILED(pD3DDevice->CreateBuffer(&bd, &initData, &m_SpriteBuffer)))
-		{
-			return FatalError("Could not create sprite vertex buffer!");
-		}
-
-		// Set vertex buffer
-		UINT stride = sizeof(SpriteVertex);
-		UINT offset = 0;
-		pD3DDevice->IASetVertexBuffers(0, 1, &m_SpriteBuffer, &stride, &offset);
 
 		//draw sprites
 		switch(type)
@@ -388,15 +410,65 @@ namespace Core
 		dims[1] = m_ScreenHeight;
 		em->SetRawValue(&dims, 0, sizeof(dims));
 
+		// clear the current sprite buffer
+		int remainingSprites = sprites->size();
+		SpriteVector spritesToRender;
+		SpriteIterator startSprite;
+		SpriteIterator endSprite;
+		startSprite = sprites->begin();
+		while(remainingSprites > 0)
+		{
+			// get the first batch of sprites
+			endSprite = sprites->end();
+			if(remainingSprites > SPRITE_BUFFER_SIZE)
+			{
+				endSprite = startSprite + SPRITE_BUFFER_SIZE;
+			}
+
+			std::copy(startSprite, endSprite, std::back_inserter(spritesToRender));
+
+			// draw this batch of sprites
+			RenderSpriteRange(&spritesToRender);
+
+			// get ready for the next iteration
+			startSprite = endSprite;
+			remainingSprites -= SPRITE_BUFFER_SIZE;
+			spritesToRender.clear();
+		}
+		
+		return true;
+	}
+
+
+	bool DirectX10Renderer::RenderSpriteRange(SpriteVector* sprites)
+	{
+		UpdateBuffers(sprites);
+
+		//ID3D10RasterizerState* WireFrame;
+		//D3D10_RASTERIZER_DESC wfdesc;
+		//ZeroMemory(&wfdesc, sizeof(D3D10_RASTERIZER_DESC));
+		//wfdesc.FillMode = D3D10_FILL_WIREFRAME;
+		//wfdesc.CullMode = D3D10_CULL_BACK;
+		//wfdesc.FrontCounterClockwise = false;
+		//HRESULT hr = pD3DDevice->CreateRasterizerState(&wfdesc, &WireFrame);
+		//pD3DDevice->RSSetState(WireFrame);
+
+		// Set vertex buffer
+		UINT stride = sizeof(SpriteVertex);
+		UINT offset = 0;
+		pD3DDevice->IASetVertexBuffers(0, 1, &m_SpriteBuffer, &stride, &offset);
+
+
 		for(UINT p = 0; p < m_SpriteTechDesc.Passes; p++)
 		{
 			//apply technique
 			m_SpriteTechnique->GetPassByIndex(p)->Apply(0);
 
 			//draw
-			pD3DDevice->Draw(numSprites, 0);
+			pD3DDevice->Draw(sprites->size(), 0);
 		}
-		
+
 		return true;
 	}
+
 }
