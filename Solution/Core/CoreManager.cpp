@@ -177,4 +177,9 @@ namespace Core
 		return true;
 	}
 
+
+	void CoreManager::SetMouseXY(int x, int y)
+	{
+	}
+
 }

@@ -63,6 +63,7 @@ LRESULT CALLBACK wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     
 			if (raw->header.dwType == RIM_TYPEMOUSE) 
 			{
+				renderer->SetMouseXY(0, 0);
 				xPosRelative = raw->data.mouse.lLastX;
 				yPosRelative = raw->data.mouse.lLastY;
 			} 
@@ -147,9 +148,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 {
 #ifdef DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetBreakAlloc(151);
-	//_CrtSetBreakAlloc(152); // Core Manager
-	//_CrtSetBreakAlloc(153); // CoreManager
+	//_CrtSetBreakAlloc(153);
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
 
@@ -185,7 +184,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	{
 		DWORD err = GetLastError();
 	}
-
 
 
 	//set up the renderer

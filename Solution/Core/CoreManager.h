@@ -41,6 +41,7 @@ namespace Core
 		bool Initialise(HWND* handle, TEST_MODE mode = TEST_MODE_NONE);
 		void Release(void);
 		bool Render();
+		void SetMouseXY(int x, int y);
 
 	private:
 		StandardRenderer* m_Renderer;
