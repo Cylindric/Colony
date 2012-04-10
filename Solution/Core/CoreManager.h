@@ -54,7 +54,8 @@ namespace Core
 		Input* m_Input;
 		Timer m_Timer;
 
-		float m_FrameStep;
+		double m_FrameStep;
+		double m_LastFrameStart;
 		int m_FrameCounter;
 		std::map<std::string, int> m_TextHandles;
 

@@ -154,4 +154,10 @@ namespace Core
 		return true;
 	}
 
+
+	void DirectX9Renderer::SetCameraXY(int x, int y)
+	{
+	}
+
+
 }

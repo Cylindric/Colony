@@ -47,6 +47,7 @@ namespace Core
 		bool BeginRender(void);
 		bool RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites);
 		bool EndRender(void);
+		void SetCameraXY(int x, int y);
 
 	private:
 		//device vars

@@ -29,6 +29,7 @@ namespace Core
 		m_MouseY = 0;
 		m_MouseL = false;
 		m_FrameStep = 0;
+		m_LastFrameStart = 0;
 	}
 
 
@@ -64,7 +65,10 @@ namespace Core
 
 		// Create a frame-counter text object
 		m_TextHandles.insert(std::pair<std::string, int>("framecounter", m_Text->InitialiseSentence("Frames: unknown", 2, 12, 1.0f)));
+
 		m_TextHandles.insert(std::pair<std::string, int>("fps", m_Text->InitialiseSentence("FPS: unknown", 2, 24, 1.0f)));
+		m_TextHandles.insert(std::pair<std::string, int>("framestep", m_Text->InitialiseSentence("Framestep: unknown", 100, 24, 1.0f)));
+
 		m_TextHandles.insert(std::pair<std::string, int>("mouse", m_Text->InitialiseSentence("Mouse: unknown", 2, 36, 1.0f)));
 
 		switch(m_TestMode)
@@ -142,11 +146,14 @@ namespace Core
 	bool CoreManager::Render()
 	{
 		// update the frame counter
-		static double fpsLastUpdatedAt = 0;
-		static int fpsFramesAtLastUpdate = 0;
+		double frameStart = m_Timer.GetElapsedTimeSeconds();
+
+		m_FrameStep = (frameStart - m_LastFrameStart);
 		m_FrameCounter++;
 
 
+		static double fpsLastUpdatedAt = 0;
+		static int fpsFramesAtLastUpdate = 0;
 		if (m_Timer.GetElapsedTimeSeconds() - 1 > fpsLastUpdatedAt)
 		{
 			double thisFrameTime = m_Timer.GetElapsedTimeSeconds();
@@ -157,8 +164,10 @@ namespace Core
 			m_Text->UpdateSentence(m_TextHandles["fps"], "FPS: %d", fps);
 			fpsFramesAtLastUpdate = m_FrameCounter;
 			fpsLastUpdatedAt = m_Timer.GetElapsedTimeSeconds();
+			m_Text->UpdateSentence(m_TextHandles["framecounter"], "Frames: %7d", m_FrameCounter);
+			m_Text->UpdateSentence(m_TextHandles["framestep"], "Framestep: %f", m_FrameStep);
 		}
-		m_Text->UpdateSentence(m_TextHandles["framecounter"], "Frames: %d", m_FrameCounter);
+
 		m_Text->UpdateSentence(m_TextHandles["mouse"], "Mouse X:%d Y:%d L:%d", m_MouseX, m_MouseY, m_MouseL);
 
 		if(m_TestMode == TEST_MODE_TEXT)
@@ -175,8 +184,11 @@ namespace Core
 		}
 
 		// Update all child objects
+		static float camX = 0;
+		static float camY = 0;
+		//camX += (100.0f * m_FrameStep);
+		m_Renderer->SetCameraXY((int)camX, (int)camY);
 
-		m_FrameStep = (m_Timer.GetElapsedTimeSeconds() - m_FrameStep);
 		m_Renderer->Update();
 		m_Map->Update(m_FrameStep);
 		m_Text->Update();
@@ -184,11 +196,15 @@ namespace Core
 		// Render
 		if(!m_Renderer->BeginRender()) return false;
 
-		if(!m_Renderer->RenderSprites(SPRITE_TYPE_TILE, m_Map->GetSprites())) return false;
+		m_Renderer->SetCameraXY((int)camX, (int)camY);
+		if(!m_Renderer->RenderSprites(SPRITE_TYPE_TILE, m_Map->GetSprites(SPRITE_TYPE_TILE))) return false;
+
+		m_Renderer->SetCameraXY(0, 0);
 		if(!m_Renderer->RenderSprites(SPRITE_TYPE_TEXT, m_Text->GetSprites())) return false;
 
 		if(!m_Renderer->EndRender()) return false;
 
+		m_LastFrameStart = frameStart;
 		return true;
 	}
 

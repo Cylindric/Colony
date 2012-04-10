@@ -15,7 +15,7 @@ namespace Core
 
 	bool Tile::Initialise()
 	{
-		m_Sprite.spriteType = SpriteType::SPRITE_TYPE_TILE;
+		m_Sprite.spriteType = SPRITE_TYPE_TILE;
 		m_Sprite.dimensions[0] = 16;
 		m_Sprite.dimensions[1] = 16;
 		return true;

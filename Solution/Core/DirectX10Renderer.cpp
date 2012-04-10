@@ -4,7 +4,9 @@
 namespace Core
 {
 
-	DirectX10Renderer::DirectX10Renderer(void)
+	DirectX10Renderer::DirectX10Renderer(void) : 
+		m_dV(D3DXVECTOR3(0,0,1)),
+		m_dU(D3DXVECTOR3(0,1,0))
 	{
 		DEBUG_OUT("DirectX10Renderer::Constructor");
 		pD3DDevice = NULL;
@@ -12,6 +14,13 @@ namespace Core
 		pRenderTargetView = NULL;
 		m_SpriteEffect = NULL;
 		m_SpriteBuffer = NULL;
+
+		m_Eye = D3DXVECTOR3(0,0,0);
+		m_View = D3DXVECTOR3(0,0,1);
+		m_Up = D3DXVECTOR3(0,1,0);
+
+		D3DXMatrixIdentity(&m_ViewMatrix);
+		D3DXMatrixIdentity(&m_ProjectionMatrix);
 	}
 
 
@@ -33,6 +42,8 @@ namespace Core
 		GetClientRect( *hWnd, &rc );
 		m_ScreenWidth = rc.right - rc.left;
 		m_ScreenHeight = rc.bottom - rc.top;
+		m_CameraX = 0;
+		m_CameraY = 0;
 
 		if(!CreateSwapChainAndDevice()) return false;
 		if(!ResizeScreen()) return false;
@@ -241,6 +252,27 @@ namespace Core
 	}
 
 
+	void DirectX10Renderer::UpdateView()
+	{
+		m_Eye.x += 1;
+
+		D3DXMatrixRotationYawPitchRoll(&m_RotationMatrix, 0, 0, 0);
+
+		D3DXVec3TransformCoord(&m_View, &m_dV, &m_RotationMatrix);
+		D3DXVec3TransformCoord(&m_Up, &m_dU, &m_RotationMatrix);
+
+		m_View = m_Eye + m_View;
+		D3DXMatrixLookAtLH(&m_ViewMatrix, &m_Eye, &m_View, &m_Up);
+	}
+
+
+	void DirectX10Renderer::SetCameraXY(int x, int y)
+	{
+		m_CameraX = x;
+		m_CameraY = y;
+	}
+
+
 	bool DirectX10Renderer::BeginRender()
 	{
 		//clear scene
@@ -250,6 +282,8 @@ namespace Core
 		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0,0,0,0));
 #endif
 		pD3DDevice->ClearDepthStencilView(pDepthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
+
+		UpdateView();
 
 		//set topology
 		pD3DDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);

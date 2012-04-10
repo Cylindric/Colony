@@ -20,8 +20,8 @@ namespace Core
 
 	private:
 		SpriteVertex m_Sprite;
-		float m_PosX;
-		float m_PosY;
+		int m_PosX;
+		int m_PosY;
 		int m_TextureTileId;
 
 		void UpdateUV(void);

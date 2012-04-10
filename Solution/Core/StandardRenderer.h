@@ -37,6 +37,7 @@ namespace Core
 		virtual bool BeginRender(void) = 0;
 		virtual bool RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites) = 0;
 		virtual bool EndRender(void) = 0;
+		virtual void SetCameraXY(int x, int y) = 0;
 		int GetScreenWidth(void);
 		int GetScreenHeight(void);
 		
@@ -44,6 +45,8 @@ namespace Core
 		HWND* hWnd;
 		UINT m_ScreenWidth;
 		UINT m_ScreenHeight;
+		UINT m_CameraX;
+		UINT m_CameraY;
 
 		//fatal error handler
 		bool FatalError(LPCSTR msg); 

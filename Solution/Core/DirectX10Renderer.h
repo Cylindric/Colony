@@ -46,6 +46,7 @@ namespace Core
 		bool BeginRender(void);
 		bool RenderSprites(SpriteType type, std::vector<SpriteVertex>* sprites);
 		bool EndRender(void);
+		void SetCameraXY(int x, int y);
 
 	private:
 		static const int SPRITE_BUFFER_SIZE = 1024;
@@ -76,6 +77,13 @@ namespace Core
 		// Effect variable pointers
 		ID3D10EffectShaderResourceVariable* pColorMap;
 
+		// Camera Controls
+		D3DXMATRIX m_ViewMatrix;
+		D3DXMATRIX m_ProjectionMatrix;
+		D3DXMATRIX m_RotationMatrix;
+		const D3DXVECTOR3 m_dV, m_dU;
+		D3DXVECTOR3 m_Eye, m_View, m_Up;
+
 		// Pipeline
 		bool ResizeScreen(void);
 		bool CreateSwapChainAndDevice(void);
@@ -83,6 +91,7 @@ namespace Core
 		bool InitialiseBuffers(void);
 		bool UpdateBuffers(SpriteVector* sprites);
 		bool DirectX10Renderer::RenderSpriteRange(SpriteVector* sprites);
+		void UpdateView(void);
 	};
 
 }
