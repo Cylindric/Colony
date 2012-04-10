@@ -10,6 +10,30 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cameraclass.cpp" />
+    <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="graphicsclass.cpp" />
+    <ClCompile Include="inputclass.cpp" />
+    <ClCompile Include="lightclass.cpp" />
+    <ClCompile Include="lightshaderclass.cpp" />
+    <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="systemclass.cpp" />
+    <ClCompile Include="textureclass.cpp" />
+    <ClCompile Include="worldclass.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="d3dclass.h" />
+    <ClInclude Include="graphicsclass.h" />
+    <ClInclude Include="inputclass.h" />
+    <ClInclude Include="lightclass.h" />
+    <ClInclude Include="lightshaderclass.h" />
+    <ClInclude Include="modelclass.h" />
+    <ClInclude Include="systemclass.h" />
+    <ClInclude Include="textureclass.h" />
+    <ClInclude Include="worldclass.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5EA2A1A2-F9E7-48DB-965A-9817BB54B900}</ProjectGuid>
     <RootNamespace>Core</RootNamespace>
@@ -18,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -69,40 +93,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="DirectX10Renderer.h" />
-    <ClInclude Include="CoreManager.h" />
-    <ClInclude Include="DirectX9Renderer.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="global.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="StandardRenderer.h" />
-    <ClInclude Include="Text.h" />
-    <ClInclude Include="Tile.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="VertexLayouts.h" />
-    <ClInclude Include="VertexTypes.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="DirectX10Renderer.cpp" />
-    <ClCompile Include="CoreManager.cpp" />
-    <ClCompile Include="DirectX9Renderer.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="StandardRenderer.cpp" />
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="Timer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\shaders\sprite.fx">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(DXSDK_DIR)Utilities\bin\x86\"fxc.exe  /T fx_4_0 /Fo "$(OutDir)\%(Filename).fxo" "%(FullPath)"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\$(filename).fxo</Outputs>
-    </CustomBuild>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
