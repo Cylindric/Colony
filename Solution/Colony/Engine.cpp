@@ -1,12 +1,14 @@
 #include "Engine.h"
 
+#include <vector>
+#include <exception>
+
 #include <OGRE/OgreRoot.h>
 #include <OGRE/OgreRenderSystem.h>
 #include <OGRE/OgreRenderWindow.h>
 #include <OGRE/OgreWindowEventUtilities.h>
 
-#include <vector>
-#include <exception>
+#include "SceneManager.h"
 
 
 namespace Colony
@@ -99,6 +101,8 @@ namespace Colony
 			result = false;
 		}
 
+		mSceneManager->Initialise(mRoot.get(), mWindow);
+
 		return result;
 	}
 
@@ -107,6 +111,13 @@ namespace Colony
 	{
 		while(!mWindow->isClosed())
 		{
+			mWindow->update(false);
+
+			bool lVerticalSync = false;
+			mWindow->swapBuffers(lVerticalSync);
+
+			mRoot->renderOneFrame();
+
 			Ogre::WindowEventUtilities::messagePump();
 		}
 	}

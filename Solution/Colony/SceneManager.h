@@ -7,10 +7,12 @@
 namespace Ogre
 {
 	class Root;
+	class RenderWindow;
 }
 
 namespace Colony
 {
+	class Map;
 
 	class SceneManager
 	{
@@ -18,10 +20,11 @@ namespace Colony
 		SceneManager(void);
 		~SceneManager(void);
 
-		void Initialise(Ogre::Root* root);
+		void Initialise(Ogre::Root* root, Ogre::RenderWindow* window);
 
 	private:
 		Ogre::Root* mRoot;
+		Map* mMap;
 
 	};
 

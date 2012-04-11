@@ -15,6 +15,7 @@ namespace Ogre
 
 namespace Colony
 {
+	class SceneManager;
 
 	class Engine
 	{
@@ -33,6 +34,7 @@ namespace Colony
 
 		Ogre::RenderWindow* mWindow;
 		std::auto_ptr<Ogre::Root> mRoot;
+		SceneManager* mSceneManager;
 	};
 
 }
