@@ -89,12 +89,15 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BaseApplication.cpp" />
-    <ClCompile Include="TutorialApplication.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseApplication.h" />
-    <ClInclude Include="TutorialApplication.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="global.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="SceneManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
