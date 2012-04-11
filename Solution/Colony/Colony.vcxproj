@@ -10,42 +10,19 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="cameraclass.cpp" />
-    <ClCompile Include="d3dclass.cpp" />
-    <ClCompile Include="graphicsclass.cpp" />
-    <ClCompile Include="inputclass.cpp" />
-    <ClCompile Include="lightclass.cpp" />
-    <ClCompile Include="lightshaderclass.cpp" />
-    <ClCompile Include="modelclass.cpp" />
-    <ClCompile Include="systemclass.cpp" />
-    <ClCompile Include="textureclass.cpp" />
-    <ClCompile Include="worldclass.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="cameraclass.h" />
-    <ClInclude Include="d3dclass.h" />
-    <ClInclude Include="graphicsclass.h" />
-    <ClInclude Include="inputclass.h" />
-    <ClInclude Include="lightclass.h" />
-    <ClInclude Include="lightshaderclass.h" />
-    <ClInclude Include="modelclass.h" />
-    <ClInclude Include="systemclass.h" />
-    <ClInclude Include="textureclass.h" />
-    <ClInclude Include="worldclass.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5EA2A1A2-F9E7-48DB-965A-9817BB54B900}</ProjectGuid>
-    <RootNamespace>Core</RootNamespace>
+    <ProjectGuid>{21581476-BCD1-4133-856F-0B9208588C89}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Colony</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
@@ -61,38 +38,64 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetExt>.lib</TargetExt>
-    <IncludePath>C:\Program Files (x86)\Visual Leak Detector\include;$(DXSDK_DIR)\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Visual Leak Detector\lib\Win32;$(DXSDK_DIR)\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(OGRE_HOME)\include;$(OGRE_HOME)\include\OIS;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\boost_1_47;$(OGRE_HOME)\Samples\Common\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OGRE_HOME)\lib\$(Configuration);$(OGRE_HOME)\boost_1_47\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(DXSDK_DIR)\include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)\lib\x86\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
-    <TargetExt>.lib</TargetExt>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(OGRE_HOME)\include;$(OGRE_HOME)\include\OIS;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\boost_1_47;$(OGRE_HOME)\Samples\Common\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OGRE_HOME)\lib\$(Configuration);$(OGRE_HOME)\boost_1_47\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>OgreMain_d.lib;OIS_d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)\$(TargetFileName)" "$(OGRE_HOME)\Bin\$(Configuration)"</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>echo $(OGRE_HOME)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>OgreMain_d.lib;OIS_d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)\$(TargetFileName)" "$(OGRE_HOME)\Bin\$(Configuration)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="BaseApplication.cpp" />
+    <ClCompile Include="TutorialApplication.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseApplication.h" />
+    <ClInclude Include="TutorialApplication.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
