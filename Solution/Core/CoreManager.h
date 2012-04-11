@@ -12,7 +12,6 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "StandardRenderer.h"
-#include "DirectX9Renderer.h"
 #include "DirectX10Renderer.h"
 #include "Font.h"
 #include "Input.h"

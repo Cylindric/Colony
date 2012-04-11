@@ -2,7 +2,7 @@
 
 #ifdef DEBUG
 #define _CRTDBG_MAP_ALLOC
-#include <vld.h>
+//#include <vld.h>
 #define DEBUG_OUT(t) std::cout << t << std::endl
 #endif
 

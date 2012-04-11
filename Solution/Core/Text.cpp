@@ -64,7 +64,7 @@ namespace Core
 		va_list args;
 		va_start(args, format);
 		char finalString[MAX_SENTENCE_LENGTH];
-		vsprintf(finalString, format, args);
+		vsprintf_s(finalString, sizeof(finalString), format, args);
 		m_Strings[id].text = finalString;
 		va_end(args);
 		return true;

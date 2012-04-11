@@ -8,15 +8,7 @@ namespace Core
 		DEBUG_OUT("CoreManager::Constructor");
 
 		// Set up the renderer
-		m_Renderer = NULL;
-		if(type == "dx9")
-		{
-			m_Renderer = new DirectX9Renderer;
-		}
-		else
-		{
-			m_Renderer = new DirectX10Renderer;
-		}
+		m_Renderer = new DirectX10Renderer;
 
 		// Set up the other objects
 		m_TestMode = TEST_MODE_NONE;
