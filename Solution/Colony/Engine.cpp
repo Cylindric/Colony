@@ -101,6 +101,7 @@ namespace Colony
 			result = false;
 		}
 
+		mSceneManager = new SceneManager;
 		mSceneManager->Initialise(mRoot.get(), mWindow);
 
 		return result;

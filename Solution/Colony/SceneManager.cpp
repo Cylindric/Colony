@@ -49,10 +49,9 @@ namespace Colony
 		window->setActive(true);
 		window->setAutoUpdated(false);
 
-		root->clearEventTimes();
-
 		mMap = new Map;
-
 		mMap->Initialise(root, lScene);
+
+		root->clearEventTimes();
 	}
 }
